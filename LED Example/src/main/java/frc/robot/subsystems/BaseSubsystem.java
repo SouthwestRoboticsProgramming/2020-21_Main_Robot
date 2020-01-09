@@ -18,10 +18,10 @@ public class BaseSubsystem extends SubsystemBase {
    */
   Spark led = new Spark(0);
 
-  private double red;
-  private double green;
-  private double orange;
-  private double purple = .9;
+  private double red = .6;
+  private double green = .74;
+  private double orange = .63;
+  private double purple = .1;
 
   @Override
   public void periodic() {
