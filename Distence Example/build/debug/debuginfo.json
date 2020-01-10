@@ -1,0 +1,9 @@
+[
+  {
+    "artifact": "frcJava (in project Color Example)",
+    "target": "roborio",
+    "debugfile": "frcJava_roborio.debugconfig",
+    "project": "Color Example",
+    "language": "java"
+  }
+]
