@@ -23,9 +23,8 @@ public class BaseSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double range = ds.getRange();
-    boolean valid = range == -1;
-    System.out.println("range = " + range + " valid = " + valid);
+    // double range = ds.getRange();
+    // boolean valid = range == -1;
+    // System.out.println("range = " + range + " valid = " + valid);
   }
-
 }

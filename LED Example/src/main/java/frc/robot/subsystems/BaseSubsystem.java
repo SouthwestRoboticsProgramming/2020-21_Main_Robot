@@ -21,7 +21,7 @@ public class BaseSubsystem extends SubsystemBase {
   private double red = .6;
   private double green = .74;
   private double orange = .63;
-  private double purple = .1;
+  private double purple = .917;
 
   @Override
   public void periodic() {

@@ -7,11 +7,11 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BaseSubsystem extends SubsystemBase {
   /**
@@ -21,6 +21,15 @@ public class BaseSubsystem extends SubsystemBase {
 
   I2C.Port i2cPort = I2C.Port.kOnboard;
   ColorSensorV3 cs = new ColorSensorV3(i2cPort);
+
+  int adress = 0x70;
+  // I2C i2c = new I2C(Port.kOnboard, adress);
+  // I2C i2cPort = new I2C(Port.kOnboard, adress);
+  // ColorSensorV3 cs = new ColorSensorV3(kk);
+
+  public void selectInput(int port, int data) {
+      // i2cPort.
+  }
 
   @Override
   public void periodic() {
