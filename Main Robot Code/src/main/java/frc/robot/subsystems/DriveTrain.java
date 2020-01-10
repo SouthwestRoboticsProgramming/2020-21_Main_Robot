@@ -12,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
+import frc.robot.Robot;
 import frc.robot.commands.ArcadeDrive;
 
 public class DriveTrain extends SubsystemBase {
@@ -56,8 +56,6 @@ public class DriveTrain extends SubsystemBase {
 
 		// FOLLOW
     rightSlave.follow(rightMaster);
-    
-    this.setDefaultCommand(new ArcadeDrive());
   }
 
   // GET INFO
@@ -103,8 +101,8 @@ public class DriveTrain extends SubsystemBase {
   public void driveMotors(double left, double right) {
       leftMaster.set(ControlMode.PercentOutput, left);
       rightMaster.set(ControlMode.PercentOutput, right);
-			RobotContainer.shuffleBoard.driveLeftOutput.setDouble(leftMaster.getMotorOutputPercent());
-			RobotContainer.shuffleBoard.driveRightOutput.setDouble(rightMaster.getMotorOutputPercent());
+			Robot.shuffleBoard.driveLeftOutput.setDouble(leftMaster.getMotorOutputPercent());
+			Robot.shuffleBoard.driveRightOutput.setDouble(rightMaster.getMotorOutputPercent());
 	}
 
 	public void stop() {

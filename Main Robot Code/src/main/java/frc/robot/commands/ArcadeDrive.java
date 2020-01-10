@@ -10,11 +10,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.CheesyDrive;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
+import frc.robot.subsystems.DriveTrain;
 
 public class ArcadeDrive extends CommandBase {
 
   private CheesyDrive cheesyDrive = new CheesyDrive();
+  private DriveTrain driveTrain;
 
   private double prevPowLeft = 0;
   private double prevPowRight = 0;
@@ -22,8 +23,9 @@ public class ArcadeDrive extends CommandBase {
 
   public static final double maxSpeedDiff = 0.08;
 
-  public ArcadeDrive() {
-    addRequirements(RobotContainer.driveTrain);
+  public ArcadeDrive(DriveTrain driveTrain) {
+    this.driveTrain = driveTrain;
+    addRequirements(this.driveTrain);
   }
 
   // Called when the command is initially scheduled.
@@ -38,7 +40,7 @@ public class ArcadeDrive extends CommandBase {
     double rightPow = leftPow;
     double rotation = Robot.robotContainer.oneTurn() * .55;
 
-    if (!RobotContainer.shuffleBoard.cheezyDrive.getBoolean(true)) { // Arcade Drive
+    if (!Robot.shuffleBoard.cheezyDrive.getBoolean(true)) { // Arcade Drive
       leftPow = limitAcceleration(leftPow, prevPowLeft);
       rightPow = limitAcceleration(rightPow, prevPowRight);
       rotation = limitAcceleration(rotation, prevRotation);
@@ -55,14 +57,14 @@ public class ArcadeDrive extends CommandBase {
       // CheezyDrive takes care of rotation so set to 0 to keep or code from adjusting
       rotation = 0;
     }
-    RobotContainer.driveTrain.driveMotors(leftPow + rotation, rightPow - rotation);
+    // Robot.driveTrain.driveMotors(leftPow + rotation, rightPow - rotation);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.driveTrain.stop();
+    // RobotContainer.driveTrain.stop();
   }
 
   // Returns true when the command should end.

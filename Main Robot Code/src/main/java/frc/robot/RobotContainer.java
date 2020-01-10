@@ -1,12 +1,7 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.Controller.Axis;
@@ -14,6 +9,7 @@ import frc.lib.Controller.Buttons;
 import frc.lib.Controller.Controller;
 import frc.lib.Controller.ControllerSet;
 import frc.lib.Controller.MappedController;
+import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomonousCommand;
 import frc.robot.sensors.ShuffleBoard;
 import frc.robot.subsystems.BaseSubsystem;
@@ -26,22 +22,24 @@ import frc.robot.subsystems.DriveTrain;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
+  private final BaseSubsystem m_baseSubsystem = new BaseSubsystem();
+  public final DriveTrain driveTrain = new DriveTrain();
+  // private final Joystick m_joystick = new Joystick(0);
+
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
-  private static BaseSubsystem m_baseSubsystem = new BaseSubsystem();
-  public static ShuffleBoard shuffleBoard = new ShuffleBoard();
-  public static DriveTrain driveTrain = new DriveTrain();
 
   private Controller controller = new Controller();
     private ControllerSet xbox = new ControllerSet();
       private MappedController xBox = new MappedController(0);
 
-  
-
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // setup controllers
+    driveTrain.setDefaultCommand(new ArcadeDrive(driveTrain));
+    // configure controllers
+    configureControllers();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -53,14 +51,27 @@ public class RobotContainer {
       .mapAxis(Axis.turnDrive, 0);
   }
 
+  /**
+   * Use this method to define your button->command mappings.  Buttons can be created by
+   * instantiating a {@link GenericHID} or one of its subclasses ({@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
+   * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   */
   private void configureButtonBindings() {
+    // Create some buttons
+
     // Connect the buttons to commands
   }
 
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
   public Command getAutonomousCommand() {
     return m_autonomousCommand;
   }
-
 
   // Single joystick drive
   public double oneDrive() {
@@ -74,8 +85,4 @@ public class RobotContainer {
   public boolean oneQuickTurn() {
     return controller.getButton(Buttons.quickTurn).get();
   }
-
-
-
-
 }
