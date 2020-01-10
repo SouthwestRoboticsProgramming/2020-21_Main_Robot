@@ -3,15 +3,13 @@ package frc.lib.Grid;
 import com.analog.adis16448.frc.ADIS16448_IMU;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.lib.PID;
 import frc.lib.TimeOutTimer;
 import frc.lib.Looper.Loop;
 import frc.lib.Looper.Looper;
-import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 
-public class Grid extends Subsystem {
+public class Grid {
   private double acceleration = 1;
   private Position position = new Position();
   private Looper looper;
@@ -446,10 +444,4 @@ private double getAngle() {
 //   }
 //   return output - (ceil * 180);
 // }
-
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-  }
 }

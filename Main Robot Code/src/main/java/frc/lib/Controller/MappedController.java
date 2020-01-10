@@ -3,7 +3,7 @@ package frc.lib.Controller;
 import java.util.ArrayList;
 import java.util.List;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.Controller.Buttons;
 
 public class MappedController {
@@ -13,8 +13,6 @@ public class MappedController {
     private List<Integer> buttonsPorts = new ArrayList<Integer>();
     private List<Axis> axis = new ArrayList<Axis>();
     private List<Integer> axisPorts = new ArrayList<Integer>();
-
-
 
     public MappedController(int port) {
         joy = new Joystick(port);
