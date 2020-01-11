@@ -31,7 +31,7 @@ public class DriveTrain extends SubsystemBase {
 		leftMaster = new WPI_TalonSRX(leftPort1);
 		leftSlave = new WPI_TalonSRX(leftPort2);
 		rightMaster = new WPI_TalonSRX(rightPort1);
-    rightSlave = new WPI_TalonSRX(rightPort2);
+    	rightSlave = new WPI_TalonSRX(rightPort2);
     
     // RESET TALONS
 		leftMaster.configFactoryDefault();
@@ -40,8 +40,8 @@ public class DriveTrain extends SubsystemBase {
 		rightSlave.configFactoryDefault();
 		
 		// LEFT MASTER
-		leftMaster.setInverted(true);
-		leftSlave.setInverted(true);
+		leftMaster.setInverted(false);
+		leftSlave.setInverted(false);
 		leftMaster.setSensorPhase(false);
 		leftMaster.setNeutralMode(NeutralMode.Brake);
 		
@@ -55,7 +55,7 @@ public class DriveTrain extends SubsystemBase {
 		rightMaster.setNeutralMode(NeutralMode.Brake);
 
 		// FOLLOW
-    rightSlave.follow(rightMaster);
+		rightSlave.follow(rightMaster);
   }
 
   // GET INFO
@@ -112,6 +112,5 @@ public class DriveTrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
   }
 }

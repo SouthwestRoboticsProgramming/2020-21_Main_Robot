@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.CheesyDrive;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain;
 
 public class ArcadeDrive extends CommandBase {
@@ -40,7 +41,8 @@ public class ArcadeDrive extends CommandBase {
     double rightPow = leftPow;
     double rotation = Robot.robotContainer.oneTurn() * .55;
 
-    if (!Robot.shuffleBoard.cheezyDrive.getBoolean(true)) { // Arcade Drive
+    // if (!Robot.shuffleBoard.cheezyDrive.getBoolean(true)) { // Arcade Drive
+    if(false) {
       leftPow = limitAcceleration(leftPow, prevPowLeft);
       rightPow = limitAcceleration(rightPow, prevPowRight);
       rotation = limitAcceleration(rotation, prevRotation);
@@ -57,7 +59,7 @@ public class ArcadeDrive extends CommandBase {
       // CheezyDrive takes care of rotation so set to 0 to keep or code from adjusting
       rotation = 0;
     }
-    // Robot.driveTrain.driveMotors(leftPow + rotation, rightPow - rotation);
+    driveTrain.driveMotors(leftPow + rotation, rightPow - rotation);
 
   }
 

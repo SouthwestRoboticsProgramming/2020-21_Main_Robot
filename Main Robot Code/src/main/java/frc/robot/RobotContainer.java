@@ -11,7 +11,6 @@ import frc.lib.Controller.ControllerSet;
 import frc.lib.Controller.MappedController;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomonousCommand;
-import frc.robot.sensors.ShuffleBoard;
 import frc.robot.subsystems.BaseSubsystem;
 import frc.robot.subsystems.DriveTrain;
 
@@ -22,12 +21,12 @@ import frc.robot.subsystems.DriveTrain;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
   private final BaseSubsystem m_baseSubsystem = new BaseSubsystem();
   public final DriveTrain driveTrain = new DriveTrain();
   // private final Joystick m_joystick = new Joystick(0);
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
+  CommandBase arcadeDrive = new ArcadeDrive(driveTrain);
 
   private Controller controller = new Controller();
     private ControllerSet xbox = new ControllerSet();
@@ -37,7 +36,10 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    driveTrain.setDefaultCommand(new ArcadeDrive(driveTrain));
+    
+    driveTrain.setDefaultCommand(arcadeDrive);
+    arcadeDrive.schedule();
+
     // configure controllers
     configureControllers();
 
@@ -48,7 +50,9 @@ public class RobotContainer {
   public void configureControllers() {
     xbox.addMappedController(xBox);
       xBox.mapAxis(Axis.centerDrive, 1)
-      .mapAxis(Axis.turnDrive, 0);
+      .mapAxis(Axis.turnDrive, 0)
+      .mapButton(Buttons.quickTurn, 6);
+    controller.setDefaultControllerSet(xbox);
   }
 
   /**
@@ -75,7 +79,7 @@ public class RobotContainer {
 
   // Single joystick drive
   public double oneDrive() {
-    return controller.getAxis(Axis.centerDrive);
+    return -controller.getAxis(Axis.centerDrive);
   }
 
   public double oneTurn() {

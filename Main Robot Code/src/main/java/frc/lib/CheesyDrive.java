@@ -152,7 +152,9 @@ public class CheesyDrive {
         private final boolean mBrakeMode;
     
         public DriveSignal(double left, double right) {
-            this(left, right, false);
+            mLeftMotor = left;
+            mRightMotor = right;
+            mBrakeMode = false;
         }
     
         public DriveSignal(double left, double right, boolean brakeMode) {
@@ -165,8 +167,8 @@ public class CheesyDrive {
             return new DriveSignal(throttle - turn, throttle + turn);
         }
     
-        public final DriveSignal NEUTRAL = new DriveSignal(0, 0);
-        public final DriveSignal BRAKE = new DriveSignal(0, 0, true);
+        // public final DriveSignal NEUTRAL = new DriveSignal(0, 0);
+        // public final DriveSignal BRAKE = new DriveSignal(0, 0, true);
     
         public double getLeft() {
             return mLeftMotor;
