@@ -11,8 +11,10 @@ import frc.lib.Controller.ControllerSet;
 import frc.lib.Controller.MappedController;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomonousCommand;
-import frc.robot.subsystems.BaseSubsystem;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.BallSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.WheelSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -21,12 +23,14 @@ import frc.robot.subsystems.DriveTrain;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final BaseSubsystem m_baseSubsystem = new BaseSubsystem();
-  public final DriveTrain driveTrain = new DriveTrain();
-  // private final Joystick m_joystick = new Joystick(0);
+  private final BallSubsystem ballSubsystem = new BallSubsystem();
+  private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
+  private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
+  private final WheelSubsystem wheelSubsystem = new WheelSubsystem();
+  
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
-  CommandBase arcadeDrive = new ArcadeDrive(driveTrain);
+  private final CommandBase arcadeDrive = new ArcadeDrive(driveTrainSubsystem);
 
   private Controller controller = new Controller();
     private ControllerSet xbox = new ControllerSet();
@@ -36,8 +40,7 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    
-    driveTrain.setDefaultCommand(arcadeDrive);
+    driveTrainSubsystem.setDefaultCommand(arcadeDrive);
     arcadeDrive.schedule();
 
     // configure controllers

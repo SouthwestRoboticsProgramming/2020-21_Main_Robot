@@ -13,11 +13,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.commands.ArcadeDrive;
 
-public class DriveTrain extends SubsystemBase {
+public class DriveTrainSubsystem extends SubsystemBase {
 
-  private WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave;
+  private WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave; //change to talon fx for main robot
 
   private int leftPort1 = 3,
               leftPort2 = 0,
@@ -26,7 +25,7 @@ public class DriveTrain extends SubsystemBase {
               rightPort2 = 1,
               rightPort3 = -1;
 
-  public DriveTrain() {
+  public DriveTrainSubsystem() {
     //setup motors
 		leftMaster = new WPI_TalonSRX(leftPort1);
 		leftSlave = new WPI_TalonSRX(leftPort2);

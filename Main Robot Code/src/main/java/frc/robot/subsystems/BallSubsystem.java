@@ -22,86 +22,68 @@ public class BallSubsystem extends SubsystemBase {
    * The ballCounters are there to ensure that no balls are missed by the sensors.
    */
 
-  private WPI_TalonSRX intakeTalon, beltTalon, outputTalon;
-  private Solenoid intakeSolenoid1, intakeSolenoid2, outputSolenoid;
+  private WPI_TalonSRX intakeTalon, ballFlickerTalon beltTalon, outputTalon;
+  private Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, blockBlockSolenoid, blockUnBlockSolenoid;
   private DigitalInput ballSensorIn, ballSensorOut;
-  private Counter ballCounterIn, ballCounterOut;
 
-  private int intakeTalonPort = 0;
-  private int beltTalonPort = 0;
-  private int outputTalonPort = 0;
+  private int intakeTalonPort = 0,
+              ballFlickerTalonPort = 0,
+              beltTalonPort = 0,
+              outputTalonPort = 0;
 
-  private int intakeSolenoid1Port = 0;
-  private int intakeSolenoid2Port = 0;
-  private int outputSolenoidPort = 0;
+  private int lowerIntakeSolenoidPort = 0,
+              liftIntakeSolenoidPort = 0,
+              blockBlockSolenoidPort = 0,
+              blockUnBlockSolenoidPort = 0;
 
-  private int ballSensorInPort = 0;
-  private int ballSensorOutPort = 0;
+  private int ballSensorInPort = 0,
+              ballSensorOutPort = 0;
 
-  //TODO: make it possible to change storedBalls in shuffleboard
   private int storedBalls = 3;
   private final int maxStoredBalls = 5;
 
-  private boolean ballSystemIsForwards = true;
+  private boolean ballSensorInBlocked = false,
+                  ballSensorOutBlocked = false;
 
   public BallSubsystem() {
     intakeTalon = new WPI_TalonSRX(intakeTalonPort);
+    ballFlickerTalon = new WPI_TalonSRX(ballFlickerTalonPort);
     beltTalon = new WPI_TalonSRX(beltTalonPort);
     outputTalon = new WPI_TalonSRX(outputTalonPort);
   
     intakeTalon.setNeutralMode(NeutralMode.Brake);
+    ballFlickerTalon.setNeutralMode(NeutralMode.Brake);
     beltTalon.setNeutralMode(NeutralMode.Brake);
     outputTalon.setNeutralMode(NeutralMode.Brake);
 
-    intakeSolenoid1 = new Solenoid(intakeSolenoid1Port);
-    intakeSolenoid2 = new Solenoid(intakeSolenoid2Port);
-    outputSolenoid = new Solenoid(outputSolenoidPort);
+    lowerIntakeSolenoid = new Solenoid(lowerIntakeSolenoidPort);
+    liftIntakeSolenoid = new Solenoid(liftIntakeSolenoidPort);
+    blockBlockSolenoid = new Solenoid(blockBlockSolenoidPort);
+    blockUnBlockSolenoid = new Solenoid(blockUnBlockSolenoidPort);
 
     ballSensorIn = new DigitalInput(ballSensorInPort);
     ballSensorOut = new DigitalInput(ballSensorOutPort);
-
-    ballCounterIn = new Counter(ballSensorIn);
-    ballCounterOut = new Counter(ballSensorOut);
   }
 
   //Intake motor
-  public double getIntake() {
-    return intakeTalon.get();
-  }
-
   public void setIntake(double x) {
     intakeTalon.set(x);
   }
 
-  public void stopIntake() {
-    intakeTalon.stopMotor();
+  // flicker motor
+  public void setFlicker(double x) {
+    flickerTalon.set(x);
   }
 
   //Belt motor
-  public double getBelt() {
-    return beltTalon.get();
-  }
-
   public void setBelt(double x) {
     beltTalon.set(x);
 
   }
 
-  public void stopBelt() {
-    beltTalon.stopMotor();
-  }
-
   //Output motor
-  public double getOutput() {
-    return outputTalon.get();
-  }
-
   public void setOutput(double x) {
     outputTalon.set(x);
-  }
-
-  public void stopOutput() {
-    outputTalon.stopMotor();
   }
 
   //Intake solenoids

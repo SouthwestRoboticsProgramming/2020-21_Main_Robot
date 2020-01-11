@@ -10,13 +10,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.CheesyDrive;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class ArcadeDrive extends CommandBase {
 
   private CheesyDrive cheesyDrive = new CheesyDrive();
-  private DriveTrain driveTrain;
+  private DriveTrainSubsystem driveTrain;
 
   private double prevPowLeft = 0;
   private double prevPowRight = 0;
@@ -24,7 +23,7 @@ public class ArcadeDrive extends CommandBase {
 
   public static final double maxSpeedDiff = 0.08;
 
-  public ArcadeDrive(DriveTrain driveTrain) {
+  public ArcadeDrive(DriveTrainSubsystem driveTrain) {
     this.driveTrain = driveTrain;
     addRequirements(this.driveTrain);
   }
