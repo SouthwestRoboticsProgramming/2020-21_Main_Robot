@@ -13,17 +13,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.wpilibj.Counter;
 
 public class BallSubsystem extends SubsystemBase {
   /**
    * The ball subsystem includes the intake motor and solenoids, the belt motor, and the output motor and solenoid.
    * It also includes two sensors used for counting stored balls.
-   * 
+   * The ballCounters are there to ensure that no balls are missed by the sensors.
    */
 
   private WPI_TalonSRX intakeTalon, beltTalon, outputTalon;
   private Solenoid intakeSolenoid1, intakeSolenoid2, outputSolenoid;
   private DigitalInput ballSensorIn, ballSensorOut;
+  private Counter ballCounterIn, ballCounterOut;
 
   private int intakeTalonPort = 0;
   private int beltTalonPort = 0;
@@ -35,6 +37,12 @@ public class BallSubsystem extends SubsystemBase {
 
   private int ballSensorInPort = 0;
   private int ballSensorOutPort = 0;
+
+  //TODO: make it possible to change storedBalls in shuffleboard
+  private int storedBalls = 3;
+  private final int maxStoredBalls = 5;
+
+  private boolean ballSystemIsForwards = true;
 
   public BallSubsystem() {
     intakeTalon = new WPI_TalonSRX(intakeTalonPort);
@@ -52,8 +60,11 @@ public class BallSubsystem extends SubsystemBase {
     ballSensorIn = new DigitalInput(ballSensorInPort);
     ballSensorOut = new DigitalInput(ballSensorOutPort);
 
+    ballCounterIn = new Counter(ballSensorIn);
+    ballCounterOut = new Counter(ballSensorOut);
   }
 
+  //Intake motor
   public double getIntake() {
     return intakeTalon.get();
   }
@@ -66,6 +77,7 @@ public class BallSubsystem extends SubsystemBase {
     intakeTalon.stopMotor();
   }
 
+  //Belt motor
   public double getBelt() {
     return beltTalon.get();
   }
@@ -79,6 +91,7 @@ public class BallSubsystem extends SubsystemBase {
     beltTalon.stopMotor();
   }
 
+  //Output motor
   public double getOutput() {
     return outputTalon.get();
   }
@@ -91,4 +104,23 @@ public class BallSubsystem extends SubsystemBase {
     outputTalon.stopMotor();
   }
 
+  //Intake solenoids
+
+  //Output solenoids
+
+  //Ball sensor in
+  public boolean getBallSensorIn() {
+    return ballSensorIn.get();
+  }
+
+  //Ball sensor out
+  public boolean getBallSensorOut() {
+    return ballSensorOut.get();
+  }
+
+  public void periodic() {
+  if (ballSystemIsForwards) {
+
+  }
+  }
 }
