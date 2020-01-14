@@ -42,6 +42,7 @@ public class WheelSubsystem extends SubsystemBase {
     pushSolenoid.set(x);
   }
 
+
   //Retract solenoid
   public void setRetractSolenoid(boolean x){
     retractSolenoid.set(x);
