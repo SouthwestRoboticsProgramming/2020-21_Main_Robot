@@ -17,19 +17,19 @@ public class BallSubsystem extends SubsystemBase {
   private Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, lowerBlockSolenoid, lowerUnBlockSolenoid, upperBlockSolenoid, upperUnBlockSolenoid;
   private DigitalInput ballSensorIn, ballSensorOut;
 
-  private int intakeTalonPort = 0,
+  private final int intakeTalonPort = 0,
               ballFlickerTalonPort = 1,
               beltTalonPort = 2,
               outputTalonPort = 3;
 
-  private int lowerIntakeSolenoidPort = 0,
+  private final int lowerIntakeSolenoidPort = 0,
               liftIntakeSolenoidPort = 1,
               lowerBlockSolenoidPort = 2,
               lowerUnBlockSolenoidPort = 3,
               upperBlockSolenoidPort = 4,
               upperUnBlockSolenoidPort = 5;
 
-  private int ballSensorInPort = 0,
+  private final int ballSensorInPort = 0,
               ballSensorOutPort = 1;
 
   private int storedBalls = 3;
