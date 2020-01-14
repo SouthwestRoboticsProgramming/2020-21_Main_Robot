@@ -32,9 +32,9 @@ public class RobotContainer {
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final CommandBase arcadeDrive = new ArcadeDrive(driveTrainSubsystem);
 
-  private Controller controller = new Controller();
-    private ControllerSet xbox = new ControllerSet();
-      private MappedController xBox = new MappedController(0);
+  // private Controller controller = new Controller();
+  //   private ControllerSet xbox = new ControllerSet();
+  //     private MappedController xBox = new MappedController(0);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -51,11 +51,6 @@ public class RobotContainer {
   }
 
   public void configureControllers() {
-    xbox.addMappedController(xBox);
-      xBox.mapAxis(Axis.centerDrive, 1)
-      .mapAxis(Axis.turnDrive, 0)
-      .mapButton(Buttons.quickTurn, 6);
-    controller.setDefaultControllerSet(xbox);
   }
 
   /**
@@ -82,14 +77,14 @@ public class RobotContainer {
 
   // Single joystick drive
   public double oneDrive() {
-    return -controller.getAxis(Axis.centerDrive);
+    return 0;
   }
 
   public double oneTurn() {
-    return controller.getAxis(Axis.turnDrive);
+    return 0;
   }
 
   public boolean oneQuickTurn() {
-    return controller.getButton(Buttons.quickTurn).get();
+    return false;
   }
 }

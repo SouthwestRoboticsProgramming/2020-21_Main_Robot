@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.subsystems;
 
 
@@ -12,35 +5,33 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import edu.wpi.first.wpilibj.Counter;
 
 public class BallSubsystem extends SubsystemBase {
-  /**
-   * The ball subsystem includes the intake motor and solenoids, the belt motor, and the output motor and solenoid.
-   * It also includes two sensors used for counting stored balls.
-   * The ballCounters are there to ensure that no balls are missed by the sensors.
-   */
-
-  private WPI_TalonSRX intakeTalon, ballFlickerTalon beltTalon, outputTalon;
-  private Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, blockBlockSolenoid, blockUnBlockSolenoid;
+  private WPI_TalonSRX intakeTalon, ballFlickerTalon, beltTalon, outputTalon;
+  private Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, lowerBlockSolenoid, lowerUnBlockSolenoid, upperBlockSolenoid, upperUnBlockSolenoid;
   private DigitalInput ballSensorIn, ballSensorOut;
 
   private int intakeTalonPort = 0,
-              ballFlickerTalonPort = 0,
-              beltTalonPort = 0,
-              outputTalonPort = 0;
+              ballFlickerTalonPort = 1,
+              beltTalonPort = 2,
+              outputTalonPort = 3;
 
   private int lowerIntakeSolenoidPort = 0,
-              liftIntakeSolenoidPort = 0,
-              blockBlockSolenoidPort = 0,
-              blockUnBlockSolenoidPort = 0;
+              liftIntakeSolenoidPort = 1,
+              lowerBlockSolenoidPort = 2,
+              lowerUnBlockSolenoidPort = 3,
+              upperBlockSolenoidPort = 4,
+              upperUnBlockSolenoidPort = 5;
 
   private int ballSensorInPort = 0,
-              ballSensorOutPort = 0;
+              ballSensorOutPort = 1;
 
   private int storedBalls = 3;
   private final int maxStoredBalls = 5;
+  private ballMode mode;
 
   private boolean ballSensorInBlocked = false,
                   ballSensorOutBlocked = false;
@@ -56,39 +47,94 @@ public class BallSubsystem extends SubsystemBase {
     beltTalon.setNeutralMode(NeutralMode.Brake);
     outputTalon.setNeutralMode(NeutralMode.Brake);
 
-    lowerIntakeSolenoid = new Solenoid(lowerIntakeSolenoidPort);
-    liftIntakeSolenoid = new Solenoid(liftIntakeSolenoidPort);
-    blockBlockSolenoid = new Solenoid(blockBlockSolenoidPort);
-    blockUnBlockSolenoid = new Solenoid(blockUnBlockSolenoidPort);
+    lowerIntakeSolenoid = new Solenoid(37, lowerIntakeSolenoidPort);
+    liftIntakeSolenoid = new Solenoid(37, liftIntakeSolenoidPort);
+    lowerBlockSolenoid = new Solenoid(37, lowerBlockSolenoidPort);
+    lowerUnBlockSolenoid = new Solenoid(37, lowerUnBlockSolenoidPort);
+    upperBlockSolenoid = new Solenoid(37, upperBlockSolenoidPort);
+    upperUnBlockSolenoid = new Solenoid(37, upperUnBlockSolenoidPort);
 
     ballSensorIn = new DigitalInput(ballSensorInPort);
     ballSensorOut = new DigitalInput(ballSensorOutPort);
   }
 
-  //Intake motor
-  public void setIntake(double x) {
-    intakeTalon.set(x);
+  // ball state
+  public enum ballMode{
+    intake,
+    hold,
+    unloadIntake,
+    unloadOutput;
   }
 
-  // flicker motor
-  public void setFlicker(double x) {
-    flickerTalon.set(x);
+  public void setBallMode(ballMode mode) {
+    double intakeSpeed = .5;
+    double flickerInSpeed = .5;
+      double flickerOutIntakeSpeed = -.5;
+    double beltsSpeed = .5;
+      double beltsOutIntakeSpeed = -.5;
+      double beltsOutOutputSpeed = .5;
+    double outputSpeed = .5;
+
+    if (mode == ballMode.intake) {
+      setBallState(true, false, true, intakeSpeed, flickerInSpeed, beltsSpeed, outputSpeed);
+    } else if (mode == ballMode.hold) {
+      setBallState(false, true, true, 0, 0, 0, 0);
+    } else if (mode == ballMode.unloadIntake) {
+      setBallState(false, false, true, 0, flickerOutIntakeSpeed, beltsOutIntakeSpeed, 0);
+    } else if (mode == ballMode.unloadOutput) {
+      setBallState(false, false, false, 0, 0, beltsOutOutputSpeed, outputSpeed);
+    }
+    this.mode = mode;
+  }
+
+  public void setBallState(boolean lowerIntake, boolean lowerBlocked, boolean upperBlocked, double ballIntake, 
+                          double ballFlicker, double belts, double output) {
+    setIntake(lowerIntake);
+    setLowerBlocker(lowerBlocked);
+    setUpperBlocker(upperBlocked);
+    setIntake(ballIntake);
+    setBallFlicker(ballFlicker);
+    setBelt(belts);
+    setOutput(output);
+  }
+
+
+  //Intake motor
+  public void setIntake(double x) {
+    intakeTalon.set(ControlMode.PercentOutput, x);
+  }
+
+  // ball flicker motor
+  public void setBallFlicker(double x) {
+    ballFlickerTalon.set(ControlMode.PercentOutput, x);
   }
 
   //Belt motor
   public void setBelt(double x) {
-    beltTalon.set(x);
-
+    beltTalon.set(ControlMode.PercentOutput, x);
   }
 
   //Output motor
   public void setOutput(double x) {
-    outputTalon.set(x);
+    outputTalon.set(ControlMode.PercentOutput, x);
   }
 
   //Intake solenoids
+  public void setIntake(Boolean intake) {
+    liftIntakeSolenoid.set(!intake);
+    lowerIntakeSolenoid.set(intake);
+  }
 
-  //Output solenoids
+  //Blocker solenoids
+  public void setLowerBlocker(Boolean blocked) {
+    lowerBlockSolenoid.set(blocked);
+    lowerUnBlockSolenoid.set(!blocked);
+  }
+
+  public void setUpperBlocker(Boolean blocked) {
+    upperBlockSolenoid.set(blocked);
+    upperUnBlockSolenoid.set(!blocked);
+  }
 
   //Ball sensor in
   public boolean getBallSensorIn() {
@@ -100,9 +146,31 @@ public class BallSubsystem extends SubsystemBase {
     return ballSensorOut.get();
   }
 
+  @Override
   public void periodic() {
-  if (ballSystemIsForwards) {
 
-  }
+    // countBalls
+    if (getBallSensorIn() && !ballSensorInBlocked) {
+      if (mode == ballMode.intake) {
+        storedBalls ++;
+      } else if (mode == ballMode.unloadIntake) {
+        storedBalls --;
+      }
+      ballSensorInBlocked = true;
+    } else if (!getBallSensorIn() && ballSensorInBlocked) {
+      ballSensorInBlocked = false;
+    }
+
+    if (getBallSensorOut() && !ballSensorOutBlocked) {
+      storedBalls --;
+      ballSensorOutBlocked = true;
+    } else if (!getBallSensorOut() && ballSensorOutBlocked) {
+      ballSensorOutBlocked = false;
+    }
+
+    // stop once 5 balls
+    if (storedBalls >= maxStoredBalls) {
+      setBallMode(ballMode.hold);
+    }
   }
 }

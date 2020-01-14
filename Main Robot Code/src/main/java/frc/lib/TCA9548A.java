@@ -14,24 +14,17 @@ import edu.wpi.first.wpilibj.I2C.Port;
  * Add your docs here.
  */
 public class TCA9548A {
-    // int adress = 0x70;
-    // I2C i2c = new I2C(Port.kOnboard, adress);
+    int adress = 0x70;
+    I2C i2c = new I2C(Port.kOnboard, adress);
 
-    // public void transmit(int port, int data) {
-    //     i2c.
-    //     i2c.write(adress, data);
-    // }
+    public void selectBus(int bus) {
+        i2c.write(adress, 1 << 0);
+    }
 
-
+    public void tcaselect(int i) {
+        if (i > 7) return;
+       
+        i2c.write(adress, 1 << i);
+      }
 
 }
-
-
- 
-// void tcaselect(uint8_t i) {
-//   if (i > 7) return;
- 
-//   Wire.beginTransmission(TCAADDR);
-//   Wire.write(1 << i);
-//   Wire.endTransmission();  
-// }
