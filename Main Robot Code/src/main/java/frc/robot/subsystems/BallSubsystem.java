@@ -4,13 +4,16 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class BallSubsystem extends SubsystemBase {
-  private WPI_TalonSRX intakeTalon, ballFlickerTalon, beltTalon, outputTalon;
+  private WPI_TalonSRX intakeTalon;
+  private WPI_VictorSPX ballFlickerVictor, beltVictor, outputVictor;
   private Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, lowerBlockSolenoid, lowerUnBlockSolenoid, upperBlockSolenoid, upperUnBlockSolenoid;
   private DigitalInput ballSensorIn, ballSensorOut;
 
@@ -38,14 +41,14 @@ public class BallSubsystem extends SubsystemBase {
 
   public BallSubsystem() {
     intakeTalon = new WPI_TalonSRX(intakeTalonPort);
-    ballFlickerTalon = new WPI_TalonSRX(ballFlickerTalonPort);
-    beltTalon = new WPI_TalonSRX(beltTalonPort);
-    outputTalon = new WPI_TalonSRX(outputTalonPort);
+    ballFlickerVictor = new WPI_VictorSPX(ballFlickerTalonPort);
+    beltVictor = new WPI_VictorSPX(beltTalonPort);
+    outputVictor = new WPI_VictorSPX(outputTalonPort);
   
     intakeTalon.setNeutralMode(NeutralMode.Brake);
-    ballFlickerTalon.setNeutralMode(NeutralMode.Brake);
-    beltTalon.setNeutralMode(NeutralMode.Brake);
-    outputTalon.setNeutralMode(NeutralMode.Brake);
+    ballFlickerVictor.setNeutralMode(NeutralMode.Brake);
+    beltVictor.setNeutralMode(NeutralMode.Brake);
+    outputVictor.setNeutralMode(NeutralMode.Brake);
 
     lowerIntakeSolenoid = new Solenoid(37, lowerIntakeSolenoidPort);
     liftIntakeSolenoid = new Solenoid(37, liftIntakeSolenoidPort);
@@ -87,7 +90,7 @@ public class BallSubsystem extends SubsystemBase {
     this.mode = mode;
   }
 
-  public void setBallState(boolean lowerIntake, boolean lowerBlocked, boolean upperBlocked, double ballIntake, 
+  private void setBallState(boolean lowerIntake, boolean lowerBlocked, boolean upperBlocked, double ballIntake, 
                           double ballFlicker, double belts, double output) {
     setIntake(lowerIntake);
     setLowerBlocker(lowerBlocked);
@@ -98,40 +101,39 @@ public class BallSubsystem extends SubsystemBase {
     setOutput(output);
   }
 
-
   //Intake motor
-  public void setIntake(double x) {
+  private void setIntake(double x) {
     intakeTalon.set(ControlMode.PercentOutput, x);
   }
 
   // ball flicker motor
-  public void setBallFlicker(double x) {
-    ballFlickerTalon.set(ControlMode.PercentOutput, x);
+  private void setBallFlicker(double x) {
+    ballFlickerVictor.set(ControlMode.PercentOutput, x);
   }
 
   //Belt motor
-  public void setBelt(double x) {
-    beltTalon.set(ControlMode.PercentOutput, x);
+  private void setBelt(double x) {
+    beltVictor.set(ControlMode.PercentOutput, x);
   }
 
   //Output motor
-  public void setOutput(double x) {
-    outputTalon.set(ControlMode.PercentOutput, x);
+  private void setOutput(double x) {
+    outputVictor.set(ControlMode.PercentOutput, x);
   }
 
   //Intake solenoids
-  public void setIntake(Boolean intake) {
+  private void setIntake(Boolean intake) {
     liftIntakeSolenoid.set(!intake);
     lowerIntakeSolenoid.set(intake);
   }
 
   //Blocker solenoids
-  public void setLowerBlocker(Boolean blocked) {
+  private void setLowerBlocker(Boolean blocked) {
     lowerBlockSolenoid.set(blocked);
     lowerUnBlockSolenoid.set(!blocked);
   }
 
-  public void setUpperBlocker(Boolean blocked) {
+  private void setUpperBlocker(Boolean blocked) {
     upperBlockSolenoid.set(blocked);
     upperUnBlockSolenoid.set(!blocked);
   }
@@ -148,7 +150,6 @@ public class BallSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
     // countBalls
     if (getBallSensorIn() && !ballSensorInBlocked) {
       if (mode == ballMode.intake) {
