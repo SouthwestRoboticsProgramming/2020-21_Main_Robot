@@ -170,7 +170,7 @@ public class BallSubsystem extends SubsystemBase {
     }
 
     // stop once 5 balls
-    if (storedBalls >= maxStoredBalls) {
+    if (storedBalls >= maxStoredBalls && mode == ballMode.intake) {
       setBallMode(ballMode.hold);
     }
   }
