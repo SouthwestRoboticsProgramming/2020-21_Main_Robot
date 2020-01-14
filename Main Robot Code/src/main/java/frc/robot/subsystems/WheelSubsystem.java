@@ -1,12 +1,25 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.TCA9548A;
 
 public class WheelSubsystem extends SubsystemBase {
+
+  private WPI_TalonSRX Spinner;
+  private Solenoid pushToSpinner, retractFronSpinner;
+
+  public WheelSubsystem() {
+
+  }
+
+
+  
+
 
   I2C.Port i2cPort = I2C.Port.kOnboard;
   ColorSensorV3 cs = new ColorSensorV3(i2cPort);
