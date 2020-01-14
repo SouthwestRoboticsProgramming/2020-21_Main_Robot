@@ -5,21 +5,47 @@ import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.TCA9548A;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 public class WheelSubsystem extends SubsystemBase {
 
-  private WPI_TalonSRX Spinner;
-  private Solenoid pushToSpinner, retractFronSpinner;
+  private WPI_TalonSRX spinnerTalon;
+  private Solenoid pushSolenoid, retractSolenoid;
+  private ADXRS450_Gyro gyro;
 
+  private final int spinnerTalonPort = 0;
+  
+  private final int pushSolenoidPort = 0,
+                    retractSolenoidPort = 0;
+  
   public WheelSubsystem() {
-
+    spinnerTalon = new WPI_TalonSRX(spinnerTalonPort);
+    pushSolenoid = new Solenoid(pushSolenoidPort);
+    retractSolenoid = new Solenoid(retractSolenoidPort);
+    gyro = new ADXRS450_Gyro(Port.kMXP);
   }
 
+  //Spinner talon SRX
+  public void setSpinnerTalon(double x){
+    spinnerTalon.set(x);
+  }
 
+  public double getSpinnerTalon(){
+    return spinnerTalon.get();
+  }
   
+  //Push solenoid
+  public void setPushSolenoid(boolean x){
+    pushSolenoid.set(x);
+  }
 
+  //Retract solenoid
+  public void setRetractSolenoid(boolean x){
+    retractSolenoid.set(x);
+  }
 
   I2C.Port i2cPort = I2C.Port.kOnboard;
   ColorSensorV3 cs = new ColorSensorV3(i2cPort);
