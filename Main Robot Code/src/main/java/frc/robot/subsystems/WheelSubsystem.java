@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.TCA9548A;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import frc.robot.Constants;
 
 public class WheelSubsystem extends SubsystemBase {
 
@@ -23,8 +24,8 @@ public class WheelSubsystem extends SubsystemBase {
   
   public WheelSubsystem() {
     spinnerTalon = new WPI_TalonSRX(spinnerTalonPort);
-    pushSolenoid = new Solenoid(pushSolenoidPort);
-    retractSolenoid = new Solenoid(retractSolenoidPort);
+    pushSolenoid = new Solenoid(Constants.PCMID, pushSolenoidPort);
+    retractSolenoid = new Solenoid(Constants.PCMID, retractSolenoidPort);
     gyro = new ADXRS450_Gyro(Port.kMXP);
   }
 

@@ -5,12 +5,12 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
 import edu.wpi.first.wpilibj.DigitalInput;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import frc.robot.Constants;
 
+//TODO: Clarify lift, lower, block, and unblock in names
 public class BallSubsystem extends SubsystemBase {
   private WPI_TalonSRX intakeTalon;
   private WPI_VictorSPX ballFlickerVictor, beltVictor, outputVictor;
@@ -50,12 +50,12 @@ public class BallSubsystem extends SubsystemBase {
     beltVictor.setNeutralMode(NeutralMode.Brake);
     outputVictor.setNeutralMode(NeutralMode.Brake);
 
-    lowerIntakeSolenoid = new Solenoid(37, lowerIntakeSolenoidPort);
-    liftIntakeSolenoid = new Solenoid(37, liftIntakeSolenoidPort);
-    lowerBlockSolenoid = new Solenoid(37, lowerBlockSolenoidPort);
-    lowerUnBlockSolenoid = new Solenoid(37, lowerUnBlockSolenoidPort);
-    upperBlockSolenoid = new Solenoid(37, upperBlockSolenoidPort);
-    upperUnBlockSolenoid = new Solenoid(37, upperUnBlockSolenoidPort);
+    lowerIntakeSolenoid = new Solenoid(Constants.PCMID, lowerIntakeSolenoidPort);
+    liftIntakeSolenoid = new Solenoid(Constants.PCMID, liftIntakeSolenoidPort);
+    lowerBlockSolenoid = new Solenoid(Constants.PCMID, lowerBlockSolenoidPort);
+    lowerUnBlockSolenoid = new Solenoid(Constants.PCMID, lowerUnBlockSolenoidPort);
+    upperBlockSolenoid = new Solenoid(Constants.PCMID, upperBlockSolenoidPort);
+    upperUnBlockSolenoid = new Solenoid(Constants.PCMID, upperUnBlockSolenoidPort);
 
     ballSensorIn = new DigitalInput(ballSensorInPort);
     ballSensorOut = new DigitalInput(ballSensorOutPort);
@@ -90,13 +90,14 @@ public class BallSubsystem extends SubsystemBase {
     this.mode = mode;
   }
 
-  private void setBallState(boolean lowerIntake, boolean lowerBlocked, boolean upperBlocked, double ballIntake, 
-                          double ballFlicker, double belts, double output) {
-    setIntake(lowerIntake);
+  
+  private void setBallState(boolean intakeLowered, boolean lowerBlocked, boolean upperBlocked, double ballIntakeSpeed, 
+                          double ballFlickerSpeed, double belts, double output) {
+    setIntake(intakeLowered);
     setLowerBlocker(lowerBlocked);
     setUpperBlocker(upperBlocked);
-    setIntake(ballIntake);
-    setBallFlicker(ballFlicker);
+    setIntake(ballIntakeSpeed);
+    setBallFlicker(ballFlickerSpeed);
     setBelt(belts);
     setOutput(output);
   }
