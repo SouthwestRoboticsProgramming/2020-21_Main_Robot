@@ -6,10 +6,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomonousCommand;
+import frc.robot.commands.BallSubsystemCommand;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.WheelSubsystem;
+import frc.robot.subsystems.BallSubsystem.ballMode;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -26,6 +28,7 @@ public class RobotContainer {
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final CommandBase arcadeDrive = new ArcadeDrive(driveTrainSubsystem);
+  private final CommandBase ballSubsystemCommand = new BallSubsystemCommand(ballSubsystem, ballMode.hold);
 
   // private Controller controller = new Controller();
   //   private ControllerSet xbox = new ControllerSet();
@@ -36,7 +39,10 @@ public class RobotContainer {
    */
   public RobotContainer() {
     driveTrainSubsystem.setDefaultCommand(arcadeDrive);
+    ballSubsystem.setDefaultCommand(ballSubsystemCommand);
+
     arcadeDrive.schedule();
+    ballSubsystemCommand.schedule();
 
     // configure controllers
     configureControllers();

@@ -11,6 +11,9 @@ import frc.lib.TCA9548A;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import frc.robot.Constants;
 
+/*
+* Wheel subsystem includes all motors, solenoids, and sensors assosiated with spinning the wheel of fortune.
+*/
 public class WheelSubsystem extends SubsystemBase {
 
   private WPI_TalonSRX spinnerTalon;
@@ -49,6 +52,7 @@ public class WheelSubsystem extends SubsystemBase {
     retractSolenoid.set(x);
   }
 
+  //Color sensor
   I2C.Port i2cPort = I2C.Port.kOnboard;
   ColorSensorV3 cs = new ColorSensorV3(i2cPort);
   TCA9548A TCA9548A = new TCA9548A();

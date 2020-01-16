@@ -10,7 +10,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import frc.robot.Constants;
 
-//TODO: Clarify lift, lower, block, and unblock in names
+//TODO: Clarify lift, lower, block, and unblock in solenoid names. Difficult to understand what does what.
+
+/*
+* Ball subsystem includes all motors, solenoids, and sensors assosiated with picking up and storing balls.
+*/
 public class BallSubsystem extends SubsystemBase {
   private WPI_TalonSRX intakeTalon;
   private WPI_VictorSPX ballFlickerVictor, beltVictor, outputVictor;
