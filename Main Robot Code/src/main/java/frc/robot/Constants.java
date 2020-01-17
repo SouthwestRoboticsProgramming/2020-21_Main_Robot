@@ -17,4 +17,5 @@ package frc.robot;
  */
 public final class Constants {
     public static final int PCMID = 37;
+    public static final int controllerPort = 0;
 }

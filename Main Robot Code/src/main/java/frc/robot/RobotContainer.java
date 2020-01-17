@@ -2,16 +2,17 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
+// import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.AutonomonousCommand;
-import frc.robot.commands.BallSubsystemCommand;
+import frc.robot.commands.*;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.WheelSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
+import frc.robot.controllers.Xbox;
+import frc.robot.interfaces.IController.Button;
+import frc.robot.Constants;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -19,12 +20,14 @@ import frc.robot.subsystems.BallSubsystem.ballMode;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
   private final BallSubsystem ballSubsystem = new BallSubsystem();
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
   private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
   private final WheelSubsystem wheelSubsystem = new WheelSubsystem();
   
+  private final Xbox controller = new Xbox(Constants.controllerPort);;
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final CommandBase arcadeDrive = new ArcadeDrive(driveTrainSubsystem);
@@ -52,6 +55,7 @@ public class RobotContainer {
   }
 
   public void configureControllers() {
+    
   }
 
   /**
@@ -62,6 +66,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Create some buttons
+    controller.getButton(Xbox.Button.intake).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.intake));
+    controller.getButton(Xbox.Button.hold).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.hold));
+    controller.getButton(Xbox.Button.unloadIntake).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.unloadIntake));
+    controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.unloadOutput));
 
     // Connect the buttons to commands
   }
@@ -72,7 +80,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public edu.wpi.first.wpilibj2.command.Command getAutonomousCommand() {
     return m_autonomousCommand;
   }
 
