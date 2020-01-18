@@ -6,22 +6,25 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.controllers;
-import frc.robot.interfaces.IController;
-import edu.wpi.first.wpilibj.XboxController;
+
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.Timer;
-import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj.Joystick.AxisType;
+import edu.wpi.first.wpilibj.XboxController;
 /**
  * Add your docs here.
  */
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;;
+import frc.lib.TimeOutTimer;
+import frc.lib.Looper.Loop;
+import frc.lib.Looper.Looper;
+import frc.robot.interfaces.IController;
+import frc.robot.subsystems.DriveTrainSubsystem;;
 public class Xbox implements IController {
     final int PORT;
     private XboxController xbox;
     private double reverseVal = 1;
+    private Looper runbleLooper;
 
     public Xbox(int port) {
         PORT = port;
@@ -46,13 +49,29 @@ public class Xbox implements IController {
             case hold : return new JoystickButton(xbox, XboxMap.B.toInt());
             case unloadIntake : return new JoystickButton(xbox, XboxMap.X.toInt());
             case unloadOutput : return new JoystickButton(xbox, XboxMap.Y.toInt());
+            case wheelSpin : return new JoystickButton(xbox, XboxMap.Select.toInt());
+            case wheelPosition : return new JoystickButton(xbox, XboxMap.Windows.toInt());
             default         : return new JoystickButton(xbox, XboxMap.X.toInt());
         }
     }
     
-    public void rumble(double amount) {
-        xbox.setRumble(RumbleType.kLeftRumble, amount);
-        xbox.setRumble(RumbleType.kRightRumble,amount);
+    public void rumble(RumbleType type, long ms) {
+        TimeOutTimer timer = new TimeOutTimer(ms);
+        Loop loop = new Loop(){
+            @Override public void onStart() {
+                xbox.setRumble(type, 1);
+                timer.start();
+            }
+            @Override public void onLoop() {
+              if (timer.getTimedOut()) {runbleLooper.stop();}
+            }
+            @Override public void onStop() {
+                timer.stop();
+            }
+          };
+          runbleLooper = new Looper(loop, 100);
+          runbleLooper.start();
+        
     }
     public double getTrigger(Hand hand) {
         return xbox.getTriggerAxis(hand);
