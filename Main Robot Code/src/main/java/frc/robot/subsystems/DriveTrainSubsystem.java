@@ -122,6 +122,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
 		return rightMaster.getSelectedSensorVelocity(0) / maxVelocity;
 	}
 
+	public double percentToVelocity(double percent) {
+		return percent * maxVelocity;
+	}
+
 	public void driveMotors(double left, double right) {
 		driveMotors(left, right, ControlMode.PercentOutput);
 	}	

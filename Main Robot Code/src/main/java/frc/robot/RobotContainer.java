@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.ManualDriveCommand;
-import frc.robot.commands.WheelOfFortuneCommand;
+import frc.robot.commands.WheelCommand;
 import frc.robot.commands.AutonomonousCommand;
 import frc.robot.commands.BallCommand;
 import frc.robot.commands.ClimbCommand;
@@ -36,8 +36,8 @@ public class RobotContainer {
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final CommandBase manualDrive = new ManualDriveCommand(driveTrainSubsystem);
   private final CommandBase ballSubsystemCommand = new BallCommand(ballSubsystem, ballMode.hold);
-  private final CommandBase spinWheel = new WheelOfFortuneCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelOfFortuneCommand.Spin.Revolutions);
-  private final CommandBase positionWheel = new WheelOfFortuneCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelOfFortuneCommand.Spin.Position);
+  private final CommandBase spinWheel = new WheelCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelCommand.Spin.Revolutions);
+  private final CommandBase positionWheel = new WheelCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelCommand.Spin.Position);
   private final CommandBase climb = new ClimbCommand(climbSubsystem);
 
   public RobotContainer() {

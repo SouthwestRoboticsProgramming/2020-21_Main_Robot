@@ -19,7 +19,7 @@ import frc.robot.subsystems.DriverFeedbackSubsystem;
 import frc.robot.subsystems.DriverFeedbackSubsystem.PresetColors;
 import frc.robot.subsystems.WheelSubsystem;
 
-public class WheelOfFortuneCommand extends CommandBase {
+public class WheelCommand extends CommandBase {
   private final WheelSubsystem m_wheelSubsystem;
   private final DriveTrainSubsystem driveTrainSubsystem;
   private DriverFeedbackSubsystem driverFeedback;
@@ -38,7 +38,7 @@ public class WheelOfFortuneCommand extends CommandBase {
     Position;
   }
 
-  public WheelOfFortuneCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, DriverFeedbackSubsystem driverFeedbackSubsystem, Spin spin) {
+  public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, DriverFeedbackSubsystem driverFeedbackSubsystem, Spin spin) {
     addRequirements(wheelSubsystem);
     this.m_wheelSubsystem = wheelSubsystem;
     this.driveTrainSubsystem = driveTrainSubsystem;
@@ -46,7 +46,7 @@ public class WheelOfFortuneCommand extends CommandBase {
     this.spin = spin;
   }
 
-  public WheelOfFortuneCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, DriverFeedbackSubsystem driverFeedbackSubsystem,  Spin spin, WheelSubsystem.Color color) {
+  public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, DriverFeedbackSubsystem driverFeedbackSubsystem,  Spin spin, WheelSubsystem.Color color) {
     this.m_wheelSubsystem = wheelSubsystem;
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.driverFeedback = driverFeedbackSubsystem;
@@ -64,7 +64,7 @@ public class WheelOfFortuneCommand extends CommandBase {
     while (pid.getError() > 1) {
       driverFeedback.setColor(PresetColors.orange);
       pid.setActual(m_wheelSubsystem.getAngle());
-      driveTrainSubsystem.driveAtAngle(driveTrainSubsystem.getVelocity(pid.getOutput()), 0, ControlMode.Velocity);
+      driveTrainSubsystem.driveAtAngle(driveTrainSubsystem.percentToVelocity(pid.getOutput()), 0, ControlMode.Velocity);
     }
     driverFeedback.setColor(PresetColors.green);
     holdPosition();
@@ -162,7 +162,7 @@ public class WheelOfFortuneCommand extends CommandBase {
       @Override public void onLoop() {
         if (finished) {positionHolder.stop();}
         pid.setActual(m_wheelSubsystem.getAngle());
-        driveTrainSubsystem.driveAtAngle(driveTrainSubsystem.getVelocity(pid.getOutput()), 0, ControlMode.Velocity);
+        driveTrainSubsystem.driveAtAngle(driveTrainSubsystem.percentToVelocity(pid.getOutput()), 0, ControlMode.Velocity);
       }
       @Override public void onStop() {
       }
