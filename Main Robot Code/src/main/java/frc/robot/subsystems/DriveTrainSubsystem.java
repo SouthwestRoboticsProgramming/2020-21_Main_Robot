@@ -106,11 +106,19 @@ public class DriveTrainSubsystem extends SubsystemBase {
 		rightSlave.setNeutralMode(neutralMode);
 	}
 
-	public double getLeftVelocityPercent(double percent) {
+	public double getLeftVelocity() {
+		return leftMaster.getSelectedSensorVelocity(0);
+	}
+
+	public double getLeftVelocityPercent() {
 		return leftMaster.getSelectedSensorVelocity(0) / maxVelocity;
 	}
 
-	public double getRightVelocityPercent(double percent) {
+	public double getRightVelocity() {
+		return rightMaster.getSelectedSensorVelocity(0);
+	}
+
+	public double getRightVelocityPercent() {
 		return rightMaster.getSelectedSensorVelocity(0) / maxVelocity;
 	}
 
