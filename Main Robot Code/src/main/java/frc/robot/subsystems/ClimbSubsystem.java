@@ -9,12 +9,12 @@ import frc.robot.Robot;
 
 public class ClimbSubsystem extends SubsystemBase {
   
-  private WPI_TalonSRX winch, elevator;
+  private final WPI_TalonSRX winch, elevator;
 
   private final double maxVelocity = 100;
   private final int encoderTicks = 4096;
 
-  private int winchTalonPort = 4, 
+  private final int winchTalonPort = 4, 
               elevatorTalonPort = 5;
 
   public ClimbSubsystem() {
@@ -49,7 +49,7 @@ public class ClimbSubsystem extends SubsystemBase {
     return 1 / maxVelocity;
   }
 
-  public double getElevatorHight() {
+  public double getElevatorHeight() {
     return elevator.getSelectedSensorPosition() / encoderTicks;
   }
 
