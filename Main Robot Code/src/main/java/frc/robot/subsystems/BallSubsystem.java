@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 //TODO: Clarify lift, lower, block, and unblock in solenoid names. Difficult to understand what does what.
 
@@ -74,13 +75,13 @@ public class BallSubsystem extends SubsystemBase {
   }
 
   public void setBallMode(ballMode mode) {
-    double intakeSpeed = .5;
-    double flickerInSpeed = .5;
-      double flickerOutIntakeSpeed = -.5;
-    double beltsSpeed = .5;
-      double beltsOutIntakeSpeed = -.5;
-      double beltsOutOutputSpeed = .5;
-    double outputSpeed = .5;
+    double intakeSpeed = Robot.shuffleBoard.ballIntakeSpeed.getDouble(0);
+    double flickerInSpeed = Robot.shuffleBoard.ballFlickerInSpeed.getDouble(0);
+      double flickerOutIntakeSpeed = Robot.shuffleBoard.ballFluckerOutIntakeSpeed.getDouble(0);
+    double beltsSpeed = Robot.shuffleBoard.ballBeltsSpeed.getDouble(0);
+      double beltsOutIntakeSpeed = Robot.shuffleBoard.ballBeltsOutIntakeSpeed.getDouble(0);
+      double beltsOutOutputSpeed = Robot.shuffleBoard.ballBeltsOutOutputSpeed.getDouble(0);
+    double outputSpeed = Robot.shuffleBoard.ballOutputSpeed.getDouble(0);
 
     if (mode == ballMode.intake) {
       setBallState(true, false, true, intakeSpeed, flickerInSpeed, beltsSpeed, outputSpeed);

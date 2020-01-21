@@ -62,16 +62,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
 	}
 
 	public double[] getDrivePid() {
-		double[] drivePID = new double[] {Robot.shuffleBoard.drivePidP.getDouble(0)
-										 ,Robot.shuffleBoard.drivePidI.getDouble(0)
-										 ,Robot.shuffleBoard.drivePidD.getDouble(0)};
+		double[] drivePID = new double[] {Robot.shuffleBoard.drivePidP.getDouble(0),
+										  Robot.shuffleBoard.drivePidI.getDouble(0),
+										  Robot.shuffleBoard.drivePidD.getDouble(0)};
 		return drivePID;
 	}
 
 	public double[] getTurnPid() {
-		double[] turnPID = new double[] {Robot.shuffleBoard.driveTurnPidP.getDouble(0)
-										 ,Robot.shuffleBoard.driveTurnPidI.getDouble(0)
-										 ,Robot.shuffleBoard.driveTurnPidD.getDouble(0)};
+		double[] turnPID = new double[] {Robot.shuffleBoard.driveTurnPidP.getDouble(0),
+										 Robot.shuffleBoard.driveTurnPidI.getDouble(0),
+										 Robot.shuffleBoard.driveTurnPidD.getDouble(0)};
 		return turnPID;
 	}
 

@@ -5,12 +5,14 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class ClimbSubsystem extends SubsystemBase {
   
   private WPI_TalonSRX winch, elevator;
 
   private final double maxVelocity = 100;
+  private final int encoderTicks = 4096;
 
   private int winchTalonPort = 4, 
               elevatorTalonPort = 5;
@@ -25,10 +27,10 @@ public class ClimbSubsystem extends SubsystemBase {
     elevator.setSensorPhase(true);
     elevator.setInverted(false);
 
-    elevator.config_kP(0, 0);
-    elevator.config_kI(0, 0);
-    elevator.config_kD(0, 0);
-    elevator.config_kF(0, 0);
+    elevator.config_kP(0, Robot.shuffleBoard.climbElevatorPidP.getDouble(0));
+    elevator.config_kI(0, Robot.shuffleBoard.climbElevatorPidI.getDouble(0));
+    elevator.config_kD(0, Robot.shuffleBoard.climbElevatorPidD.getDouble(0));
+    elevator.config_kF(0, Robot.shuffleBoard.climbElevatorPidF.getDouble(0));
 
     elevator.configForwardSoftLimitThreshold(1300);
 		elevator.configForwardSoftLimitEnable(false);
@@ -47,12 +49,26 @@ public class ClimbSubsystem extends SubsystemBase {
     return 1 / maxVelocity;
   }
 
+  public double getElevatorHight() {
+    return elevator.getSelectedSensorPosition() / encoderTicks;
+  }
+
   public void setWinch(double percent) {
     winch.set(ControlMode.PercentOutput, percent);
   }
 
+  public void stopWinch() {
+    winch.set(ControlMode.PercentOutput, 0);
+    winch.stopMotor();
+  }
+
   public void setelevator(double velocity) {
     elevator.set(ControlMode.Velocity, velocity);
+  }
+
+  public void stopElevator() {
+    elevator.set(ControlMode.PercentOutput, 0);
+    elevator.stopMotor();
   }
 
   public boolean elevatorLowerLimit() {

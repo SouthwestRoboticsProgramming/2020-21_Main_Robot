@@ -10,6 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.ADIS16448_IMU;
+import frc.robot.sensors.Limelight;
 import frc.robot.sensors.ShuffleBoard;
 
 /**
@@ -22,6 +24,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   public static RobotContainer robotContainer;
   public static ShuffleBoard shuffleBoard = new ShuffleBoard();
+  public static ADIS16448_IMU gyro = new ADIS16448_IMU();
+  public static Limelight limelight = new Limelight();
 
   /**
    * This function is run when the robot is first started up and should be used for any

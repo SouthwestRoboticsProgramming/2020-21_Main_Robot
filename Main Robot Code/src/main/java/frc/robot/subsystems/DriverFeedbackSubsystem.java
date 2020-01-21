@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class DriverFeedbackSubsystem extends SubsystemBase {
@@ -63,8 +64,11 @@ public class DriverFeedbackSubsystem extends SubsystemBase {
     getFadedColorsValue(color, percent);
   }
 
-  public void setRumble(RumbleType type, double time) {
-    robotContainer.setRumble(type, amount);
+  public void errorRumble() {
+    setRumble(RumbleType.kLeftRumble, (Long)Robot.shuffleBoard.driverErrorRumbleLength.getNumber(0));
+
+  public void setRumble(RumbleType type, long ms) {
+    robotContainer.setRumble(type, ms);
   }
 
   @Override

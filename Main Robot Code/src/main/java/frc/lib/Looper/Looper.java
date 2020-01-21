@@ -25,6 +25,15 @@ public class Looper {
     }
 
     /**
+     * Returns the time of the loop.
+     *
+     * @return The loopTime 
+     */
+    public double getLoopTime() {
+        return loopTime;
+    }
+
+    /**
      * Start looping
      */
     public void start() {

@@ -38,6 +38,8 @@ public interface IController {
         intake,
         hold,
         unloadIntake,
-        unloadOutput;
+        unloadOutput,
+        wheelSpin,
+        wheelPosition;
     }
 }

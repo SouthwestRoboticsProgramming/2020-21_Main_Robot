@@ -2,17 +2,20 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-// import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.*;
+import frc.robot.commands.ManualDrive;
+import frc.robot.commands.WheelOfFortune;
+import frc.robot.commands.AutonomonousCommand;
+import frc.robot.commands.BallSubsystemCommand;
+import frc.robot.commands.Climb;
+import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
+import frc.robot.subsystems.BallSubsystem.ballMode;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.DriverFeedbackSubsystem;
 import frc.robot.subsystems.WheelSubsystem;
-import frc.robot.subsystems.BallSubsystem.ballMode;
-import frc.robot.controllers.Xbox;
-import frc.robot.interfaces.IController.Button;
-import frc.robot.Constants;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -26,36 +29,24 @@ public class RobotContainer {
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
   private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
   private final WheelSubsystem wheelSubsystem = new WheelSubsystem();
+  private final DriverFeedbackSubsystem driverFeedback = new DriverFeedbackSubsystem(this);
   
   private final Xbox controller = new Xbox(Constants.controllerPort);;
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
-  private final CommandBase arcadeDrive = new ArcadeDrive(driveTrainSubsystem);
+  private final CommandBase manualDrive = new ManualDrive(driveTrainSubsystem);
   private final CommandBase ballSubsystemCommand = new BallSubsystemCommand(ballSubsystem, ballMode.hold);
+  private final CommandBase spinWheel = new WheelOfFortune(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelOfFortune.Spin.Revolutions);
+  private final CommandBase positionWheel = new WheelOfFortune(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelOfFortune.Spin.Position);
+  private final CommandBase climb = new Climb(climbSubsystem);
 
-  // private Controller controller = new Controller();
-  //   private ControllerSet xbox = new ControllerSet();
-  //     private MappedController xBox = new MappedController(0);
-
-  /**
-   * The container for the robot.  Contains subsystems, OI devices, and commands.
-   */
   public RobotContainer() {
-    driveTrainSubsystem.setDefaultCommand(arcadeDrive);
-    ballSubsystem.setDefaultCommand(ballSubsystemCommand);
-
-    arcadeDrive.schedule();
-    ballSubsystemCommand.schedule();
-
-    // configure controllers
-    configureControllers();
+    driveTrainSubsystem.setDefaultCommand(manualDrive); manualDrive.schedule();
+    ballSubsystem.setDefaultCommand(ballSubsystemCommand); ballSubsystemCommand.schedule();
+    climbSubsystem.setDefaultCommand(climb); climb.schedule();
 
     // Configure the button bindings
     configureButtonBindings();
-  }
-
-  public void configureControllers() {
-    
   }
 
   /**
@@ -70,6 +61,8 @@ public class RobotContainer {
     controller.getButton(Xbox.Button.hold).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.hold));
     controller.getButton(Xbox.Button.unloadIntake).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.unloadIntake));
     controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.unloadOutput));
+    controller.getButton(Xbox.Button.wheelPosition).whenPressed(positionWheel);
+    controller.getButton(Xbox.Button.wheelPosition).whenPressed(spinWheel);
 
     // Connect the buttons to commands
   }
@@ -95,5 +88,22 @@ public class RobotContainer {
 
   public boolean oneQuickTurn() {
     return false;
+  }
+
+  public double wallEffeciveness() {
+    return 0;
+  }
+
+  public double limelightEffeciveness() {
+    return 0;
+  }
+
+  // climb
+  public double climbOutput() {
+    return 0;
+  }
+
+  public void setRumble(RumbleType type, long ms) {
+    controller.rumble(type, ms);
   }
 }

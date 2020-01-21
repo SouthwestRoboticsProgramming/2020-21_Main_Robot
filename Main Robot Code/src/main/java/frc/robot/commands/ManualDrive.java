@@ -7,15 +7,21 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.CheesyDrive;
+import frc.lib.PID;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class ArcadeDrive extends CommandBase {
+public class ManualDrive extends CommandBase {
 
   private CheesyDrive cheesyDrive = new CheesyDrive();
   private DriveTrainSubsystem driveTrain;
+  private double[] tPid = driveTrain.getTurnPid();
+  private PID wallFollow = new PID(tPid[0], tPid[1], tPid[2]);
+  private PID limeLight = new PID(tPid[0], tPid[1], tPid[2]);
 
   private double prevPowLeft = 0;
   private double prevPowRight = 0;
@@ -23,8 +29,14 @@ public class ArcadeDrive extends CommandBase {
 
   public static final double maxSpeedDiff = 0.08;
 
-  public ArcadeDrive(DriveTrainSubsystem driveTrain) {
+  public enum DriveType {
+    arcade, cheezy, field;
+  }
+
+  public ManualDrive(DriveTrainSubsystem driveTrain) {
     this.driveTrain = driveTrain;
+    wallFollow.setSetPoint(0);
+    limeLight.setSetPoint(0);
     addRequirements(this.driveTrain);
   }
 
@@ -37,36 +49,55 @@ public class ArcadeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double leftPow = Robot.robotContainer.oneDrive();
-    double rightPow = leftPow;
-    double rotation = Robot.robotContainer.oneTurn() * .55;
+    double leftAuto = 0;
+    double rightAuto = 0;
 
-    // if (!Robot.shuffleBoard.cheezyDrive.getBoolean(true)) { // Arcade Drive
-    if(false) {
-      leftPow = limitAcceleration(leftPow, prevPowLeft);
-      rightPow = limitAcceleration(rightPow, prevPowRight);
-      rotation = limitAcceleration(rotation, prevRotation);
+    // wallFollow
+    double wallOffset = wallFollow.getOutput(Robot.gyro.getGyroAngleX());
+    double wallEffectiveness = Robot.robotContainer.wallEffeciveness();
+    leftAuto += wallOffset * wallEffectiveness;
+    rightAuto -= wallOffset * wallEffectiveness;
+
+    // limelight
+    double limelightOffset = limeLight.getOutput(Robot.limelight.limelightX());
+    double limelightEffectiveness = Robot.robotContainer.limelightEffeciveness();
+    leftAuto += limelightOffset * limelightEffectiveness;
+    rightAuto -= limelightOffset * limelightEffectiveness;
+
+    // driver
+    double rotatMulti = .55;
+    double x = Robot.robotContainer.oneTurn();
+    double y = Robot.robotContainer.oneDrive();
+    boolean quickTurn = Robot.robotContainer.oneQuickTurn();
+
+    if(getDriveType() == DriveType.arcade) { // arcade drive
+      double leftPow = limitAcceleration(y, prevPowLeft);
+      double rightPow = limitAcceleration(y, prevPowRight);
+      double rotation = limitAcceleration(x * rotatMulti, prevRotation);
 
       prevPowLeft = leftPow;
       prevPowRight = rightPow;
       prevRotation = rotation;
-    } else { // Cheesy Drive
-      boolean quickTurn = Robot.robotContainer.oneQuickTurn();
-      var signal = cheesyDrive.cheesyDrive(leftPow, rotation, quickTurn, false);
-      leftPow = signal.getLeft();
-      rightPow = signal.getRight();
+      driveTrain.driveMotors(leftPow + rotation + leftAuto, rightPow - rotation + rightAuto);
+    } else if (getDriveType() == DriveType.cheezy) { // Cheesy Drive
+      var signal = cheesyDrive.cheesyDrive(y, x, quickTurn, false);
+      double leftPow = signal.getLeft();
+      double rightPow = signal.getRight();
 
-      // CheezyDrive takes care of rotation so set to 0 to keep or code from adjusting
-      rotation = 0;
+      driveTrain.driveMotors(leftPow + leftAuto, rightPow + rightAuto);
+    } else if (getDriveType() == DriveType.field) {
+      double setAngle = getJoyAngle(x, y);
+      setAngle = 1-wallEffectiveness;
+      double output = getJoyDistence(x, y);
+
+      driveTrain.driveAtAngle(output, setAngle, ControlMode.PercentOutput);
     }
-    driveTrain.driveMotors(leftPow + rotation, rightPow - rotation);
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // RobotContainer.driveTrain.stop();
+    driveTrain.stop();
   }
 
   // Returns true when the command should end.
@@ -88,4 +119,37 @@ public class ArcadeDrive extends CommandBase {
         return prevPow;
     }
   }
+
+  private DriveType getDriveType() {
+    String sbdt = Robot.shuffleBoard.driveType.getString("");
+    if (sbdt.equals("a")) {
+      return DriveType.arcade;
+    } else if (sbdt.equals("c")) {
+      return DriveType.cheezy;
+    } else if (sbdt.equals("f")) {
+      return DriveType.field;
+    } else {
+      return DriveType.arcade;
+    }
+  }
+
+  private double getJoyAngle(double jX, double jY) {
+    double angle = Math.toDegrees(Math.atan(jX / jY));
+    if (jX > 0 && jY > 0) { // I
+      return angle;
+    } else if (jX < 0 && jY > 0) { // II
+        return angle;
+    } else if (jX < 0 && jY < 0) { // III
+      return -(90-angle) - 90;
+    } else if (jX > 0 && jY < 0) { // IV
+      return (90+angle) + 90;
+    } else {
+      return 0;
+    }
+  }
+
+  private double getJoyDistence(double jX, double jY) {
+    return Math.sqrt(Math.pow(jX, 2) + Math.pow(jY, 2));
+  }
+
 }
