@@ -66,7 +66,8 @@ public class DriverFeedbackSubsystem extends SubsystemBase {
 
   public void errorRumble() {
     setRumble(RumbleType.kLeftRumble, (Long)Robot.shuffleBoard.driverErrorRumbleLength.getNumber(0));
-
+  }
+  
   public void setRumble(RumbleType type, long ms) {
     robotContainer.setRumble(type, ms);
   }

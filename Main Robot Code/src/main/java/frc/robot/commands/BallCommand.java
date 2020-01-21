@@ -14,15 +14,15 @@ import frc.robot.subsystems.BallSubsystem.ballMode;
 * Controls the ball subsystem.
 * Input: Ball subsytem and the mode of the subsystem
 */
-public class BallSubsystemCommand extends CommandBase {
+public class BallCommand extends CommandBase {
   private final BallSubsystem m_ballSubsystem;
   private ballMode m_mode;
   
 
-  public BallSubsystemCommand(BallSubsystem subsystem, ballMode mode) {
-    addRequirements(subsystem);
-    m_ballSubsystem = subsystem;
-    m_mode = mode;
+  public BallCommand(BallSubsystem ballSubsystem, ballMode mode) {
+    addRequirements(ballSubsystem);
+    this.m_ballSubsystem = ballSubsystem;
+    this.m_mode = mode;
   }
 
   // Called when the command is initially scheduled.

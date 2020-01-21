@@ -15,14 +15,13 @@ import frc.lib.PID;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class ManualDrive extends CommandBase {
-
+public class ManualDriveCommand extends CommandBase {
+  private final DriveTrainSubsystem m_driveTrainSubsystem;
   private CheesyDrive cheesyDrive = new CheesyDrive();
-  private DriveTrainSubsystem driveTrain;
-  private double[] tPid = driveTrain.getTurnPid();
-  private PID wallFollow = new PID(tPid[0], tPid[1], tPid[2]);
-  private PID limeLight = new PID(tPid[0], tPid[1], tPid[2]);
-
+  private double[] tPid;
+  private PID wallFollow;
+  private PID limeLight;
+  
   private double prevPowLeft = 0;
   private double prevPowRight = 0;
   private double prevRotation = 0;
@@ -33,11 +32,15 @@ public class ManualDrive extends CommandBase {
     arcade, cheezy, field;
   }
 
-  public ManualDrive(DriveTrainSubsystem driveTrain) {
-    this.driveTrain = driveTrain;
+  public ManualDriveCommand(DriveTrainSubsystem driveTrainSubsystem) {
+    addRequirements(driveTrainSubsystem);
+    this.m_driveTrainSubsystem = driveTrainSubsystem;
+
+    tPid = m_driveTrainSubsystem.getTurnPid();
+    wallFollow = new PID(tPid[0], tPid[1], tPid[2]);
+    limeLight = new PID(tPid[0], tPid[1], tPid[2]);
     wallFollow.setSetPoint(0);
     limeLight.setSetPoint(0);
-    addRequirements(this.driveTrain);
   }
 
   
@@ -78,26 +81,26 @@ public class ManualDrive extends CommandBase {
       prevPowLeft = leftPow;
       prevPowRight = rightPow;
       prevRotation = rotation;
-      driveTrain.driveMotors(leftPow + rotation + leftAuto, rightPow - rotation + rightAuto);
+      m_driveTrainSubsystem.driveMotors(leftPow + rotation + leftAuto, rightPow - rotation + rightAuto);
     } else if (getDriveType() == DriveType.cheezy) { // Cheesy Drive
       var signal = cheesyDrive.cheesyDrive(y, x, quickTurn, false);
       double leftPow = signal.getLeft();
       double rightPow = signal.getRight();
 
-      driveTrain.driveMotors(leftPow + leftAuto, rightPow + rightAuto);
+      m_driveTrainSubsystem.driveMotors(leftPow + leftAuto, rightPow + rightAuto);
     } else if (getDriveType() == DriveType.field) {
       double setAngle = getJoyAngle(x, y);
       setAngle = 1-wallEffectiveness;
       double output = getJoyDistence(x, y);
 
-      driveTrain.driveAtAngle(output, setAngle, ControlMode.PercentOutput);
+      m_driveTrainSubsystem.driveAtAngle(output, setAngle, ControlMode.PercentOutput);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveTrain.stop();
+    m_driveTrainSubsystem.stop();
   }
 
   // Returns true when the command should end.

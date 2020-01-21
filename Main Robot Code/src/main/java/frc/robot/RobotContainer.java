@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.ManualDrive;
-import frc.robot.commands.WheelOfFortune;
+import frc.robot.commands.ManualDriveCommand;
+import frc.robot.commands.WheelOfFortuneCommand;
 import frc.robot.commands.AutonomonousCommand;
-import frc.robot.commands.BallSubsystemCommand;
-import frc.robot.commands.Climb;
+import frc.robot.commands.BallCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
@@ -34,11 +34,11 @@ public class RobotContainer {
   private final Xbox controller = new Xbox(Constants.controllerPort);;
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
-  private final CommandBase manualDrive = new ManualDrive(driveTrainSubsystem);
-  private final CommandBase ballSubsystemCommand = new BallSubsystemCommand(ballSubsystem, ballMode.hold);
-  private final CommandBase spinWheel = new WheelOfFortune(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelOfFortune.Spin.Revolutions);
-  private final CommandBase positionWheel = new WheelOfFortune(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelOfFortune.Spin.Position);
-  private final CommandBase climb = new Climb(climbSubsystem);
+  private final CommandBase manualDrive = new ManualDriveCommand(driveTrainSubsystem);
+  private final CommandBase ballSubsystemCommand = new BallCommand(ballSubsystem, ballMode.hold);
+  private final CommandBase spinWheel = new WheelOfFortuneCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelOfFortuneCommand.Spin.Revolutions);
+  private final CommandBase positionWheel = new WheelOfFortuneCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelOfFortuneCommand.Spin.Position);
+  private final CommandBase climb = new ClimbCommand(climbSubsystem);
 
   public RobotContainer() {
     driveTrainSubsystem.setDefaultCommand(manualDrive); manualDrive.schedule();
@@ -57,10 +57,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Create some buttons
-    controller.getButton(Xbox.Button.intake).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.intake));
-    controller.getButton(Xbox.Button.hold).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.hold));
-    controller.getButton(Xbox.Button.unloadIntake).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.unloadIntake));
-    controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallSubsystemCommand(ballSubsystem, ballMode.unloadOutput));
+    controller.getButton(Xbox.Button.intake).whenPressed(new BallCommand(ballSubsystem, ballMode.intake));
+    controller.getButton(Xbox.Button.hold).whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
+    controller.getButton(Xbox.Button.unloadIntake).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
+    controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(positionWheel);
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(spinWheel);
 
