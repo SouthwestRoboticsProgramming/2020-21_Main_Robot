@@ -15,7 +15,7 @@ public class ClimbSubsystem extends SubsystemBase {
   private final int encoderTicks = 4096;
 
   private final int winchTalonPort = 4, 
-              elevatorTalonPort = 5;
+                    elevatorTalonPort = 5;
 
   public ClimbSubsystem() {
     winch = new WPI_TalonSRX(winchTalonPort);
@@ -45,8 +45,8 @@ public class ClimbSubsystem extends SubsystemBase {
     elevator.setSelectedSensorPosition(0);
   }
 
-  public double getVelocity(double percent) {
-    return 1 / maxVelocity;
+  public double getElevatorVelocityPercent() {
+    return elevator.getSelectedSensorVelocity(0) / maxVelocity;
   }
 
   public double getElevatorHeight() {
@@ -57,12 +57,16 @@ public class ClimbSubsystem extends SubsystemBase {
     winch.set(ControlMode.PercentOutput, percent);
   }
 
+  public double getWinch() {
+    return winch.get();
+  }
+
   public void stopWinch() {
     winch.set(ControlMode.PercentOutput, 0);
     winch.stopMotor();
   }
 
-  public void setelevator(double velocity) {
+  public void setElevatorVelocity(double velocity) {
     elevator.set(ControlMode.Velocity, velocity);
   }
 
