@@ -24,7 +24,7 @@ public class Xbox implements IController {
     final int PORT;
     private XboxController xbox;
     private double reverseVal = 1;
-    private Looper runbleLooper;
+    private Looper rumbleLooper;
 
     public Xbox(int port) {
         PORT = port;
@@ -63,14 +63,14 @@ public class Xbox implements IController {
                 timer.start();
             }
             @Override public void onLoop() {
-              if (timer.getTimedOut()) {runbleLooper.stop();}
+              if (timer.getTimedOut()) {rumbleLooper.stop();}
             }
             @Override public void onStop() {
                 timer.stop();
             }
           };
-          runbleLooper = new Looper(loop, 100);
-          runbleLooper.start();
+          rumbleLooper = new Looper(loop, 100);
+          rumbleLooper.start();
         
     }
     public double getTrigger(Hand hand) {

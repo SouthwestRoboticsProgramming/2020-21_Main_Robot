@@ -8,23 +8,33 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.BallSubsystem;
+import frc.robot.subsystems.BallSubsystem.ballMode;
+/* 
+* Controls the ball subsystem.
+* Input: Ball subsytem and the mode of the subsystem
+*/
+public class BallCommand extends CommandBase {
+  private final BallSubsystem m_ballSubsystem;
+  private ballMode m_mode;
+  
 
-public class AutonomonousCommand extends CommandBase {
-  /**
-   * Creates a new AutonomonousCommand.
-   */
-  public AutonomonousCommand() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public BallCommand(BallSubsystem ballSubsystem, ballMode mode) {
+    addRequirements(ballSubsystem);
+    this.m_ballSubsystem = ballSubsystem;
+    this.m_mode = mode;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_ballSubsystem.setBallMode(ballMode.hold);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_ballSubsystem.setBallMode(m_mode);
   }
 
   // Called once the command ends or is interrupted.

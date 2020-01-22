@@ -14,9 +14,9 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class DriverFeedbackSubsystem extends SubsystemBase {
-  RobotContainer robotContainer;
-  int controllerPWMChannel = 0;
-  Spark controller;
+  final RobotContainer robotContainer;
+  final int controllerPWMChannel = 0;
+  final Spark controller;
 
   public DriverFeedbackSubsystem(RobotContainer robotContainer) {
     this.robotContainer = robotContainer;

@@ -10,10 +10,10 @@ import frc.robot.Robot;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
-	private WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave; //change to talon fx for main robot
+	private final WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave; //change to talon fx for main robot
 	private final double maxVelocity = 100;
 
-	private int leftPort1 = 3,
+	private final int leftPort1 = 3,
 				leftPort2 = 0,
 				leftPort3 = -1,
 				rightPort1 = 2,
@@ -106,8 +106,24 @@ public class DriveTrainSubsystem extends SubsystemBase {
 		rightSlave.setNeutralMode(neutralMode);
 	}
 
-	public double getVelocity(double percent) {
-		return 1 / maxVelocity;
+	public double getLeftVelocity() {
+		return leftMaster.getSelectedSensorVelocity(0);
+	}
+
+	public double getLeftVelocityPercent() {
+		return leftMaster.getSelectedSensorVelocity(0) / maxVelocity;
+	}
+
+	public double getRightVelocity() {
+		return rightMaster.getSelectedSensorVelocity(0);
+	}
+
+	public double getRightVelocityPercent() {
+		return rightMaster.getSelectedSensorVelocity(0) / maxVelocity;
+	}
+
+	public double percentToVelocity(double percent) {
+		return percent * maxVelocity;
 	}
 
 	public void driveMotors(double left, double right) {

@@ -18,9 +18,9 @@ import frc.robot.Constants;
 */
 public class WheelSubsystem extends SubsystemBase {
 
-  private WPI_TalonSRX spinnerTalon;
-  private Solenoid pushSolenoid, retractSolenoid;
-  private ADXRS450_Gyro gyro;
+  private final WPI_TalonSRX spinnerTalon;
+  private final Solenoid pushSolenoid, retractSolenoid;
+  private final ADXRS450_Gyro gyro;
   private double gyroOffset = 0;
 
   private final int spinnerTalonPort = 0;

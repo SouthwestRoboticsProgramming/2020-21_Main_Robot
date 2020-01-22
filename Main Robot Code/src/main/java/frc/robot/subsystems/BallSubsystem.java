@@ -17,10 +17,10 @@ import frc.robot.Robot;
 * Ball subsystem includes all motors, solenoids, and sensors assosiated with picking up and storing balls.
 */
 public class BallSubsystem extends SubsystemBase {
-  private WPI_TalonSRX intakeTalon;
-  private WPI_VictorSPX ballFlickerVictor, beltVictor, outputVictor;
-  private Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, lowerBlockSolenoid, lowerUnBlockSolenoid, upperBlockSolenoid, upperUnBlockSolenoid;
-  private DigitalInput ballSensorIn, ballSensorOut;
+  private final WPI_TalonSRX intakeTalon;
+  private final WPI_VictorSPX ballFlickerVictor, beltVictor, outputVictor;
+  private final Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, lowerBlockSolenoid, lowerUnBlockSolenoid, upperBlockSolenoid, upperUnBlockSolenoid;
+  private final DigitalInput ballSensorIn, ballSensorOut;
 
   private final int intakeTalonPort = 0,
               ballFlickerTalonPort = 1,

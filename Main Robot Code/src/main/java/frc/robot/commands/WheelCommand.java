@@ -19,9 +19,9 @@ import frc.robot.subsystems.DriverFeedbackSubsystem;
 import frc.robot.subsystems.DriverFeedbackSubsystem.PresetColors;
 import frc.robot.subsystems.WheelSubsystem;
 
-public class WheelOfFortune extends CommandBase {
-  private WheelSubsystem wheelSubsystem;
-  private DriveTrainSubsystem driveTrainSubsystem;
+public class WheelCommand extends CommandBase {
+  private final WheelSubsystem m_wheelSubsystem;
+  private final DriveTrainSubsystem driveTrainSubsystem;
   private DriverFeedbackSubsystem driverFeedback;
   private PID pid = new PID(0, 0, 0);
   private Looper powerRamper;
@@ -38,21 +38,21 @@ public class WheelOfFortune extends CommandBase {
     Position;
   }
 
-  public WheelOfFortune(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, DriverFeedbackSubsystem driverFeedbackSubsystem, Spin spin) {
-    this.wheelSubsystem = wheelSubsystem;
+  public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, DriverFeedbackSubsystem driverFeedbackSubsystem, Spin spin) {
+    addRequirements(wheelSubsystem);
+    this.m_wheelSubsystem = wheelSubsystem;
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.driverFeedback = driverFeedbackSubsystem;
     this.spin = spin;
-    addRequirements(this.wheelSubsystem);
   }
 
-  public WheelOfFortune(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, DriverFeedbackSubsystem driverFeedbackSubsystem,  Spin spin, WheelSubsystem.Color color) {
-    this.wheelSubsystem = wheelSubsystem;
+  public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, DriverFeedbackSubsystem driverFeedbackSubsystem,  Spin spin, WheelSubsystem.Color color) {
+    this.m_wheelSubsystem = wheelSubsystem;
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.driverFeedback = driverFeedbackSubsystem;
     this.spin = spin;
     this.color = color;
-    addRequirements(this.wheelSubsystem);
+    addRequirements(this.m_wheelSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -63,15 +63,15 @@ public class WheelOfFortune extends CommandBase {
 
     while (pid.getError() > 1) {
       driverFeedback.setColor(PresetColors.orange);
-      pid.setActual(wheelSubsystem.getAngle());
-      driveTrainSubsystem.driveAtAngle(driveTrainSubsystem.getVelocity(pid.getOutput()), 0, ControlMode.Velocity);
+      pid.setActual(m_wheelSubsystem.getAngle());
+      driveTrainSubsystem.driveAtAngle(driveTrainSubsystem.percentToVelocity(pid.getOutput()), 0, ControlMode.Velocity);
     }
     driverFeedback.setColor(PresetColors.green);
     holdPosition();
-    wheelSubsystem.setPushedState(true);
+    m_wheelSubsystem.setPushedState(true);
 
     if (spin == Spin.Position) {
-      while (getColor(wheelSubsystem.getColor()) != color) {
+      while (getColor(m_wheelSubsystem.getColor()) != color) {
         rampPower(0, .5);
       }
         rampPower(.5, 0);
@@ -79,16 +79,16 @@ public class WheelOfFortune extends CommandBase {
       Loop loop = new Loop(){
         double setRevolution;
         @Override public void onStart() {
-          setRevolution = wheelSubsystem.getEncoderRevolutions() + spinCount;
-          wheelSubsystem.moveSpinnerTalon(spinCount);
+          setRevolution = m_wheelSubsystem.getEncoderRevolutions() + spinCount;
+          m_wheelSubsystem.moveSpinnerTalon(spinCount);
         }
         @Override public void onLoop() {
-          if (wheelSubsystem.getEncoderRevolutions() >= setRevolution) {spinner.stop();}
+          if (m_wheelSubsystem.getEncoderRevolutions() >= setRevolution) {spinner.stop();}
 
         }
         @Override public void onStop() {
-          wheelSubsystem.setSpinnerTalon(0);
-          wheelSubsystem.setPushedState(false);
+          m_wheelSubsystem.setSpinnerTalon(0);
+          m_wheelSubsystem.setPushedState(false);
           finished = false;
         }
       };
@@ -110,7 +110,7 @@ public class WheelOfFortune extends CommandBase {
       driverFeedback.setColor(PresetColors.red);
       driverFeedback.errorRumble();
     }
-    wheelSubsystem.setPushedState(false);
+    m_wheelSubsystem.setPushedState(false);
   }
 
   // Returns true when the command should end.
@@ -140,14 +140,14 @@ public class WheelOfFortune extends CommandBase {
     
     Loop loop = new Loop(){
       @Override public void onStart() {
-        wheelSubsystem.setSpinnerTalon(start);
+        m_wheelSubsystem.setSpinnerTalon(start);
       }
       @Override public void onLoop() {
-        if (wheelSubsystem.getSpinnerTalon() >= end || finished) {powerRamper.stop();}
-        wheelSubsystem.setSpinnerTalon(wheelSubsystem.getSpinnerTalon() + loopAdded);
+        if (m_wheelSubsystem.getSpinnerTalon() >= end || finished) {powerRamper.stop();}
+        m_wheelSubsystem.setSpinnerTalon(m_wheelSubsystem.getSpinnerTalon() + loopAdded);
       }
       @Override public void onStop() {
-        wheelSubsystem.setSpinnerTalon(end);
+        m_wheelSubsystem.setSpinnerTalon(end);
       }
     };
     powerRamper = new Looper(loop, diff);
@@ -161,8 +161,8 @@ public class WheelOfFortune extends CommandBase {
       }
       @Override public void onLoop() {
         if (finished) {positionHolder.stop();}
-        pid.setActual(wheelSubsystem.getAngle());
-        driveTrainSubsystem.driveAtAngle(driveTrainSubsystem.getVelocity(pid.getOutput()), 0, ControlMode.Velocity);
+        pid.setActual(m_wheelSubsystem.getAngle());
+        driveTrainSubsystem.driveAtAngle(driveTrainSubsystem.percentToVelocity(pid.getOutput()), 0, ControlMode.Velocity);
       }
       @Override public void onStop() {
       }

@@ -11,21 +11,20 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.ClimbSubsystem;
 
-public class Climb extends CommandBase {
-  ClimbSubsystem climbSubsystem;
+public class ClimbCommand extends CommandBase {
+  ClimbSubsystem m_climbSubsystem;
   private boolean hookPlaced;
   private boolean hookHightReached;
 
-  public Climb(ClimbSubsystem climbSubsystem) {
-    this.climbSubsystem = climbSubsystem;
+  public ClimbCommand(ClimbSubsystem climbSubsystem) {
     addRequirements(climbSubsystem);
-    
+    this.m_climbSubsystem = climbSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climbSubsystem.resetEncoder();
+    m_climbSubsystem.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,15 +32,15 @@ public class Climb extends CommandBase {
   public void execute() {
     double climbOutput = Robot.robotContainer.climbOutput();
     if (hookPlaced) {
-      climbSubsystem.setWinch(Math.round(climbOutput));
+      m_climbSubsystem.setWinch(Math.round(climbOutput));
     } else {
-      climbSubsystem.setelevator(climbSubsystem.getVelocity(climbOutput));
-      if (climbSubsystem.getElevatorHight() >= 4 && !hookHightReached) {
+      m_climbSubsystem.setElevatorVelocity(m_climbSubsystem.getElevatorVelocityPercent());
+      if (m_climbSubsystem.getElevatorHeight() >= 4 && !hookHightReached) {
         hookHightReached = true;
       }
-      if (climbSubsystem.elevatorLowerLimit() && hookHightReached) {
+      if (m_climbSubsystem.elevatorLowerLimit() && hookHightReached) {
         hookPlaced = true;
-        climbSubsystem.stopElevator();
+        m_climbSubsystem.stopElevator();
       }
     }
   }
@@ -49,8 +48,8 @@ public class Climb extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climbSubsystem.stopElevator();
-    climbSubsystem.stopWinch();
+    m_climbSubsystem.stopElevator();
+    m_climbSubsystem.stopWinch();
   }
 
   // Returns true when the command should end.
