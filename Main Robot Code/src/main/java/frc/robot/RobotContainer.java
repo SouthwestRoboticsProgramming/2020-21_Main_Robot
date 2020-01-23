@@ -77,6 +77,8 @@ public class RobotContainer {
     return m_autonomousCommand;
   }
 
+  //TODO: Do these functions need to be in robotContainer? What are they for?
+
   // Single joystick drive
   public double oneDrive() {
     return 0;

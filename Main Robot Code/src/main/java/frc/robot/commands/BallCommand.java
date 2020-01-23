@@ -13,6 +13,7 @@ import frc.robot.subsystems.BallSubsystem.ballMode;
 /* 
 * Controls the ball subsystem.
 * Input: Ball subsytem and the mode of the subsystem
+* Output: Ball subsystem is set to th
 */
 public class BallCommand extends CommandBase {
   private final BallSubsystem m_ballSubsystem;
