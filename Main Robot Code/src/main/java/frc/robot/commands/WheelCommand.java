@@ -71,10 +71,10 @@ public class WheelCommand extends CommandBase {
     m_wheelSubsystem.setPushedState(true);
 
     if (spin == Spin.Position) {
-      while (getColor(m_wheelSubsystem.getColor()) != color) {
-        rampPower(0, .5);
-      }
-        rampPower(.5, 0);
+      // while (getColor(m_wheelSubsystem.getColor()) != color) {
+      //   rampPower(0, .5);
+      // }
+      //   rampPower(.5, 0);
     } else if (spin == Spin.Revolutions) {
       Loop loop = new Loop(){
         double setRevolution;

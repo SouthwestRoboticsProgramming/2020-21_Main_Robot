@@ -25,8 +25,6 @@ public class WheelSubsystem extends SubsystemBase {
 
   private final int spinnerTalonPort = 0;
   
-  private final int pushSolenoidPort = 0,
-                    retractSolenoidPort = 0;
   private final int encoderTicks = 4096;
 
   public enum Color{
@@ -35,8 +33,8 @@ public class WheelSubsystem extends SubsystemBase {
   
   public WheelSubsystem() {
     spinnerTalon = new WPI_TalonSRX(spinnerTalonPort);
-    pushSolenoid = new Solenoid(Constants.PCMID, pushSolenoidPort);
-    retractSolenoid = new Solenoid(Constants.PCMID, retractSolenoidPort);
+    pushSolenoid = new Solenoid(Constants.PCMID, Constants.pushSolenoidPort);
+    retractSolenoid = new Solenoid(Constants.PCMID, Constants.retractSolenoidPort);
     gyro = new ADXRS450_Gyro(Port.kMXP);
     if (retractSolenoid.get()) {
       gyroOffset = gyro.getAngle()-30;
@@ -85,7 +83,7 @@ public class WheelSubsystem extends SubsystemBase {
 
   //Color sensor
   I2C.Port i2cPort = I2C.Port.kOnboard;
-  ColorSensorV3 cs = new ColorSensorV3(i2cPort);
+  // ColorSensorV3 cs = new ColorSensorV3(i2cPort);
   TCA9548A TCA9548A = new TCA9548A();
 
   int adress = 0x70;
@@ -97,23 +95,23 @@ public class WheelSubsystem extends SubsystemBase {
       // i2cPort.
   }
 
-  public Color getColor() {
-    int r = cs.getRed();
-    int g = cs.getGreen();
-    int b = cs.getBlue();
+  // public Color getColor() {
+  //   int r = cs.getRed();
+  //   int g = cs.getGreen();
+  //   int b = cs.getBlue();
 
-    if (.9*g < r && r < 1.9*g && 1.9*b < r && r < 4*b) {
-      return Color.red;
-    } else if (2*r < g && g < 5*r && 2*b < g && g < 4*b) {
-      return Color.green;
-    } else if (1.5*r < b && b < 3*r && (Math.abs(b+g)/2)/b < .3 * b) {
-      return Color.blue;
-    } else if (1.4*r < g && g < 2*r && 3*b < g && g < 5*b) {
-      return Color.yellow;
-    } else {
-      return Color.noColor;
-    }
-  }
+  //   if (.9*g < r && r < 1.9*g && 1.9*b < r && r < 4*b) {
+  //     return Color.red;
+  //   } else if (2*r < g && g < 5*r && 2*b < g && g < 4*b) {
+  //     return Color.green;
+  //   } else if (1.5*r < b && b < 3*r && (Math.abs(b+g)/2)/b < .3 * b) {
+  //     return Color.blue;
+  //   } else if (1.4*r < g && g < 2*r && 3*b < g && g < 5*b) {
+  //     return Color.yellow;
+  //   } else {
+  //     return Color.noColor;
+  //   }
+  // }
 
   @Override
   public void periodic() {
