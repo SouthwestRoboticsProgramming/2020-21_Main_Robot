@@ -9,34 +9,19 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import frc.robot.Constants;
+import frc.robot.Constants.*;
 import frc.robot.Robot;
 
 //TODO: Clarify lift, lower, block, and unblock in solenoid names. Difficult to understand what does what.
 
 /*
 * Ball subsystem includes all motors, solenoids, and sensors assosiated with picking up and storing balls.
-*
-*
-*
-*
 */
 public class BallSubsystem extends SubsystemBase {
   private final WPI_TalonSRX intakeTalon;
   private final WPI_VictorSPX ballFlickerVictor, beltVictor, outputVictor;
   private final Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, lowerBlockSolenoid, lowerUnBlockSolenoid, upperBlockSolenoid, upperUnBlockSolenoid;
   private final DigitalInput ballSensorIn, ballSensorOut;
-
-  private final int intakeTalonPort = 0,
-              ballFlickerVictorPort = 1,
-              beltTalonPort = 2,
-              outputTalonPort = 3;
-
-  private final int lowerIntakeSolenoidPort = 0,
-              liftIntakeSolenoidPort = 1,
-              lowerBlockSolenoidPort = 2,
-              lowerUnBlockSolenoidPort = 3,
-              upperBlockSolenoidPort = 4,
-              upperUnBlockSolenoidPort = 5;
 
   private final int ballSensorInPort = 0,
               ballSensorOutPort = 1;
@@ -49,22 +34,22 @@ public class BallSubsystem extends SubsystemBase {
                   ballSensorOutBlocked = false;
 
   public BallSubsystem() {
-    intakeTalon = new WPI_TalonSRX(intakeTalonPort);
-    ballFlickerVictor = new WPI_VictorSPX(ballFlickerVictorPort);
-    beltVictor = new WPI_VictorSPX(beltTalonPort);
-    outputVictor = new WPI_VictorSPX(outputTalonPort);
+    intakeTalon = new WPI_TalonSRX(Constants.intakeTalonPort);
+    ballFlickerVictor = new WPI_VictorSPX(Constants.ballFlickerTalonPort);
+    beltVictor = new WPI_VictorSPX(Constants.beltTalonPort);
+    outputVictor = new WPI_VictorSPX(Constants.outputTalonPort);
   
     intakeTalon.setNeutralMode(NeutralMode.Brake);
     ballFlickerVictor.setNeutralMode(NeutralMode.Brake);
     beltVictor.setNeutralMode(NeutralMode.Brake);
     outputVictor.setNeutralMode(NeutralMode.Brake);
 
-    lowerIntakeSolenoid = new Solenoid(Constants.PCMID, lowerIntakeSolenoidPort);
-    liftIntakeSolenoid = new Solenoid(Constants.PCMID, liftIntakeSolenoidPort);
-    lowerBlockSolenoid = new Solenoid(Constants.PCMID, lowerBlockSolenoidPort);
-    lowerUnBlockSolenoid = new Solenoid(Constants.PCMID, lowerUnBlockSolenoidPort);
-    upperBlockSolenoid = new Solenoid(Constants.PCMID, upperBlockSolenoidPort);
-    upperUnBlockSolenoid = new Solenoid(Constants.PCMID, upperUnBlockSolenoidPort);
+    lowerIntakeSolenoid = new Solenoid(Constants.PCMID, Constants.lowerIntakeSolenoidPort);
+    liftIntakeSolenoid = new Solenoid(Constants.PCMID, Constants.liftIntakeSolenoidPort);
+    lowerBlockSolenoid = new Solenoid(Constants.PCMID, Constants.lowerBlockSolenoidPort);
+    lowerUnBlockSolenoid = new Solenoid(Constants.PCMID, Constants.lowerUnBlockSolenoidPort);
+    upperBlockSolenoid = new Solenoid(Constants.PCMID, Constants.upperBlockSolenoidPort);
+    upperUnBlockSolenoid = new Solenoid(Constants.PCMID, Constants.upperUnBlockSolenoidPort);
 
     ballSensorIn = new DigitalInput(ballSensorInPort);
     ballSensorOut = new DigitalInput(ballSensorOutPort);

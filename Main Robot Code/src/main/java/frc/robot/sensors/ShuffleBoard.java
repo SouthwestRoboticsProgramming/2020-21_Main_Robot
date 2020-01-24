@@ -22,16 +22,16 @@ public class ShuffleBoard{
             public NetworkTableEntry driveSpeed = driveTune.addPersistent("driveSpeed", 0).getEntry();
             public NetworkTableEntry driveSmooth = driveTune.addPersistent("driveSmooth", 0).getEntry();
             public NetworkTableEntry drivePidP = driveTune.addPersistent("drivePID-P", 0).getEntry();
-            public NetworkTableEntry drivePidI = driveTune.addPersistent("drivePID-P", 0).getEntry();
-            public NetworkTableEntry drivePidD = driveTune.addPersistent("drivePID-P", 0).getEntry();
+            public NetworkTableEntry drivePidI = driveTune.addPersistent("drivePID-I", 0).getEntry();
+            public NetworkTableEntry drivePidD = driveTune.addPersistent("drivePID-D", 0).getEntry();
             public NetworkTableEntry driveTurnPidP = driveTune.addPersistent("driveTurnPID-P", 0).getEntry();
-            public NetworkTableEntry driveTurnPidI = driveTune.addPersistent("driveTurnPID-P", 0).getEntry();
-            public NetworkTableEntry driveTurnPidD = driveTune.addPersistent("driveTurnPID-P", 0).getEntry();
+            public NetworkTableEntry driveTurnPidI = driveTune.addPersistent("driveTurnPID-I", 0).getEntry();
+            public NetworkTableEntry driveTurnPidD = driveTune.addPersistent("driveTurnPID-D", 0).getEntry();
 
         private ShuffleboardLayout ballTune = Tune.getLayout("ballTune", BuiltInLayouts.kList);
             public NetworkTableEntry ballIntakeSpeed = ballTune.addPersistent("ballIntakeSpeed", .5).getEntry();
             public NetworkTableEntry ballFlickerInSpeed = ballTune.addPersistent("ballFlickerInSpeed", .5).getEntry();
-            public NetworkTableEntry ballFluckerOutIntakeSpeed = ballTune.addPersistent("ballFluckerOutIntakeSpeed", -.5).getEntry();
+            public NetworkTableEntry ballFluckerOutIntakeSpeed = ballTune.addPersistent("ballFlikerOutIntakeSpeed", -.5).getEntry();
             public NetworkTableEntry ballBeltsSpeed = ballTune.addPersistent("ballBeltsSpeed", .5).getEntry();
             public NetworkTableEntry ballBeltsOutIntakeSpeed = ballTune.addPersistent("ballBeltsOutIntakeSpeed", -.5).getEntry();
             public NetworkTableEntry ballBeltsOutOutputSpeed = ballTune.addPersistent("ballBeltsOutOutputSpeed", .5).getEntry();

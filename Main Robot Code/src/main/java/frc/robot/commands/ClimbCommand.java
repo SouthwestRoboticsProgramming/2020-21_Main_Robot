@@ -31,7 +31,7 @@ public class ClimbCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double climbOutput = Robot.robotContainer.climbOutput();
+    double climbOutput = Robot.robotContainer.getClimbOutput();
     if (hookPlaced) {
       m_climbSubsystem.setWinch(Math.round(climbOutput));
     } else {
