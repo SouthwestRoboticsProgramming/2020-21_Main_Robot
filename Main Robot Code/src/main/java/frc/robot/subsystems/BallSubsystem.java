@@ -15,6 +15,10 @@ import frc.robot.Robot;
 
 /*
 * Ball subsystem includes all motors, solenoids, and sensors assosiated with picking up and storing balls.
+*
+*
+*
+*
 */
 public class BallSubsystem extends SubsystemBase {
   private final WPI_TalonSRX intakeTalon;
@@ -23,7 +27,7 @@ public class BallSubsystem extends SubsystemBase {
   private final DigitalInput ballSensorIn, ballSensorOut;
 
   private final int intakeTalonPort = 0,
-              ballFlickerTalonPort = 1,
+              ballFlickerVictorPort = 1,
               beltTalonPort = 2,
               outputTalonPort = 3;
 
@@ -46,7 +50,7 @@ public class BallSubsystem extends SubsystemBase {
 
   public BallSubsystem() {
     intakeTalon = new WPI_TalonSRX(intakeTalonPort);
-    ballFlickerVictor = new WPI_VictorSPX(ballFlickerTalonPort);
+    ballFlickerVictor = new WPI_VictorSPX(ballFlickerVictorPort);
     beltVictor = new WPI_VictorSPX(beltTalonPort);
     outputVictor = new WPI_VictorSPX(outputTalonPort);
   

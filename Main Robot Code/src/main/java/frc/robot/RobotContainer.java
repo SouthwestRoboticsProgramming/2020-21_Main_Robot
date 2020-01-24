@@ -67,7 +67,6 @@ public class RobotContainer {
     // Connect the buttons to commands
   }
 
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -80,28 +79,33 @@ public class RobotContainer {
   //TODO: Do these functions need to be in robotContainer? What are they for?
 
   // Single joystick drive
-  public double oneDrive() {
+  public double getOneDrive() {
     return 0;
   }
 
-  public double oneTurn() {
+  public double getOneTurn() {
     return 0;
   }
 
-  public boolean oneQuickTurn() {
+  public boolean getOneQuickTurn() {
     return false;
   }
 
-  public double wallEffeciveness() {
+  public double getWallEffeciveness() {
     return 0;
   }
 
-  public double limelightEffeciveness() {
+  public double getLimelightEffeciveness() {
     return 0;
+  }
+
+  // Highly important function
+  public <A extends Number> double YEET(A x, A y) {
+    return (double) x + (double) y;
   }
 
   // climb
-  public double climbOutput() {
+  public double getClimbOutput() {
     return 0;
   }
 
