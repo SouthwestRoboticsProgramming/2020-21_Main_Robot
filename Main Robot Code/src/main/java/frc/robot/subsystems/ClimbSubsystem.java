@@ -14,8 +14,8 @@ public class ClimbSubsystem extends SubsystemBase {
   private final double maxVelocity = 100;
   private final int encoderTicks = 4096;
 
-  private final int winchTalonPort = 4, 
-                    elevatorTalonPort = 5;
+  private final int winchTalonPort = 7, 
+                    elevatorTalonPort = 8;
 
   public ClimbSubsystem() {
     winch = new WPI_TalonSRX(winchTalonPort);
@@ -45,8 +45,8 @@ public class ClimbSubsystem extends SubsystemBase {
     elevator.setSelectedSensorPosition(0);
   }
 
-  public double getElevatorVelocityPercent() {
-    return elevator.getSelectedSensorVelocity(0) / maxVelocity;
+  public double getElevatorVelocityPercent(double percent) {
+    return percent / maxVelocity;
   }
 
   public double getElevatorHeight() {
@@ -55,6 +55,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void setWinch(double percent) {
     winch.set(ControlMode.PercentOutput, percent);
+    Robot.shuffleBoard.climbWinchOutput.setDouble(winch.getMotorOutputPercent());
   }
 
   public double getWinch() {
@@ -68,6 +69,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void setElevatorVelocity(double velocity) {
     elevator.set(ControlMode.Velocity, velocity);
+    Robot.shuffleBoard.climbElevatorOutput.setDouble(elevator.getMotorOutputPercent());
   }
 
   public void stopElevator() {

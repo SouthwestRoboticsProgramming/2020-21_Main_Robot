@@ -88,7 +88,7 @@ public class ManualDriveCommand extends CommandBase {
       double rightPow = signal.getRight();
 
       m_driveTrainSubsystem.driveMotors(leftPow + leftAuto, rightPow + rightAuto);
-    } else if (getDriveType() == DriveType.field) {
+    } else if (getDriveType() == DriveType.field) { // field
       double setAngle = getJoyAngle(x, y);
       setAngle = 1-wallEffectiveness;
       double output = getJoyDistence(x, y);

@@ -7,18 +7,19 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.PID;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 
 public class DriveTrainSubsystem extends SubsystemBase {
 
 	private final WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave; //change to talon fx for main robot
 	private final double maxVelocity = 100;
 
-	private final int leftPort1 = 3,
-				leftPort2 = 0,
-				leftPort3 = -1,
-				rightPort1 = 2,
-				rightPort2 = 1,
-				rightPort3 = -1;
+	private final int leftPort1 = 1,
+				leftPort2 = 2,
+				leftPort3 = 3,
+				rightPort1 = 4,
+				rightPort2 = 5,
+				rightPort3 = 6;
 
 	public DriveTrainSubsystem() {
 	//setup motors
@@ -128,6 +129,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
 	public void driveMotors(double left, double right) {
 		driveMotors(left, right, ControlMode.PercentOutput);
+		Robot.shuffleBoard.driveLeftOutput.setDouble(leftMaster.getMotorOutputPercent());
+		Robot.shuffleBoard.driveRightOutput.setDouble(rightMaster.getMotorOutputPercent());
 	}	
 
 	public void driveMotors(double left, double right, ControlMode controlMode) {

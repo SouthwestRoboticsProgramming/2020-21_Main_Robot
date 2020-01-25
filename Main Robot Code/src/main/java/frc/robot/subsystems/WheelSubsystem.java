@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.TCA9548A;
-import frc.robot.Constants;
+import frc.robot.Robot;
 
 /*
 * Wheel subsystem includes all motors, solenoids, and sensors assosiated with spinning the wheel of fortune.
@@ -23,20 +23,21 @@ public class WheelSubsystem extends SubsystemBase {
   private final ADXRS450_Gyro gyro;
   private double gyroOffset = 0;
 
-  private final int spinnerTalonPort = 0;
+  private final int spinnerTalonPort = 9;
   
-  private final int pushSolenoidPort = 0,
-                    retractSolenoidPort = 0;
+  private final int pushSolenoidPort = 6,
+                    retractSolenoidPort = 7;
+
   private final int encoderTicks = 4096;
 
   public enum Color{
-    red,blue,green,yellow, noColor
+    red,blue,green,yellow,noColor
   } 
   
   public WheelSubsystem() {
     spinnerTalon = new WPI_TalonSRX(spinnerTalonPort);
-    pushSolenoid = new Solenoid(Constants.PCMID, pushSolenoidPort);
-    retractSolenoid = new Solenoid(Constants.PCMID, retractSolenoidPort);
+    pushSolenoid = new Solenoid(pushSolenoidPort);
+    retractSolenoid = new Solenoid(retractSolenoidPort);
     gyro = new ADXRS450_Gyro(Port.kMXP);
     if (retractSolenoid.get()) {
       gyroOffset = gyro.getAngle()-30;
@@ -63,6 +64,7 @@ public class WheelSubsystem extends SubsystemBase {
   //Spinner talon SRX
   public void setSpinnerTalon(double x){
     spinnerTalon.set(ControlMode.PercentOutput, x);
+    Robot.shuffleBoard.wheelSpinnerOutput.setDouble(spinnerTalon.getMotorOutputPercent());
   }
 
   public double getSpinnerTalon(){
@@ -81,6 +83,8 @@ public class WheelSubsystem extends SubsystemBase {
   public void setPushedState(boolean pushed) {
     pushSolenoid.set(pushed);
     retractSolenoid.set(!pushed);
+    Robot.shuffleBoard.wheelPushSolenoid.setBoolean(pushSolenoid.get());
+    Robot.shuffleBoard.wheelRetractSolenoid.setBoolean(retractSolenoid.get());
   }
 
   //Color sensor

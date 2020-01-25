@@ -31,7 +31,7 @@ public class RobotContainer {
   private final WheelSubsystem wheelSubsystem = new WheelSubsystem();
   private final DriverFeedbackSubsystem driverFeedback = new DriverFeedbackSubsystem(this);
   
-  private final Xbox controller = new Xbox(Constants.controllerPort);;
+  private final Xbox controller = new Xbox(Constants.controllerPort);
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final CommandBase manualDrive = new ManualDriveCommand(driveTrainSubsystem);

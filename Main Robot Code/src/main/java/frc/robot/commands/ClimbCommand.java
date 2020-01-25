@@ -34,7 +34,7 @@ public class ClimbCommand extends CommandBase {
     if (hookPlaced) {
       m_climbSubsystem.setWinch(Math.round(climbOutput));
     } else {
-      m_climbSubsystem.setElevatorVelocity(m_climbSubsystem.getElevatorVelocityPercent());
+      m_climbSubsystem.setElevatorVelocity(m_climbSubsystem.getElevatorVelocityPercent(climbOutput));
       if (m_climbSubsystem.getElevatorHeight() >= 4 && !hookHightReached) {
         hookHightReached = true;
       }

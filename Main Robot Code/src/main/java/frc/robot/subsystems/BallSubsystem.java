@@ -22,17 +22,17 @@ public class BallSubsystem extends SubsystemBase {
   private final Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, lowerBlockSolenoid, lowerUnBlockSolenoid, upperBlockSolenoid, upperUnBlockSolenoid;
   private final DigitalInput ballSensorIn, ballSensorOut;
 
-  private final int intakeTalonPort = 0,
-              ballFlickerTalonPort = 1,
-              beltTalonPort = 2,
-              outputTalonPort = 3;
+  private final int intakeTalonPort = 10,
+              ballFlickerTalonPort = 12,
+              beltTalonPort = 11,
+              outputTalonPort = 13;
 
   private final int lowerIntakeSolenoidPort = 0,
               liftIntakeSolenoidPort = 1,
-              lowerBlockSolenoidPort = 2,
-              lowerUnBlockSolenoidPort = 3,
-              upperBlockSolenoidPort = 4,
-              upperUnBlockSolenoidPort = 5;
+              lowerBlockSolenoidPort = 4,
+              lowerUnBlockSolenoidPort = 5,
+              upperBlockSolenoidPort = 2,
+              upperUnBlockSolenoidPort = 3;
 
   private final int ballSensorInPort = 0,
               ballSensorOutPort = 1;
@@ -55,12 +55,12 @@ public class BallSubsystem extends SubsystemBase {
     beltVictor.setNeutralMode(NeutralMode.Brake);
     outputVictor.setNeutralMode(NeutralMode.Brake);
 
-    lowerIntakeSolenoid = new Solenoid(Constants.PCMID, lowerIntakeSolenoidPort);
-    liftIntakeSolenoid = new Solenoid(Constants.PCMID, liftIntakeSolenoidPort);
-    lowerBlockSolenoid = new Solenoid(Constants.PCMID, lowerBlockSolenoidPort);
-    lowerUnBlockSolenoid = new Solenoid(Constants.PCMID, lowerUnBlockSolenoidPort);
-    upperBlockSolenoid = new Solenoid(Constants.PCMID, upperBlockSolenoidPort);
-    upperUnBlockSolenoid = new Solenoid(Constants.PCMID, upperUnBlockSolenoidPort);
+    lowerIntakeSolenoid = new Solenoid(lowerIntakeSolenoidPort);
+    liftIntakeSolenoid = new Solenoid(liftIntakeSolenoidPort);
+    lowerBlockSolenoid = new Solenoid(lowerBlockSolenoidPort);
+    lowerUnBlockSolenoid = new Solenoid(lowerUnBlockSolenoidPort);
+    upperBlockSolenoid = new Solenoid(upperBlockSolenoidPort);
+    upperUnBlockSolenoid = new Solenoid(upperUnBlockSolenoidPort);
 
     ballSensorIn = new DigitalInput(ballSensorInPort);
     ballSensorOut = new DigitalInput(ballSensorOutPort);
@@ -110,47 +110,59 @@ public class BallSubsystem extends SubsystemBase {
   //Intake motor
   private void setIntake(double x) {
     intakeTalon.set(ControlMode.PercentOutput, x);
+    Robot.shuffleBoard.ballIntakeOutput.setDouble(intakeTalon.getMotorOutputPercent());
   }
 
   // ball flicker motor
   private void setBallFlicker(double x) {
     ballFlickerVictor.set(ControlMode.PercentOutput, x);
+    Robot.shuffleBoard.ballFlickerOutput.setDouble(ballFlickerVictor.getMotorOutputPercent());
   }
 
   //Belt motor
   private void setBelt(double x) {
     beltVictor.set(ControlMode.PercentOutput, x);
+    Robot.shuffleBoard.ballBeltsOutput.setDouble(beltVictor.getMotorOutputPercent());
   }
 
   //Output motor
   private void setOutput(double x) {
     outputVictor.set(ControlMode.PercentOutput, x);
+    Robot.shuffleBoard.ballOutputOutput.setDouble(outputVictor.getMotorOutputPercent());
   }
 
   //Intake solenoids
   private void setIntake(Boolean intake) {
     liftIntakeSolenoid.set(!intake);
     lowerIntakeSolenoid.set(intake);
+    Robot.shuffleBoard.ballLiftIntakeSolenoid.setBoolean(liftIntakeSolenoid.get());
+    Robot.shuffleBoard.ballLowerIntakeSolenoid.setBoolean(lowerIntakeSolenoid.get());
   }
 
   //Blocker solenoids
   private void setLowerBlocker(Boolean blocked) {
     lowerBlockSolenoid.set(blocked);
     lowerUnBlockSolenoid.set(!blocked);
+    Robot.shuffleBoard.ballLowerBlockSolenoid.setBoolean(lowerBlockSolenoid.get());
+    Robot.shuffleBoard.ballLowerUnBlockSolenoid.setBoolean(lowerUnBlockSolenoid.get());
   }
 
   private void setUpperBlocker(Boolean blocked) {
     upperBlockSolenoid.set(blocked);
     upperUnBlockSolenoid.set(!blocked);
+    Robot.shuffleBoard.ballUpperBlockSolenoid.setBoolean(upperBlockSolenoid.get());
+    Robot.shuffleBoard.ballUpperUnBlockSolenoid.setBoolean(upperUnBlockSolenoid.get());
   }
 
   //Ball sensor in
   public boolean getBallSensorIn() {
+    Robot.shuffleBoard.ballSensorInDIO.setBoolean(ballSensorIn.get());
     return ballSensorIn.get();
   }
 
   //Ball sensor out
   public boolean getBallSensorOut() {
+    Robot.shuffleBoard.ballSensorOutDIO.setBoolean(ballSensorOut.get());
     return ballSensorOut.get();
   }
 
