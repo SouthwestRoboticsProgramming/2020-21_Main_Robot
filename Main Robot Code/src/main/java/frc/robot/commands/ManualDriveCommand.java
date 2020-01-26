@@ -57,21 +57,21 @@ public class ManualDriveCommand extends CommandBase {
 
     // wallFollow
     double wallOffset = wallFollow.getOutput(Robot.gyro.getGyroAngleX());
-    double wallEffectiveness = Robot.robotContainer.wallEffeciveness();
+    double wallEffectiveness = Robot.robotContainer.getWallEffeciveness();
     leftAuto += wallOffset * wallEffectiveness;
     rightAuto -= wallOffset * wallEffectiveness;
 
     // limelight
     double limelightOffset = limeLight.getOutput(Robot.limelight.limelightX());
-    double limelightEffectiveness = Robot.robotContainer.limelightEffeciveness();
+    double limelightEffectiveness = Robot.robotContainer.getLimelightEffeciveness();
     leftAuto += limelightOffset * limelightEffectiveness;
     rightAuto -= limelightOffset * limelightEffectiveness;
 
     // driver
     double rotatMulti = .55;
-    double x = Robot.robotContainer.oneTurn();
-    double y = Robot.robotContainer.oneDrive();
-    boolean quickTurn = Robot.robotContainer.oneQuickTurn();
+    double x = Robot.robotContainer.getOneTurn();
+    double y = Robot.robotContainer.getOneDrive();
+    boolean quickTurn = Robot.robotContainer.getOneQuickTurn();
 
     if(getDriveType() == DriveType.arcade) { // arcade drive
       double leftPow = limitAcceleration(y, prevPowLeft);
@@ -88,7 +88,7 @@ public class ManualDriveCommand extends CommandBase {
       double rightPow = signal.getRight();
 
       m_driveTrainSubsystem.driveMotors(leftPow + leftAuto, rightPow + rightAuto);
-    } else if (getDriveType() == DriveType.field) { // field
+    } else if (getDriveType() == DriveType.field) {
       double setAngle = getJoyAngle(x, y);
       setAngle = 1-wallEffectiveness;
       double output = getJoyDistence(x, y);

@@ -15,6 +15,7 @@ public class ClimbCommand extends CommandBase {
   ClimbSubsystem m_climbSubsystem;
   private boolean hookPlaced;
   private boolean hookHightReached;
+  // private 
 
   public ClimbCommand(ClimbSubsystem climbSubsystem) {
     addRequirements(climbSubsystem);
@@ -30,11 +31,14 @@ public class ClimbCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double climbOutput = Robot.robotContainer.climbOutput();
+    double climbOutput = Robot.robotContainer.getClimbOutput();
     if (hookPlaced) {
       m_climbSubsystem.setWinch(Math.round(climbOutput));
     } else {
       m_climbSubsystem.setElevatorVelocity(m_climbSubsystem.getElevatorVelocityPercent(climbOutput));
+
+      //TODO: what does '4' signify?
+
       if (m_climbSubsystem.getElevatorHeight() >= 4 && !hookHightReached) {
         hookHightReached = true;
       }

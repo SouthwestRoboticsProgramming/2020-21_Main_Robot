@@ -22,11 +22,6 @@ public class BallSubsystem extends SubsystemBase {
   private final Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, lowerBlockSolenoid, lowerUnBlockSolenoid, upperBlockSolenoid, upperUnBlockSolenoid;
   private final DigitalInput ballSensorIn, ballSensorOut;
 
-  private final int intakeTalonPort = 10,
-              ballFlickerTalonPort = 12,
-              beltTalonPort = 11,
-              outputTalonPort = 13;
-
   private final int lowerIntakeSolenoidPort = 0,
               liftIntakeSolenoidPort = 1,
               lowerBlockSolenoidPort = 4,
@@ -45,10 +40,10 @@ public class BallSubsystem extends SubsystemBase {
                   ballSensorOutBlocked = false;
 
   public BallSubsystem() {
-    intakeTalon = new WPI_TalonSRX(intakeTalonPort);
-    ballFlickerVictor = new WPI_VictorSPX(ballFlickerTalonPort);
-    beltVictor = new WPI_VictorSPX(beltTalonPort);
-    outputVictor = new WPI_VictorSPX(outputTalonPort);
+    intakeTalon = new WPI_TalonSRX(Constants.intakeTalonPort);
+    ballFlickerVictor = new WPI_VictorSPX(Constants.ballFlickerTalonPort);
+    beltVictor = new WPI_VictorSPX(Constants.beltTalonPort);
+    outputVictor = new WPI_VictorSPX(Constants.outputTalonPort);
   
     intakeTalon.setNeutralMode(NeutralMode.Brake);
     ballFlickerVictor.setNeutralMode(NeutralMode.Brake);
