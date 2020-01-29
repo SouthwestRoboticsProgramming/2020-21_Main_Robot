@@ -102,7 +102,7 @@ public class BallSubsystem extends SubsystemBase {
     setOutput(output);
   }
 
-  //Intake motor
+  // Intake motor
   private void setIntake(double x) {
     intakeTalon.set(ControlMode.PercentOutput, x);
     Robot.shuffleBoard.ballIntakeOutput.setDouble(intakeTalon.getMotorOutputPercent());

@@ -52,6 +52,7 @@ public class ManualDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.print("ManualDriveExecute");
     double leftAuto = 0;
     double rightAuto = 0;
 
@@ -74,6 +75,7 @@ public class ManualDriveCommand extends CommandBase {
     boolean quickTurn = Robot.robotContainer.getOneQuickTurn();
 
     if(getDriveType() == DriveType.arcade) { // arcade drive
+      Robot.shuffleBoard.currentDrive.setString("arcadeDrive");
       double leftPow = limitAcceleration(y, prevPowLeft);
       double rightPow = limitAcceleration(y, prevPowRight);
       double rotation = limitAcceleration(x * rotatMulti, prevRotation);
@@ -83,17 +85,21 @@ public class ManualDriveCommand extends CommandBase {
       prevRotation = rotation;
       m_driveTrainSubsystem.driveMotors(leftPow + rotation + leftAuto, rightPow - rotation + rightAuto);
     } else if (getDriveType() == DriveType.cheezy) { // Cheesy Drive
+      Robot.shuffleBoard.currentDrive.setString("cheezyDrive");
       var signal = cheesyDrive.cheesyDrive(y, x, quickTurn, false);
       double leftPow = signal.getLeft();
       double rightPow = signal.getRight();
 
       m_driveTrainSubsystem.driveMotors(leftPow + leftAuto, rightPow + rightAuto);
     } else if (getDriveType() == DriveType.field) {
+      Robot.shuffleBoard.currentDrive.setString("fieldDrive");
       double setAngle = getJoyAngle(x, y);
       setAngle = 1-wallEffectiveness;
       double output = getJoyDistence(x, y);
 
       m_driveTrainSubsystem.driveAtAngle(output, setAngle, ControlMode.PercentOutput);
+    } else {
+      Robot.shuffleBoard.currentDrive.setString("drivetypeNotFound");
     }
   }
 

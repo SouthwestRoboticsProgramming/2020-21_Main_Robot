@@ -2,8 +2,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.WheelCommand;
 import frc.robot.commands.AutonomonousCommand;
@@ -27,26 +29,31 @@ import frc.robot.subsystems.WheelSubsystem;
 public class RobotContainer {
   private final BallSubsystem ballSubsystem = new BallSubsystem();
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-  private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
+  public final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
   private final WheelSubsystem wheelSubsystem = new WheelSubsystem();
   private final DriverFeedbackSubsystem driverFeedback = new DriverFeedbackSubsystem(this);
   
   private final Xbox controller = new Xbox(Constants.controllerPort);
+  private final XboxController xbox = new XboxController(0);
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
-  private final CommandBase manualDrive = new ManualDriveCommand(driveTrainSubsystem);
+  private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem);
   private final CommandBase ballSubsystemCommand = new BallCommand(ballSubsystem, ballMode.hold);
   private final CommandBase spinWheel = new WheelCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelCommand.Spin.Revolutions);
   private final CommandBase positionWheel = new WheelCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelCommand.Spin.Position);
   private final CommandBase climb = new ClimbCommand(climbSubsystem);
 
   public RobotContainer() {
-    driveTrainSubsystem.setDefaultCommand(manualDrive); manualDrive.schedule();
-    ballSubsystem.setDefaultCommand(ballSubsystemCommand); ballSubsystemCommand.schedule();
-    climbSubsystem.setDefaultCommand(climb); climb.schedule();
+    // driveTrainSubsystem.setDefaultCommand(manualDrive); manualDrive.schedule();
+    // ballSubsystem.setDefaultCommand(ballSubsystemCommand); ballSubsystemCommand.schedule();
+    // climbSubsystem.setDefaultCommand(climb); climb.schedule();
 
     // Configure the button bindings
     configureButtonBindings();
+  }
+
+  public void startTeleopCommands() {
+    manualDrive.schedule();
   }
 
   /**
@@ -80,15 +87,15 @@ public class RobotContainer {
 
   // Single joystick drive
   public double getOneDrive() {
-    return 0;
+    return xbox.getY(Hand.kLeft);
   }
 
   public double getOneTurn() {
-    return 0;
+    return -xbox.getX(Hand.kLeft);
   }
 
   public boolean getOneQuickTurn() {
-    return false;
+    return xbox.getBButton();
   }
 
   public double getWallEffeciveness() {

@@ -19,18 +19,19 @@ public final class Constants {
     public static final int PCMID = 37;
     public static final int controllerPort = 0;
 
-    public static final int intakeTalonPort = 0,
-                ballFlickerTalonPort = 1,
-                beltTalonPort = 2,
-                outputTalonPort = 3,
-                winchTalonPort = 4, 
-                elevatorTalonPort = 5,
-                leftPort1 = 6,
-			    leftPort2 = 7,
-				leftPort3 = 8,
-				rightPort1 = 9,
-				rightPort2 = 10,
-				rightPort3 = 11;
+    public static final int intakeTalonPort = 10,
+                            ballFlickerTalonPort = 11,
+                            beltTalonPort = 12,
+                            outputTalonPort = 13,
+                          winchTalonPort = 7, 
+                          elevatorTalonPort = 8,
+                        wheelOfFortuneTalonPort = 9,
+        leftPort1 = 1,
+			  leftPort2 = 2,
+				leftPort3 = 3,
+				rightPort1 = 4,
+				rightPort2 = 5,
+				rightPort3 = 6;
 
   public static final int lowerIntakeSolenoidPort = 0,
                 liftIntakeSolenoidPort = 1,

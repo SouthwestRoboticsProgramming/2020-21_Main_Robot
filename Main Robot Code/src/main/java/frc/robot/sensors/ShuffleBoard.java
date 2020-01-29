@@ -51,6 +51,7 @@ public class ShuffleBoard{
         private ShuffleboardLayout driveDebug = Debug.getLayout("driveDebug", BuiltInLayouts.kList);
             public NetworkTableEntry driveLeftOutput = driveDebug.add("driveLeftOutput", 0).getEntry();
             public NetworkTableEntry driveRightOutput = driveDebug.add("driveRightOutput", 0).getEntry();
+            public NetworkTableEntry currentDrive = driveDebug.add("currentDrive", "not set!").getEntry();
 
         private ShuffleboardLayout ballDebug = Debug.getLayout("ballDebug", BuiltInLayouts.kList);
             //controllers
