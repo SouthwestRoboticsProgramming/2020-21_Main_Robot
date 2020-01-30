@@ -41,4 +41,7 @@ public final class Constants {
               upperUnBlockSolenoidPort = 5,
              pushSolenoidPort = 6,
              retractSolenoidPort = 7;
+
+  public final double wheelCircumferenceMeters = 0.1524;
+  public final int encoderTicksPerRotation = 4096;
 }

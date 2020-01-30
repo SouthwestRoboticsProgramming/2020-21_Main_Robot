@@ -21,6 +21,10 @@ public class ShuffleBoard{
             public NetworkTableEntry driveType = driveTune.addPersistent("driveType", "c").getEntry(); // a=arcade, c=cheezy, f=field
             public NetworkTableEntry driveSpeed = driveTune.addPersistent("driveSpeed", 0).getEntry();
             public NetworkTableEntry driveSmooth = driveTune.addPersistent("driveSmooth", 0).getEntry();
+            public NetworkTableEntry driveFXPidP = driveTune.addPersistent("driveFXPID-P", 0).getEntry();
+            public NetworkTableEntry driveFXPidI = driveTune.addPersistent("driveFXPID-I", 0).getEntry();
+            public NetworkTableEntry driveFXPidD = driveTune.addPersistent("driveFXPID-D", 0).getEntry();
+            public NetworkTableEntry driveFXPidF = driveTune.addPersistent("driveFXPID-F", 0).getEntry();
             public NetworkTableEntry drivePidP = driveTune.addPersistent("drivePID-P", 0).getEntry();
             public NetworkTableEntry drivePidI = driveTune.addPersistent("drivePID-I", 0).getEntry();
             public NetworkTableEntry drivePidD = driveTune.addPersistent("drivePID-D", 0).getEntry();
@@ -51,7 +55,9 @@ public class ShuffleBoard{
         private ShuffleboardLayout driveDebug = Debug.getLayout("driveDebug", BuiltInLayouts.kList);
             public NetworkTableEntry driveLeftOutput = driveDebug.add("driveLeftOutput", 0).getEntry();
             public NetworkTableEntry driveRightOutput = driveDebug.add("driveRightOutput", 0).getEntry();
-            public NetworkTableEntry currentDrive = driveDebug.add("currentDrive", "not set!").getEntry();
+            public NetworkTableEntry driveControlMode = driveDebug.add("driveControlMode", 0).getEntry();
+            public NetworkTableEntry driveCurrentType = driveDebug.add("driveCurrentType", "not set!").getEntry();
+            public NetworkTableEntry drivePosition = driveDebug.add("drivePosition", "").getEntry();
 
         private ShuffleboardLayout ballDebug = Debug.getLayout("ballDebug", BuiltInLayouts.kList);
             //controllers

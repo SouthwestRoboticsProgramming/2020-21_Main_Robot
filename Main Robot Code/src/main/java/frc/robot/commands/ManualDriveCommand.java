@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.CheesyDrive;
@@ -29,7 +30,7 @@ public class ManualDriveCommand extends CommandBase {
   public static final double maxSpeedDiff = 0.08;
 
   public enum DriveType {
-    arcade, cheezy, field;
+    arcade, cheezy, field, pid;
   }
 
   public ManualDriveCommand(DriveTrainSubsystem driveTrainSubsystem) {
@@ -47,6 +48,13 @@ public class ManualDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // TalonFXConfiguration drive = m_driveTrainSubsystem.getTFXC();
+    //     drive.slot0.kF = Robot.shuffleBoard.driveFXPidF.getDouble(0);
+    //     drive.slot0.kP = Robot.shuffleBoard.driveFXPidP.getDouble(0);
+    //     drive.slot0.kI = Robot.shuffleBoard.driveFXPidI.getDouble(0);
+    //     drive.slot0.kD = Robot.shuffleBoard.driveFXPidD.getDouble(0);
+    //     m_driveTrainSubsystem.setTFXC(drive);
+    //     System.out.print("updated control mode = " + Robot.shuffleBoard.driveType.getString(""));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -72,10 +80,11 @@ public class ManualDriveCommand extends CommandBase {
     double rotatMulti = .55;
     double x = Robot.robotContainer.getOneTurn();
     double y = Robot.robotContainer.getOneDrive();
+    double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0);
     boolean quickTurn = Robot.robotContainer.getOneQuickTurn();
 
     if(getDriveType() == DriveType.arcade) { // arcade drive
-      Robot.shuffleBoard.currentDrive.setString("arcadeDrive");
+      Robot.shuffleBoard.driveCurrentType.setString("arcadeDrive");
       double leftPow = limitAcceleration(y, prevPowLeft);
       double rightPow = limitAcceleration(y, prevPowRight);
       double rotation = limitAcceleration(x * rotatMulti, prevRotation);
@@ -83,23 +92,34 @@ public class ManualDriveCommand extends CommandBase {
       prevPowLeft = leftPow;
       prevPowRight = rightPow;
       prevRotation = rotation;
-      m_driveTrainSubsystem.driveMotors(leftPow + rotation + leftAuto, rightPow - rotation + rightAuto);
+      m_driveTrainSubsystem.driveMotors((leftPow + rotation + leftAuto)*driveSpeed, (rightPow - rotation + rightAuto)*driveSpeed);
     } else if (getDriveType() == DriveType.cheezy) { // Cheesy Drive
-      Robot.shuffleBoard.currentDrive.setString("cheezyDrive");
+      Robot.shuffleBoard.driveCurrentType.setString("cheezyDrive");
       var signal = cheesyDrive.cheesyDrive(y, x, quickTurn, false);
       double leftPow = signal.getLeft();
       double rightPow = signal.getRight();
 
-      m_driveTrainSubsystem.driveMotors(leftPow + leftAuto, rightPow + rightAuto);
+      m_driveTrainSubsystem.driveMotors((leftPow + leftAuto)*driveSpeed, (rightPow + rightAuto)*driveSpeed);
     } else if (getDriveType() == DriveType.field) {
-      Robot.shuffleBoard.currentDrive.setString("fieldDrive");
+      Robot.shuffleBoard.driveCurrentType.setString("fieldDrive");
       double setAngle = getJoyAngle(x, y);
       setAngle = 1-wallEffectiveness;
       double output = getJoyDistence(x, y);
+      output = limitAcceleration(output, (prevPowLeft + prevPowRight)/2);
 
       m_driveTrainSubsystem.driveAtAngle(output, setAngle, ControlMode.PercentOutput);
+      prevPowLeft = output;
+      prevPowRight = output;
+    } else if (getDriveType() == DriveType.pid) {
+      // double velocityConvert = m_driveTrainSubsystem.percentToVelocity(y);
+      double velocityConvert = (double)y*20000;
+      // m_driveTrainSubsystem.getLeftMaster().setVoltage(velocityConvert);
+      // m_driveTrainSubsystem.getRightMaster().setVoltage(velocityConvert);
+      m_driveTrainSubsystem.getLeftMaster().set(ControlMode.Position, velocityConvert);
+      m_driveTrainSubsystem.getRightMaster().set(ControlMode.Position, velocityConvert);
+      System.out.print("controller = " + y + " velocityConvert = " + velocityConvert);
     } else {
-      Robot.shuffleBoard.currentDrive.setString("drivetypeNotFound");
+      Robot.shuffleBoard.driveCurrentType.setString("drivetypeNotFound");
     }
   }
 
@@ -137,6 +157,8 @@ public class ManualDriveCommand extends CommandBase {
       return DriveType.cheezy;
     } else if (sbdt.equals("f")) {
       return DriveType.field;
+    } else if (sbdt.equals("p")) {
+      return DriveType.pid;
     } else {
       return DriveType.arcade;
     }

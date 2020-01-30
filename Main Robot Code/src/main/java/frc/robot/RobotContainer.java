@@ -1,16 +1,18 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.ManualDriveCommand;
-import frc.robot.commands.WheelCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonomonousCommand;
 import frc.robot.commands.BallCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ManualDriveCommand;
+import frc.robot.commands.ManualUpdateCommand;
+import frc.robot.commands.WheelCommand;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
@@ -70,8 +72,9 @@ public class RobotContainer {
     controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(positionWheel);
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(spinWheel);
-
-    // Connect the buttons to commands
+    // JoystickButton b = new JoystickButton(xbox, 2);
+    // b.whenPressed(new ManualUpdateCommand(driveTrainSubsystem));
+        // Connect the buttons to commands
   }
 
   /**
