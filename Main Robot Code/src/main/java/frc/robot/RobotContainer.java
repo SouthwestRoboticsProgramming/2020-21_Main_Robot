@@ -90,11 +90,11 @@ public class RobotContainer {
 
   // Single joystick drive
   public double getOneDrive() {
-    return xbox.getY(Hand.kLeft);
+    return -xbox.getY(Hand.kLeft);
   }
 
   public double getOneTurn() {
-    return -xbox.getX(Hand.kLeft);
+    return xbox.getX(Hand.kLeft);
   }
 
   public boolean getOneQuickTurn() {

@@ -51,11 +51,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
 		fxConfig = new TalonFXConfiguration();
 		fxConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
 		fxConfig.neutralDeadband = .001;
-		fxConfig.slot0.kF = 0;
-		fxConfig.slot0.kP = 0;
-		fxConfig.slot0.kI = 0;
-		fxConfig.slot0.kD = 0;
-		// fxConfig.slot0.closedLoopPeakOutput = 1;
+		fxConfig.slot0.kF = Robot.shuffleBoard.driveFXPidF.getDouble(0);
+		fxConfig.slot0.kP = Robot.shuffleBoard.driveFXPidP.getDouble(0);
+		fxConfig.slot0.kI = Robot.shuffleBoard.driveFXPidI.getDouble(0);
+		fxConfig.slot0.kD = Robot.shuffleBoard.driveFXPidD.getDouble(0);
+		fxConfig.slot0.closedLoopPeakOutput = 1;
 		fxConfig.openloopRamp = .5;
 
 
@@ -73,7 +73,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 		leftSlave2.follow(leftMaster);
 		
 		// RIGHT MASTER
-		rightMaster.config_kP(0, .01);
+		rightMaster.config_kP(0, 0);
 		rightMaster.config_kI(0, 0);
 		rightMaster.config_kD(0, 0);
 		rightMaster.config_kF(0, 0);
@@ -177,7 +177,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 	}
 
 	public double percentToVelocity(double percent) {
-		return (percent * maxVelocity);
+		return (percent * maxVelocity)*2;
 	}
 
 	public void driveMotors(double left, double right) {
@@ -199,7 +199,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void periodic() {
 	  differentialDriveOdometry.update(getRHeading(), ticksToMeters(getLeftDriveEncoderTicks()) , ticksToMeters(getRightDriveEncoderTicks()));
 	  Robot.shuffleBoard.drivePosition.setString(differentialDriveOdometry.getPoseMeters().toString());
-	  System.out.print("LV = " + getLeftVelocity());
+	//   System.out.print("LV = " + getLeftVelocity());
   }
 
   public double[] getDrivePid() {

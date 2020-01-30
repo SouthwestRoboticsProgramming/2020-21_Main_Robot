@@ -31,6 +31,7 @@ public class ShuffleBoard{
             public NetworkTableEntry driveTurnPidP = driveTune.addPersistent("driveTurnPID-P", 0).getEntry();
             public NetworkTableEntry driveTurnPidI = driveTune.addPersistent("driveTurnPID-I", 0).getEntry();
             public NetworkTableEntry driveTurnPidD = driveTune.addPersistent("driveTurnPID-D", 0).getEntry();
+            public NetworkTableEntry driveSetPosition = driveTune.addPersistent("driveSetPosition", 0).getEntry();
 
         private ShuffleboardLayout ballTune = Tune.getLayout("ballTune", BuiltInLayouts.kList);
             public NetworkTableEntry ballIntakeSpeed = ballTune.addPersistent("ballIntakeSpeed", .5).getEntry();

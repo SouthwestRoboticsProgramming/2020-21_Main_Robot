@@ -8,8 +8,8 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.CheesyDrive;
 import frc.lib.PID;
@@ -48,6 +48,7 @@ public class ManualDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.putNumber("setPosition", 0);
     // TalonFXConfiguration drive = m_driveTrainSubsystem.getTFXC();
     //     drive.slot0.kF = Robot.shuffleBoard.driveFXPidF.getDouble(0);
     //     drive.slot0.kP = Robot.shuffleBoard.driveFXPidP.getDouble(0);
@@ -103,21 +104,21 @@ public class ManualDriveCommand extends CommandBase {
     } else if (getDriveType() == DriveType.field) {
       Robot.shuffleBoard.driveCurrentType.setString("fieldDrive");
       double setAngle = getJoyAngle(x, y);
+      SmartDashboard.putNumber("setAngle", setAngle);
       setAngle = 1-wallEffectiveness;
       double output = getJoyDistence(x, y);
+      SmartDashboard.putNumber("output", output);
       output = limitAcceleration(output, (prevPowLeft + prevPowRight)/2);
 
-      m_driveTrainSubsystem.driveAtAngle(output, setAngle, ControlMode.PercentOutput);
+      // m_driveTrainSubsystem.driveAtAngle(output, setAngle, ControlMode.PercentOutput);
       prevPowLeft = output;
       prevPowRight = output;
     } else if (getDriveType() == DriveType.pid) {
       // double velocityConvert = m_driveTrainSubsystem.percentToVelocity(y);
-      double velocityConvert = (double)y*20000;
-      // m_driveTrainSubsystem.getLeftMaster().setVoltage(velocityConvert);
-      // m_driveTrainSubsystem.getRightMaster().setVoltage(velocityConvert);
-      m_driveTrainSubsystem.getLeftMaster().set(ControlMode.Position, velocityConvert);
-      m_driveTrainSubsystem.getRightMaster().set(ControlMode.Position, velocityConvert);
-      System.out.print("controller = " + y + " velocityConvert = " + velocityConvert);
+
+      // m_driveTrainSubsystem.getLeftMaster().set(ControlMode.Velocity, velocityConvert);
+      // m_driveTrainSubsystem.getRightMaster().set(ControlMode.Velocity, velocityConvert);
+      // System.out.print("controller = " + y + " velocityConvert = " + velocityConvert);
     } else {
       Robot.shuffleBoard.driveCurrentType.setString("drivetypeNotFound");
     }
@@ -167,13 +168,17 @@ public class ManualDriveCommand extends CommandBase {
   private double getJoyAngle(double jX, double jY) {
     double angle = Math.toDegrees(Math.atan(jX / jY));
     if (jX > 0 && jY > 0) { // I
+      // return (90+angle) + 90;
       return angle;
     } else if (jX < 0 && jY > 0) { // II
+      // return -(90-angle) + 90;
         return angle;
     } else if (jX < 0 && jY < 0) { // III
       return -(90-angle) - 90;
+      // return angle;
     } else if (jX > 0 && jY < 0) { // IV
       return (90+angle) + 90;
+      // return angle;
     } else {
       return 0;
     }
