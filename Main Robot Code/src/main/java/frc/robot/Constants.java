@@ -19,28 +19,31 @@ public final class Constants {
     public static final int PCMID = 37;
     public static final int controllerPort = 0;
 
-    public static final int intakeTalonPort = 10,
+    public static final int leftPort1 = 1,
+                            leftPort2 = 2,
+                            leftPort3 = 3,
+                            rightPort1 = 4,
+                            rightPort2 = 5,
+                            rightPort3 = 6,
+                            intakeTalonPort = 10,
                             ballFlickerTalonPort = 11,
                             beltTalonPort = 12,
                             outputTalonPort = 13,
-                          winchTalonPort = 7, 
-                          elevatorTalonPort = 8,
-                        wheelOfFortuneTalonPort = 9,
-        leftPort1 = 1,
-			  leftPort2 = 2,
-				leftPort3 = 3,
-				rightPort1 = 4,
-				rightPort2 = 5,
-				rightPort3 = 6;
-
+                            winchTalonPort = 7, 
+                            elevatorTalonPort = 8,
+                            wheelOfFortuneTalonPort = 9;
+                            
   public static final int lowerIntakeSolenoidPort = 0,
-                liftIntakeSolenoidPort = 1,
-              lowerBlockSolenoidPort = 2,
-              lowerUnBlockSolenoidPort = 3,
-              upperBlockSolenoidPort = 4,
-              upperUnBlockSolenoidPort = 5,
-             pushSolenoidPort = 6,
-             retractSolenoidPort = 7;
+                          liftIntakeSolenoidPort = 1,
+                          lowerBlockSolenoidPort = 2,
+                          lowerUnBlockSolenoidPort = 3,
+                          upperBlockSolenoidPort = 4,
+                          upperUnBlockSolenoidPort = 5,
+                          pushSolenoidPort = 6,
+                          retractSolenoidPort = 7;
+
+  public static final int ballSensorInPort = 0,
+                          ballSensorOutPort = 1;
 
   public final double wheelCircumferenceMeters = 0.1524;
   public final int encoderTicksPerRotation = 4096;

@@ -22,16 +22,6 @@ public class BallSubsystem extends SubsystemBase {
   private final Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, lowerBlockSolenoid, lowerUnBlockSolenoid, upperBlockSolenoid, upperUnBlockSolenoid;
   private final DigitalInput ballSensorIn, ballSensorOut;
 
-  private final int lowerIntakeSolenoidPort = 0,
-              liftIntakeSolenoidPort = 1,
-              lowerBlockSolenoidPort = 4,
-              lowerUnBlockSolenoidPort = 5,
-              upperBlockSolenoidPort = 2,
-              upperUnBlockSolenoidPort = 3;
-
-  private final int ballSensorInPort = 0,
-              ballSensorOutPort = 1;
-
   private int storedBalls = 3;
   private final int maxStoredBalls = 5;
   private ballMode mode;
@@ -50,15 +40,15 @@ public class BallSubsystem extends SubsystemBase {
     beltVictor.setNeutralMode(NeutralMode.Brake);
     outputVictor.setNeutralMode(NeutralMode.Brake);
 
-    lowerIntakeSolenoid = new Solenoid(lowerIntakeSolenoidPort);
-    liftIntakeSolenoid = new Solenoid(liftIntakeSolenoidPort);
-    lowerBlockSolenoid = new Solenoid(lowerBlockSolenoidPort);
-    lowerUnBlockSolenoid = new Solenoid(lowerUnBlockSolenoidPort);
-    upperBlockSolenoid = new Solenoid(upperBlockSolenoidPort);
-    upperUnBlockSolenoid = new Solenoid(upperUnBlockSolenoidPort);
+    lowerIntakeSolenoid = new Solenoid(Constants.lowerIntakeSolenoidPort);
+    liftIntakeSolenoid = new Solenoid(Constants.liftIntakeSolenoidPort);
+    lowerBlockSolenoid = new Solenoid(Constants.lowerBlockSolenoidPort);
+    lowerUnBlockSolenoid = new Solenoid(Constants.lowerUnBlockSolenoidPort);
+    upperBlockSolenoid = new Solenoid(Constants.upperBlockSolenoidPort);
+    upperUnBlockSolenoid = new Solenoid(Constants.upperUnBlockSolenoidPort);
 
-    ballSensorIn = new DigitalInput(ballSensorInPort);
-    ballSensorOut = new DigitalInput(ballSensorOutPort);
+    ballSensorIn = new DigitalInput(Constants.ballSensorInPort);
+    ballSensorOut = new DigitalInput(Constants.ballSensorOutPort);
   }
 
   // ball state
@@ -72,10 +62,10 @@ public class BallSubsystem extends SubsystemBase {
   public void setBallMode(ballMode mode) {
     double intakeSpeed = Robot.shuffleBoard.ballIntakeSpeed.getDouble(0);
     double flickerInSpeed = Robot.shuffleBoard.ballFlickerInSpeed.getDouble(0);
-      double flickerOutIntakeSpeed = Robot.shuffleBoard.ballFluckerOutIntakeSpeed.getDouble(0);
+    double flickerOutIntakeSpeed = Robot.shuffleBoard.ballFluckerOutIntakeSpeed.getDouble(0);
     double beltsSpeed = Robot.shuffleBoard.ballBeltsSpeed.getDouble(0);
-      double beltsOutIntakeSpeed = Robot.shuffleBoard.ballBeltsOutIntakeSpeed.getDouble(0);
-      double beltsOutOutputSpeed = Robot.shuffleBoard.ballBeltsOutOutputSpeed.getDouble(0);
+    double beltsOutIntakeSpeed = Robot.shuffleBoard.ballBeltsOutIntakeSpeed.getDouble(0);
+    double beltsOutOutputSpeed = Robot.shuffleBoard.ballBeltsOutOutputSpeed.getDouble(0);
     double outputSpeed = Robot.shuffleBoard.ballOutputSpeed.getDouble(0);
 
     if (mode == ballMode.intake) {
