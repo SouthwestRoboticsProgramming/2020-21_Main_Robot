@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
-
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -15,43 +15,40 @@ import frc.robot.Robot;
 
 /*
 * Ball subsystem includes all motors, solenoids, and sensors assosiated with picking up and storing balls.
+  Note that "lower" refers to the part of the belt system near the intake, while "upper" refers to the other end.
 */
 public class BallSubsystem extends SubsystemBase {
   private final WPI_TalonSRX intakeTalon;
-  private final WPI_VictorSPX ballFlickerVictor, beltVictor, outputVictor;
-  private final Solenoid lowerIntakeSolenoid, liftIntakeSolenoid, lowerBlockSolenoid, lowerUnBlockSolenoid, upperBlockSolenoid, upperUnBlockSolenoid;
-  private final DigitalInput ballSensorIn, ballSensorOut;
+  private final WPI_VictorSPX flickerVictor, beltVictor, outputVictor;
+  private final DoubleSolenoid intakeDoubleSolenoid, lowerBlockDoubleSolenoid, upperBlockDoubleSolenoid;
+  private final DigitalInput lowerBallSensor, upperBallSensor;
 
   private int storedBalls = 3;
   private final int maxStoredBalls = 5;
   private ballMode mode;
 
-  private boolean ballSensorInBlocked = false,
-                  ballSensorOutBlocked = false;
+  private boolean lowerBallSensorBlocked = false,
+                  upperBallSensorBlocked = false;
 
   public BallSubsystem() {
     intakeTalon = new WPI_TalonSRX(Constants.intakeTalonPort);
-    ballFlickerVictor = new WPI_VictorSPX(Constants.ballFlickerTalonPort);
-    beltVictor = new WPI_VictorSPX(Constants.beltTalonPort);
-    outputVictor = new WPI_VictorSPX(Constants.outputTalonPort);
+    flickerVictor = new WPI_VictorSPX(Constants.flickerVictorPort);
+    beltVictor = new WPI_VictorSPX(Constants.beltVictorPort);
+    outputVictor = new WPI_VictorSPX(Constants.outputVictorPort);
   
     intakeTalon.setNeutralMode(NeutralMode.Brake);
-    ballFlickerVictor.setNeutralMode(NeutralMode.Brake);
+    flickerVictor.setNeutralMode(NeutralMode.Brake);
     beltVictor.setNeutralMode(NeutralMode.Brake);
     outputVictor.setNeutralMode(NeutralMode.Brake);
 
-    lowerIntakeSolenoid = new Solenoid(Constants.lowerIntakeSolenoidPort);
-    liftIntakeSolenoid = new Solenoid(Constants.liftIntakeSolenoidPort);
-    lowerBlockSolenoid = new Solenoid(Constants.lowerBlockSolenoidPort);
-    lowerUnBlockSolenoid = new Solenoid(Constants.lowerUnBlockSolenoidPort);
-    upperBlockSolenoid = new Solenoid(Constants.upperBlockSolenoidPort);
-    upperUnBlockSolenoid = new Solenoid(Constants.upperUnBlockSolenoidPort);
+    intakeDoubleSolenoid = new DoubleSolenoid(Constants.lowerIntakeSolenoidPort, Constants.liftIntakeSolenoidPort);
+    lowerBlockDoubleSolenoid = new DoubleSolenoid(Constants.closeLowerSolenoidPort, Constants.openLowerSolenoidPort);
+    upperBlockDoubleSolenoid = new DoubleSolenoid(Constants.closeUpperSolenoidPort, Constants.openUpperSolenoidPort);
 
-    ballSensorIn = new DigitalInput(Constants.ballSensorInPort);
-    ballSensorOut = new DigitalInput(Constants.ballSensorOutPort);
+    lowerBallSensor = new DigitalInput(Constants.lowerBallSensorPort);
+    upperBallSensor = new DigitalInput(Constants.upperBallSensorPort);
   }
 
-  // ball state
   public enum ballMode{
     intake,
     hold,
@@ -60,16 +57,17 @@ public class BallSubsystem extends SubsystemBase {
   }
 
   public void setBallMode(ballMode mode) {
+
     double intakeSpeed = Robot.shuffleBoard.ballIntakeSpeed.getDouble(0);
     double flickerInSpeed = Robot.shuffleBoard.ballFlickerInSpeed.getDouble(0);
     double flickerOutIntakeSpeed = Robot.shuffleBoard.ballFluckerOutIntakeSpeed.getDouble(0);
-    double beltsSpeed = Robot.shuffleBoard.ballBeltsSpeed.getDouble(0);
+    double beltSpeed = Robot.shuffleBoard.ballBeltsSpeed.getDouble(0);
     double beltsOutIntakeSpeed = Robot.shuffleBoard.ballBeltsOutIntakeSpeed.getDouble(0);
     double beltsOutOutputSpeed = Robot.shuffleBoard.ballBeltsOutOutputSpeed.getDouble(0);
     double outputSpeed = Robot.shuffleBoard.ballOutputSpeed.getDouble(0);
 
     if (mode == ballMode.intake) {
-      setBallState(true, false, true, intakeSpeed, flickerInSpeed, beltsSpeed, outputSpeed);
+      setBallState(true, false, true, intakeSpeed, flickerInSpeed, beltSpeed, outputSpeed);
     } else if (mode == ballMode.hold) {
       setBallState(false, true, true, 0, 0, 0, 0);
     } else if (mode == ballMode.unloadIntake) {
@@ -81,95 +79,114 @@ public class BallSubsystem extends SubsystemBase {
   }
 
   
-  private void setBallState(boolean intakeLowered, boolean lowerBlocked, boolean upperBlocked, double ballIntakeSpeed, 
-                          double ballFlickerSpeed, double belts, double output) {
-    setIntake(intakeLowered);
-    setLowerBlocker(lowerBlocked);
-    setUpperBlocker(upperBlocked);
-    setIntake(ballIntakeSpeed);
-    setBallFlicker(ballFlickerSpeed);
-    setBelt(belts);
-    setOutput(output);
+  private void setBallState(boolean intakeDown, boolean lowerBlocked, boolean upperBlocked, double intakeSpeed, 
+                          double flickerSpeed, double beltSpeed, double outputSpeed) {
+    setIntakeDown(intakeDown);
+    setLowerBlocked(lowerBlocked);
+    setUpperBlocked(upperBlocked);
+    setIntakeSpeed(intakeSpeed);
+    setFlickerSpeed(flickerSpeed);
+    setBeltSpeed(beltSpeed);
+    setOutputSpeed(outputSpeed);
   }
 
-  // Intake motor
-  private void setIntake(double x) {
+  // Set intake motor speed percent and outputs to dashboard.
+  private void setIntakeSpeed(double x) {
     intakeTalon.set(ControlMode.PercentOutput, x);
     Robot.shuffleBoard.ballIntakeOutput.setDouble(intakeTalon.getMotorOutputPercent());
   }
 
-  // ball flicker motor
-  private void setBallFlicker(double x) {
-    ballFlickerVictor.set(ControlMode.PercentOutput, x);
-    Robot.shuffleBoard.ballFlickerOutput.setDouble(ballFlickerVictor.getMotorOutputPercent());
+  // Set flicker motor speed percent and outputs to dashboard.
+  private void setFlickerSpeed(double x) {
+    flickerVictor.set(ControlMode.PercentOutput, x);
+    Robot.shuffleBoard.ballFlickerOutput.setDouble(flickerVictor.getMotorOutputPercent());
   }
 
-  //Belt motor
-  private void setBelt(double x) {
+  // Set belt motor speed percent and outputs to dashboard.
+  private void setBeltSpeed(double x) {
     beltVictor.set(ControlMode.PercentOutput, x);
     Robot.shuffleBoard.ballBeltsOutput.setDouble(beltVictor.getMotorOutputPercent());
   }
 
-  //Output motor
-  private void setOutput(double x) {
+  // Set output motor speed percent and outputs to dashboard.
+  private void setOutputSpeed(double x) {
     outputVictor.set(ControlMode.PercentOutput, x);
     Robot.shuffleBoard.ballOutputOutput.setDouble(outputVictor.getMotorOutputPercent());
   }
 
-  //Intake solenoids
-  private void setIntake(Boolean intake) {
-    liftIntakeSolenoid.set(!intake);
-    lowerIntakeSolenoid.set(intake);
-    Robot.shuffleBoard.ballLiftIntakeSolenoid.setBoolean(liftIntakeSolenoid.get());
-    Robot.shuffleBoard.ballLowerIntakeSolenoid.setBoolean(lowerIntakeSolenoid.get());
+  //Set intake down and outputs to dashboard.
+  private void setIntakeDown(Boolean intakeDown) {
+    if (intakeDown) {
+      intakeDoubleSolenoid.set(Value.kForward);
+    }
+    else {
+      intakeDoubleSolenoid.set(Value.kReverse);
+    }
+
+    //TODO: Add shuffleBoard to this function
+    // Robot.shuffleBoard.ballLiftIntakeSolenoid.setBoolean(liftIntakeSolenoid.get());
+    // Robot.shuffleBoard.ballLowerIntakeSolenoid.setBoolean(lowerIntakeSolenoid.get());
   }
 
-  //Blocker solenoids
-  private void setLowerBlocker(Boolean blocked) {
-    lowerBlockSolenoid.set(blocked);
-    lowerUnBlockSolenoid.set(!blocked);
-    Robot.shuffleBoard.ballLowerBlockSolenoid.setBoolean(lowerBlockSolenoid.get());
-    Robot.shuffleBoard.ballLowerUnBlockSolenoid.setBoolean(lowerUnBlockSolenoid.get());
+  //Block lower and outputs to dashboard.
+  private void setLowerBlocked(Boolean blocked) {
+    if (blocked) {
+      lowerBlockDoubleSolenoid.set(Value.kForward);
+    }
+    else {
+      lowerBlockDoubleSolenoid.set(Value.kReverse);
+    }
+    
+    //TODO: Add shuffleBoard to this function
+    // Robot.shuffleBoard.ballLowerBlockSolenoid.setBoolean(lowerBlockSolenoid.get());
+    // Robot.shuffleBoard.ballLowerUnBlockSolenoid.setBoolean(lowerUnBlockSolenoid.get());
   }
 
-  private void setUpperBlocker(Boolean blocked) {
-    upperBlockSolenoid.set(blocked);
-    upperUnBlockSolenoid.set(!blocked);
-    Robot.shuffleBoard.ballUpperBlockSolenoid.setBoolean(upperBlockSolenoid.get());
-    Robot.shuffleBoard.ballUpperUnBlockSolenoid.setBoolean(upperUnBlockSolenoid.get());
+  //Block upper and outputs to dashboard.
+  private void setUpperBlocked(Boolean blocked) {
+    if (blocked) {
+      upperBlockDoubleSolenoid.set(Value.kForward);
+    }
+    else {
+      upperBlockDoubleSolenoid.set(Value.kReverse);
+    }
+
+    //TODO: Add shuffleBoard to this function
+    // Robot.shuffleBoard.ballUpperBlockSolenoid.setBoolean(upperBlockSolenoid.get());
+    // Robot.shuffleBoard.ballUpperUnBlockSolenoid.setBoolean(upperUnBlockSolenoid.get());
   }
 
   //Ball sensor in
-  public boolean getBallSensorIn() {
-    Robot.shuffleBoard.ballSensorInDIO.setBoolean(ballSensorIn.get());
-    return ballSensorIn.get();
+  public boolean getLowerBallSensor() {
+    Robot.shuffleBoard.ballSensorInDIO.setBoolean(lowerBallSensor.get());
+    return lowerBallSensor.get();
   }
 
   //Ball sensor out
-  public boolean getBallSensorOut() {
-    Robot.shuffleBoard.ballSensorOutDIO.setBoolean(ballSensorOut.get());
-    return ballSensorOut.get();
+  public boolean getUpperBallSensor() {
+    Robot.shuffleBoard.ballSensorOutDIO.setBoolean(upperBallSensor.get());
+    return upperBallSensor.get();
   }
 
   @Override
   public void periodic() {
     // countBalls
-    if (getBallSensorIn() && !ballSensorInBlocked) {
+    if (getLowerBallSensor() && !lowerBallSensorBlocked) {
       if (mode == ballMode.intake) {
         storedBalls ++;
       } else if (mode == ballMode.unloadIntake) {
         storedBalls --;
       }
-      ballSensorInBlocked = true;
-    } else if (!getBallSensorIn() && ballSensorInBlocked) {
-      ballSensorInBlocked = false;
+      lowerBallSensorBlocked = true;
+    } else if (!getLowerBallSensor() && lowerBallSensorBlocked) {
+      lowerBallSensorBlocked = false;
     }
 
-    if (getBallSensorOut() && !ballSensorOutBlocked) {
+    if (getUpperBallSensor() && !upperBallSensorBlocked) {
       storedBalls --;
-      ballSensorOutBlocked = true;
-    } else if (!getBallSensorOut() && ballSensorOutBlocked) {
-      ballSensorOutBlocked = false;
+      upperBallSensorBlocked = true;
+    } else if (!getUpperBallSensor() && upperBallSensorBlocked) {
+      upperBallSensorBlocked = false;
     }
 
     // stop once 5 balls

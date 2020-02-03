@@ -26,24 +26,24 @@ public final class Constants {
                             rightPort2 = 5,
                             rightPort3 = 6,
                             intakeTalonPort = 10,
-                            ballFlickerTalonPort = 11,
-                            beltTalonPort = 12,
-                            outputTalonPort = 13,
+                            flickerVictorPort = 11,
+                            beltVictorPort = 12,
+                            outputVictorPort = 13,
                             winchTalonPort = 7, 
                             elevatorTalonPort = 8,
                             wheelOfFortuneTalonPort = 9;
                             
   public static final int lowerIntakeSolenoidPort = 0,
                           liftIntakeSolenoidPort = 1,
-                          lowerBlockSolenoidPort = 2,
-                          lowerUnBlockSolenoidPort = 3,
-                          upperBlockSolenoidPort = 4,
-                          upperUnBlockSolenoidPort = 5,
+                          closeLowerSolenoidPort = 2,
+                          openLowerSolenoidPort = 3,
+                          closeUpperSolenoidPort = 4,
+                          openUpperSolenoidPort = 5,
                           pushSolenoidPort = 6,
                           retractSolenoidPort = 7;
 
-  public static final int ballSensorInPort = 0,
-                          ballSensorOutPort = 1;
+  public static final int lowerBallSensorPort = 0,
+                          upperBallSensorPort = 1;
 
   public final double wheelCircumferenceMeters = 0.1524;
   public final int encoderTicksPerRotation = 4096;
