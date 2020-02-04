@@ -168,9 +168,8 @@ public class BallSubsystem extends SubsystemBase {
     return upperBallSensor.get();
   }
 
-  @Override
-  public void periodic() {
-    // countBalls
+  // Function which handles ball counting logic.
+  private void ballCounter() {
     if (getLowerBallSensor() && !lowerBallSensorBlocked) {
       if (mode == ballMode.intake) {
         storedBalls ++;
@@ -193,5 +192,11 @@ public class BallSubsystem extends SubsystemBase {
     if (storedBalls >= maxStoredBalls && mode == ballMode.intake) {
       setBallMode(ballMode.hold);
     }
+  }
+  
+
+  @Override
+  public void periodic() {
+    ballCounter();
   }
 }
