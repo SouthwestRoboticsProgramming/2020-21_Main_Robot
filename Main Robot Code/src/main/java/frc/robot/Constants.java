@@ -16,23 +16,28 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    //TODO: Possibly use convention of PORT_NAME_1 for finals?
+    //TODO: Classify by what kind of ports used rather than type of thing?
+
     public static final int PCMID = 37;
     public static final int controllerPort = 0;
 
+    //Motor controllers
     public static final int leftPort1 = 1,
                             leftPort2 = 2,
                             leftPort3 = 3,
                             rightPort1 = 4,
                             rightPort2 = 5,
                             rightPort3 = 6,
+                            winchTalonPort = 7, 
+                            elevatorTalonPort = 8,
+                            wheelOfFortuneTalonPort = 9,
                             intakeTalonPort = 10,
                             flickerVictorPort = 11,
                             beltVictorPort = 12,
-                            outputVictorPort = 13,
-                            winchTalonPort = 7, 
-                            elevatorTalonPort = 8,
-                            wheelOfFortuneTalonPort = 9;
-                            
+                            outputVictorPort = 13;
+            
+  //Solenoids
   public static final int lowerIntakeSolenoidPort = 0,
                           liftIntakeSolenoidPort = 1,
                           closeLowerSolenoidPort = 2,
@@ -42,6 +47,7 @@ public final class Constants {
                           pushSolenoidPort = 6,
                           retractSolenoidPort = 7;
 
+  //Sensors
   public static final int lowerBallSensorPort = 0,
                           upperBallSensorPort = 1;
 

@@ -41,9 +41,9 @@ public class BallSubsystem extends SubsystemBase {
     beltVictor.setNeutralMode(NeutralMode.Brake);
     outputVictor.setNeutralMode(NeutralMode.Brake);
 
-    intakeDoubleSolenoid = new DoubleSolenoid(Constants.lowerIntakeSolenoidPort, Constants.liftIntakeSolenoidPort);
-    lowerBlockDoubleSolenoid = new DoubleSolenoid(Constants.closeLowerSolenoidPort, Constants.openLowerSolenoidPort);
-    upperBlockDoubleSolenoid = new DoubleSolenoid(Constants.closeUpperSolenoidPort, Constants.openUpperSolenoidPort);
+    intakeDoubleSolenoid = new DoubleSolenoid(Constants.PCMID, Constants.lowerIntakeSolenoidPort, Constants.liftIntakeSolenoidPort);
+    lowerBlockDoubleSolenoid = new DoubleSolenoid(Constants.PCMID, Constants.closeLowerSolenoidPort, Constants.openLowerSolenoidPort);
+    upperBlockDoubleSolenoid = new DoubleSolenoid(Constants.PCMID, Constants.closeUpperSolenoidPort, Constants.openUpperSolenoidPort);
 
     lowerBallSensor = new DigitalInput(Constants.lowerBallSensorPort);
     upperBallSensor = new DigitalInput(Constants.upperBallSensorPort);

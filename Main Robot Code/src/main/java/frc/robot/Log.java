@@ -8,7 +8,9 @@
 package frc.robot;
 
 /**
- * Add your docs here.
+ * Class responsible for logging messages. 
+ * To log a message, import Log and call
+ * Log.info("message here")
  */
 import java.util.logging.Level;
 import java.util.logging.Logger;

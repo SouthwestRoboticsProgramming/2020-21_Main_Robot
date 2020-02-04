@@ -7,7 +7,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.TCA9548A;
 import frc.robot.Constants;
@@ -19,7 +20,7 @@ import frc.robot.Robot;
 public class WheelSubsystem extends SubsystemBase {
 
   private final WPI_TalonSRX spinnerTalon;
-  private final Solenoid pushSolenoid, retractSolenoid;
+  private final DoubleSolenoid wheelDoubleSolenoid;
   private final ADXRS450_Gyro gyro;
   private double gyroOffset = 0;
 
@@ -33,10 +34,9 @@ public class WheelSubsystem extends SubsystemBase {
   
   public WheelSubsystem() {
     spinnerTalon = new WPI_TalonSRX(spinnerTalonPort);
-    pushSolenoid = new Solenoid(Constants.PCMID, Constants.pushSolenoidPort);
-    retractSolenoid = new Solenoid(Constants.PCMID, Constants.retractSolenoidPort);
+    wheelDoubleSolenoid = new DoubleSolenoid(Constants.PCMID, Constants.pushSolenoidPort, Constants.retractSolenoidPort);
     gyro = new ADXRS450_Gyro(Port.kMXP);
-    if (retractSolenoid.get()) {
+    if (wheelDoubleSolenoid.get()==Value.kReverse) {
       gyroOffset = gyro.getAngle()-30;
     } else {
       gyroOffset = gyro.getAngle()-110;
@@ -78,10 +78,16 @@ public class WheelSubsystem extends SubsystemBase {
   
   //Push solenoid 
   public void setPushedState(boolean pushed) {
-    pushSolenoid.set(pushed);
-    retractSolenoid.set(!pushed);
-    Robot.shuffleBoard.wheelPushSolenoid.setBoolean(pushSolenoid.get());
-    Robot.shuffleBoard.wheelRetractSolenoid.setBoolean(retractSolenoid.get());
+    if (pushed) {
+      wheelDoubleSolenoid.set(Value.kForward);
+    }
+    else {
+      wheelDoubleSolenoid.set(Value.kReverse);
+    }
+    
+    //TODO: Readd shuffleboard
+    // Robot.shuffleBoard.wheelPushSolenoid.setBoolean(pushSolenoid.get());
+    // Robot.shuffleBoard.wheelRetractSolenoid.setBoolean(retractSolenoid.get());
   }
 
   //Color sensor
