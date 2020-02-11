@@ -89,18 +89,27 @@ public class RobotContainer {
   //TODO: Do these functions need to be in robotContainer? What are they for?
 
   // Single joystick drive
-  public double getOneDrive() {
-    return -xbox.getY(Hand.kLeft);
+  public double getLeftDrive() {
+    return xbox.getY(Hand.kLeft);
   }
 
-  public double getOneTurn() {
+  public double getLeftTurn() {
     return xbox.getX(Hand.kLeft);
+  }
+
+  public double getRightDrive() {
+    return xbox.getY(Hand.kRight);
+  }
+
+  public double getRightTurn() {
+    return xbox.getX(Hand.kRight);
   }
 
   public boolean getOneQuickTurn() {
     return xbox.getBButton();
   }
 
+  //TODO: What does effectiveness mean?
   public double getWallEffeciveness() {
     return 0;
   }
@@ -109,7 +118,7 @@ public class RobotContainer {
     return 0;
   }
 
-  // Highly important function
+  // Highly important function 
   public <A extends Number> double YEET(A x, A y) {
     return (double) x + (double) y;
   }
