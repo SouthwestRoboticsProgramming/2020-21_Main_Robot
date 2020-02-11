@@ -67,12 +67,9 @@ public class ShuffleBoard{
             public NetworkTableEntry ballBeltsOutput = ballDebug.add("ballBeltsOutput", 0).getEntry();
             public NetworkTableEntry ballOutputOutput = ballDebug.add("ballOutputOutput", 0).getEntry();
             //solenoids
-            public NetworkTableEntry ballLowerIntakeSolenoid = ballDebug.add("ballLowerIntakeSolenoid", 0).getEntry();
-            public NetworkTableEntry ballLiftIntakeSolenoid = ballDebug.add("ballLiftIntakeSolenoid", 0).getEntry();
-            public NetworkTableEntry ballLowerBlockSolenoid = ballDebug.add("ballLowerBlockSolenoid", 0).getEntry();
-            public NetworkTableEntry ballLowerUnBlockSolenoid = ballDebug.add("ballLowerUnBlockSolenoid", 0).getEntry();
-            public NetworkTableEntry ballUpperBlockSolenoid = ballDebug.add("ballUpperBlockSolenoid", 0).getEntry();
-            public NetworkTableEntry ballUpperUnBlockSolenoid = ballDebug.add("ballUpperUnBlockSolenoid", 0).getEntry();
+            public NetworkTableEntry ballIntakeState = ballDebug.add("ballIntakeState", 0).getEntry();
+            public NetworkTableEntry ballLowerBlockerState = ballDebug.add("ballLowerBlockerState", 0).getEntry();
+            public NetworkTableEntry ballUpperBlockerState = ballDebug.add("ballUpperBlockerState", 0).getEntry();
             //DIO
             public NetworkTableEntry ballSensorInDIO = ballDebug.add("ballSensorInDIO", 0).getEntry();
             public NetworkTableEntry ballSensorOutDIO = ballDebug.add("ballSensorOutDIO", 0).getEntry();
