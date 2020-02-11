@@ -23,11 +23,14 @@ public class ManualDriveCommand extends CommandBase {
   private PID wallFollow;
   private PID limeLight;
   
+  //Previous l
   private double prevPowLeft = 0;
   private double prevPowRight = 0;
   private double prevRotation = 0;
 
+  //Maximum change in motor speed per execute
   public static final double maxSpeedDiff = 0.08;
+  public static final double rotatMulti = .55;
 
   public enum DriveType {
     arcade, cheezy, field, pid;
@@ -78,9 +81,11 @@ public class ManualDriveCommand extends CommandBase {
     rightAuto -= limelightOffset * limelightEffectiveness;
 
     // driver
-    double rotatMulti = .55;
-    double x = Robot.robotContainer.getOneTurn();
-    double y = Robot.robotContainer.getOneDrive();
+    double x = Robot.robotContainer.getLeftTurn();
+    //TODO: Why is y negative?
+    double y = -1 * Robot.robotContainer.getLeftDrive();
+    double xRight = Robot.robotContainer.getRightTurn();
+    double yRight = Robot.robotContainer.getRightDrive();
     double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0);
     boolean quickTurn = Robot.robotContainer.getOneQuickTurn();
 
@@ -101,12 +106,12 @@ public class ManualDriveCommand extends CommandBase {
       double rightPow = signal.getRight();
 
       m_driveTrainSubsystem.driveMotors((leftPow + leftAuto)*driveSpeed, (rightPow + rightAuto)*driveSpeed);
-    } else if (getDriveType() == DriveType.field) {
+    } else if (getDriveType() == DriveType.field) { //Field oriented driving
       Robot.shuffleBoard.driveCurrentType.setString("fieldDrive");
-      double setAngle = getJoyAngle(x, y);
+      double setAngle = getJoyAngle(xRight, yRight);
       SmartDashboard.putNumber("setAngle", setAngle);
       setAngle = 1-wallEffectiveness;
-      double output = getJoyDistence(x, y);
+      double output = getJoyDistance(xRight, yRight);
       SmartDashboard.putNumber("output", output);
       output = limitAcceleration(output, (prevPowLeft + prevPowRight)/2);
 
@@ -184,7 +189,7 @@ public class ManualDriveCommand extends CommandBase {
     }
   }
 
-  private double getJoyDistence(double jX, double jY) {
+  private double getJoyDistance(double jX, double jY) {
     return Math.sqrt(Math.pow(jX, 2) + Math.pow(jY, 2));
   }
 
