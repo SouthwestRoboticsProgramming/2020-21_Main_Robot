@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,8 +12,8 @@ import frc.robot.commands.AutonomonousCommand;
 import frc.robot.commands.BallCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ManualDriveCommand;
-import frc.robot.commands.ManualUpdateCommand;
 import frc.robot.commands.WheelCommand;
+// import frc.robot.commands.HopperCommands.IntakeBallsCommand;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
@@ -29,6 +30,7 @@ import frc.robot.subsystems.WheelSubsystem;
  */
 
 public class RobotContainer {
+
   private final BallSubsystem ballSubsystem = new BallSubsystem();
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
   public final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
@@ -37,10 +39,12 @@ public class RobotContainer {
   
   private final Xbox controller = new Xbox(Constants.controllerPort);
   private final XboxController xbox = new XboxController(0);
+  private final Joystick xboxJoy = new Joystick(0);
+  private final JoystickButton intakeBalls = new JoystickButton(xboxJoy, 4);
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem);
-  private final CommandBase ballSubsystemCommand = new BallCommand(ballSubsystem, ballMode.hold);
+  // private final CommandBase ballSubsystemCommand = new BallCommand(ballSubsystem, ballMode.hold);
   private final CommandBase spinWheel = new WheelCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelCommand.Spin.Revolutions);
   private final CommandBase positionWheel = new WheelCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelCommand.Spin.Position);
   private final CommandBase climb = new ClimbCommand(climbSubsystem);
@@ -65,13 +69,15 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Create some buttons
-    controller.getButton(Xbox.Button.intake).whenPressed(new BallCommand(ballSubsystem, ballMode.intake));
-    controller.getButton(Xbox.Button.hold).whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
-    controller.getButton(Xbox.Button.unloadIntake).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
-    controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
+    // // Create some buttons
+    // controller.getButton(Xbox.Button.intake).whenPressed(new BallCommand(ballSubsystem, ballMode.intake));
+    // controller.getButton(Xbox.Button.hold).whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
+    // controller.getButton(Xbox.Button.unloadIntake).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
+    // controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(positionWheel);
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(spinWheel);
+
+    intakeBalls.whenPressed(new BallCommand(ballSubsystem));
     // JoystickButton b = new JoystickButton(xbox, 2);
     // b.whenPressed(new ManualUpdateCommand(driveTrainSubsystem));
         // Connect the buttons to commands

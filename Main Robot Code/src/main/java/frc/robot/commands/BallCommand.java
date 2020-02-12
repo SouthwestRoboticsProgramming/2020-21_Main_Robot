@@ -17,25 +17,25 @@ import frc.robot.subsystems.BallSubsystem.ballMode;
 */
 public class BallCommand extends CommandBase {
   private final BallSubsystem m_ballSubsystem;
-  private ballMode m_mode;
+  // private ballMode m_mode;
   
 
-  public BallCommand(BallSubsystem ballSubsystem, ballMode mode) {
+  public BallCommand(BallSubsystem ballSubsystem) {
     addRequirements(ballSubsystem);
     this.m_ballSubsystem = ballSubsystem;
-    this.m_mode = mode;
+    // this.m_mode = mode;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ballSubsystem.setBallMode(ballMode.hold);
+    m_ballSubsystem.setBallMode(ballMode.intake);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ballSubsystem.setBallMode(m_mode);
+    // m_ballSubsystem.setBallMode(m_mode);
   }
 
   // Called once the command ends or is interrupted.

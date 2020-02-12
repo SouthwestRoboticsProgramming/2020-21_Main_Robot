@@ -186,7 +186,7 @@ public class BallSubsystem extends SubsystemBase {
       intakeLiftSolenoid.set(true);
     }
 
-    Robot.shuffleBoard.ballIntakeState.setValue(intakeLiftSolenoid.get());
+    // Robot.shuffleBoard.ballIntakeState.setValue(intakeLiftSolenoid.get());
   }
 
   //Block lower and outputs to dashboard.
@@ -197,7 +197,7 @@ public class BallSubsystem extends SubsystemBase {
       lowerBlockDoubleSolenoid.set(Value.kReverse);
     }
     
-    Robot.shuffleBoard.ballLowerBlockerState.setValue(lowerBlockDoubleSolenoid.get());
+    // Robot.shuffleBoard.ballLowerBlockerState.setBoolean(lowerBlockDoubleSolenoid.get());
   }
 
   //Block upper and outputs to dashboard.
@@ -208,7 +208,7 @@ public class BallSubsystem extends SubsystemBase {
       upperBlockDoubleSolenoid.set(Value.kReverse);
     }
 
-    Robot.shuffleBoard.ballUpperBlockerState.setValue(upperBlockDoubleSolenoid.get());
+    // Robot.shuffleBoard.ballUpperBlockerState.setValue(upperBlockDoubleSolenoid.get());
   }
 
   //Ball sensor in
