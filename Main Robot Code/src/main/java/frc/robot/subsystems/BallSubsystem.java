@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -64,7 +65,6 @@ public class BallSubsystem extends SubsystemBase {
   }
 
   public void setBallMode(ballMode mode) {
-
     double intakeSpeed = Robot.shuffleBoard.ballIntakeSpeed.getDouble(0);
     double flickerInSpeed = Robot.shuffleBoard.ballFlickerInSpeed.getDouble(0);
     double flickerOutIntakeSpeed = Robot.shuffleBoard.ballFluckerOutIntakeSpeed.getDouble(0);
@@ -86,12 +86,13 @@ public class BallSubsystem extends SubsystemBase {
   }
 
   
-  private void setBallState(boolean intakeDown, boolean lowerBlocked, boolean upperBlocked, double intakeSpeed, 
+  public void setBallState(boolean intakeDown, boolean lowerBlocked, boolean upperBlocked, double intakeSpeed, 
                           double flickerSpeed, double beltSpeed, double outputSpeed) {
     setIntakeDown(intakeDown);
     setLowerBlocked(lowerBlocked);
     setUpperBlocked(upperBlocked);
     setIntakeSpeed(intakeSpeed);
+    // accelerateIntake(intakeTalon, intakeSpeed, .01);
     setFlickerSpeed(flickerSpeed);
     setBeltSpeed(beltSpeed);
     setOutputSpeed(outputSpeed);
@@ -247,6 +248,31 @@ public class BallSubsystem extends SubsystemBase {
     if (storedBalls >= maxStoredBalls && mode == ballMode.intake) {
       setBallMode(ballMode.hold);
     }
+  }
+
+  private void accelerateIntake(WPI_TalonSRX talonSRX, double setPercentage, double acceleration) {
+    double tolerance = acceleration * 1.5;
+    Looper accelerator;
+    Loop accelerate = new Loop(){
+        @Override public void onStart() {
+        }
+        @Override public void onLoop() {
+          double currentPercent = talonSRX.get();
+          if (Math.abs(currentPercent - setPercentage) < tolerance) {
+            looper.stop();
+          }
+          if (currentPercent < setPercentage) {
+            setIntakeSpeed(currentPercent + acceleration);
+          } else if (currentPercent > setPercentage) {
+            setIntakeSpeed(currentPercent - acceleration);
+          }
+        }
+        @Override public void onStop() {
+          setIntakeSpeed(setPercentage);
+        }
+      };
+      accelerator = new Looper(accelerate, 50);
+      accelerator.start();
   }
   
 

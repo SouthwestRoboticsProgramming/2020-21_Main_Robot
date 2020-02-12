@@ -38,9 +38,13 @@ public class RobotContainer {
   private final DriverFeedbackSubsystem driverFeedback = new DriverFeedbackSubsystem(this);
   
   private final Xbox controller = new Xbox(Constants.controllerPort);
+
   private final XboxController xbox = new XboxController(0);
   private final Joystick xboxJoy = new Joystick(0);
   private final JoystickButton intakeBalls = new JoystickButton(xboxJoy, 4);
+  private final JoystickButton holdBalls = new JoystickButton(xboxJoy, 5);
+  private final JoystickButton unloadIntakeBalls = new JoystickButton(xboxJoy, 6);
+  private final JoystickButton unloadOuttakeBalls = new JoystickButton(xboxJoy, 7);
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem);
@@ -77,7 +81,10 @@ public class RobotContainer {
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(positionWheel);
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(spinWheel);
 
-    intakeBalls.whenPressed(new BallCommand(ballSubsystem));
+    intakeBalls.whenPressed(new BallCommand(ballSubsystem, ballMode.intake));
+    holdBalls.whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
+    unloadIntakeBalls.whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
+    unloadOuttakeBalls.whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
     // JoystickButton b = new JoystickButton(xbox, 2);
     // b.whenPressed(new ManualUpdateCommand(driveTrainSubsystem));
         // Connect the buttons to commands

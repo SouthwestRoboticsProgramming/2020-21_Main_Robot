@@ -17,25 +17,24 @@ import frc.robot.subsystems.BallSubsystem.ballMode;
 */
 public class BallCommand extends CommandBase {
   private final BallSubsystem m_ballSubsystem;
-  // private ballMode m_mode;
+  private ballMode ballMode;
   
 
-  public BallCommand(BallSubsystem ballSubsystem) {
+  public BallCommand(BallSubsystem ballSubsystem, ballMode ballMode) {
     addRequirements(ballSubsystem);
     this.m_ballSubsystem = ballSubsystem;
-    // this.m_mode = mode;
+    this.ballMode = ballMode;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ballSubsystem.setBallMode(ballMode.intake);
+    m_ballSubsystem.setBallMode(ballMode);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // m_ballSubsystem.setBallMode(m_mode);
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +45,6 @@ public class BallCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
