@@ -5,42 +5,12 @@
 // /* the project.                                                               */
 // /*----------------------------------------------------------------------------*/
 
-// package frc.robot.interfaces;
+package frc.robot.interfaces;
 
-// /**
-//  * Add your docs here.
-//  */
-// public interface Controller {
-//     R<Doub> get();
-//     Trigger Ball;
-//     Trigger Climb;
-//     Trigger ManualDrive;
-//     Trigger Wheel;
-// }
-
-/*
-
-public class OI {
-    Controller controller;
-
-    public void robotInit() {
-        controller = new Controller() {
-            private Xbox xbox = new Xbox(0);
-            public get() {
-                Vector dir = new Vector(xbox.getX(Hand.kLeft),xbox.getY(Hand.kLeft));
-                dir.mag()
-            }
-        }
-
-
-    }
-
+public interface Controller {
+     final Control<R<Doub>> Ball;
+     final Control<R<Doub>> Climb;
+     final Control<R<Doub>> Manual;
+     final Control<R<Doub>> Wheel;
 }
 
-        controller = new Controller() {
-            private Xbox xbox = new Xbox(0);
-            public get() {
-                return new Vector( xbox.getY(Hand.kLeft), xbox.getY(Hand.kRight));
-            }
-        }
-*/
