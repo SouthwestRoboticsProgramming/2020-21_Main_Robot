@@ -31,7 +31,9 @@ public class BallSubsystem extends SubsystemBase {
   private int storedBalls = 0;
   private final int maxStoredBalls = 5;
   private ballMode mode;
-  private Looper looper;
+  private Looper pushForwardLooper;
+  private Looper waitToStopLooper;
+  private Looper holdDownLooper;
 
   private boolean lowerBallSensorBlocked = false,
                   upperBallSensorBlocked = false;
@@ -131,71 +133,71 @@ public class BallSubsystem extends SubsystemBase {
 
   //Set intake down and outputs to dashboard.
   private void setIntakeDown(Boolean intakeDown) {
-    intakeLowerSolenoid.set(!intakeDown);
-    intakeLiftSolenoid.set(intakeDown);
+    // intakeLowerSolenoid.set(!intakeDown);
+    // intakeLiftSolenoid.set(intakeDown);
     // System.out.println("BallSubsystem.setIntakeDown() intake set to ::: " + intakeDown);
-    // if (intakeDown) {
-    //   final int timeToPushForward = 10;
-    //   final int timeBeforeStopping = 10;
-    //   final int timeBeforeHolingIntakeDown = 10;
-    //   long currentTime = System.currentTimeMillis();
+    if (intakeDown) {
+      final int timeToPushForward = 1000;
+      final int timeBeforeStopping = 1000;
+      final int timeBeforeHolingIntakeDown = 1000;
+      long currentTime = System.currentTimeMillis();
 
-    //   //Push intake forward
-    //   Loop pushForward = new Loop(){
-    //     @Override public void onStart() {
-    //       intakeLowerSolenoid.set(true);
-    //       intakeLiftSolenoid.set(false);
-    //     }
-    //     @Override public void onLoop() {
-    //       if (currentTime + timeToPushForward >= System.currentTimeMillis()) {
-    //         looper.stop();
-    //       }
-    //     }
-    //     @Override public void onStop() {
-    //       intakeLowerSolenoid.set(false);
-    //         intakeLiftSolenoid.set(false);
-    //     }
-    //   };
-    //   looper = new Looper(pushForward, 50);
-    //   looper.start();
+      //Push intake forward
+      Loop pushForward = new Loop(){
+        @Override public void onStart() {
+          intakeLowerSolenoid.set(true);
+          intakeLiftSolenoid.set(false);
+        }
+        @Override public void onLoop() {
+          if (currentTime + timeToPushForward >= System.currentTimeMillis()) {
+            pushForwardLooper.stop();
+          }
+        }
+        @Override public void onStop() {
+          intakeLowerSolenoid.set(false);
+            intakeLiftSolenoid.set(true);
+          waitToStopLooper.start();
+        }
+      };
+      pushForwardLooper = new Looper(pushForward, 50);
+      pushForwardLooper.start();
 
       
-    //   Loop waitToStop = new Loop(){
-    //     @Override public void onStart() {
-    //     }
-    //     @Override public void onLoop() {
-    //       if (currentTime + timeToPushForward + timeBeforeStopping >= System.currentTimeMillis()) {
-    //         intakeLowerSolenoid.set(false);
-    //         intakeLiftSolenoid.set(true);
-    //         looper.stop();
-    //       }
-    //     }
-    //     @Override public void onStop() {
-    //     }
-    //   };
-    //   looper = new Looper(waitToStop, 50);
-    //   looper.start();
+      Loop waitToStop = new Loop(){
+        @Override public void onStart() {
+        }
+        @Override public void onLoop() {
+          if (currentTime + timeToPushForward + timeBeforeStopping >= System.currentTimeMillis()) {
+            intakeLowerSolenoid.set(false);
+            intakeLiftSolenoid.set(true);
+            waitToStopLooper.stop();
+          }
+        }
+        @Override public void onStop() {
+          holdDownLooper.start();
+        }
+      };
+      waitToStopLooper = new Looper(waitToStop, 50);
 
-    //   Loop holdDown = new Loop(){
-    //     @Override public void onStart() {
-    //     }
-    //     @Override public void onLoop() {
-    //       if (currentTime + timeToPushForward + timeBeforeStopping + timeBeforeHolingIntakeDown >= System.currentTimeMillis()) {
-    //         intakeLowerSolenoid.set(true);
-    //         intakeLiftSolenoid.set(false);
-    //         looper.stop();
-    //       }
-    //     }
-    //     @Override public void onStop() {
-    //     }
-    //   };
-    //   looper = new Looper(waitToStop, 50);
-    //   looper.start();
+      Loop holdDown = new Loop(){
+        @Override public void onStart() {
+        }
+        @Override public void onLoop() {
+          if (currentTime + timeToPushForward + timeBeforeStopping + timeBeforeHolingIntakeDown >= System.currentTimeMillis()) {
+            intakeLowerSolenoid.set(true);
+            intakeLiftSolenoid.set(false);
+            holdDownLooper.stop();
+          }
+        }
+        @Override public void onStop() {
+        }
+      };
+      holdDownLooper = new Looper(holdDown, 50);
 
-    // } else {
-    //   intakeLowerSolenoid.set(false);
-    //   intakeLiftSolenoid.set(true);
-    // }
+    } else {
+      intakeLowerSolenoid.set(false);
+      intakeLiftSolenoid.set(true);
+    }
 
     // Robot.shuffleBoard.ballIntakeState.setValue(intakeLiftSolenoid.get());
   }
@@ -262,30 +264,30 @@ public class BallSubsystem extends SubsystemBase {
     }
   }
 
-  private void accelerateIntake(WPI_TalonSRX talonSRX, double setPercentage, double acceleration) {
-    double tolerance = acceleration * 1.5;
-    Looper accelerator;
-    Loop accelerate = new Loop(){
-        @Override public void onStart() {
-        }
-        @Override public void onLoop() {
-          double currentPercent = talonSRX.get();
-          if (Math.abs(currentPercent - setPercentage) < tolerance) {
-            looper.stop();
-          }
-          if (currentPercent < setPercentage) {
-            setIntakeSpeed(currentPercent + acceleration);
-          } else if (currentPercent > setPercentage) {
-            setIntakeSpeed(currentPercent - acceleration);
-          }
-        }
-        @Override public void onStop() {
-          setIntakeSpeed(setPercentage);
-        }
-      };
-      accelerator = new Looper(accelerate, 50);
-      accelerator.start();
-  }
+  // private void accelerateIntake(WPI_TalonSRX talonSRX, double setPercentage, double acceleration) {
+  //   double tolerance = acceleration * 1.5;
+  //   Looper accelerator;
+  //   Loop accelerate = new Loop(){
+  //       @Override public void onStart() {
+  //       }
+  //       @Override public void onLoop() {
+  //         double currentPercent = talonSRX.get();
+  //         if (Math.abs(currentPercent - setPercentage) < tolerance) {
+  //           looper.stop();
+  //         }
+  //         if (currentPercent < setPercentage) {
+  //           setIntakeSpeed(currentPercent + acceleration);
+  //         } else if (currentPercent > setPercentage) {
+  //           setIntakeSpeed(currentPercent - acceleration);
+  //         }
+  //       }
+  //       @Override public void onStop() {
+  //         setIntakeSpeed(setPercentage);
+  //       }
+  //     };
+  //     accelerator = new Looper(accelerate, 50);
+  //     accelerator.start();
+  // }
   
 
   @Override

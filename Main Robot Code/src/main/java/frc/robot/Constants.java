@@ -38,8 +38,8 @@ public final class Constants {
                             outputVictorPort = 13;
             
   //Solenoids
-  public static final int lowerIntakeSolenoidPort = 2,
-                          liftIntakeSolenoidPort = 6,
+  public static final int lowerIntakeSolenoidPort = 6,
+                          liftIntakeSolenoidPort = 2,
                           closeLowerSolenoidPort = 0,
                           openLowerSolenoidPort = 7,
                           closeUpperSolenoidPort = 3,
