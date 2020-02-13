@@ -12,7 +12,23 @@ public interface Controller {
      final Control<R<Doub>> climb;
      final Control<R<Doub>> drive;
      final Control<R<Doub>> wheel;
-     void rumble(double x);
+          
+     default void rumble(double intensity, double duration) {
+          new TimedCommand(duration) {
+               void initalize() { rumble(intensity); }
+               void end() { rumble(0); }
+          }.start();
+     }
+     
+     void rumble(double intensity);
+     
+     default void lights(int id, double duration); {
+          new TimedCommand(duration) {
+               void initalize() {  lights(id,true);    }
+               void end() { lights(id,false);}
+          }.start();
+     }
+     
      void lights(int id, boolean state);
 }
 
