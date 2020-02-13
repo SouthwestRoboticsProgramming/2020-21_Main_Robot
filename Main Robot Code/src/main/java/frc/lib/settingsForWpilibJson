@@ -1,0 +1,24 @@
+To be copied into Users/Public/wpilib/2020/vscode/data/user-data/User/settings.json
+
+{
+  "java.home": "C:\\Users\\Public\\wpilib\\2020\\jdk",
+  "extensions.autoCheckUpdates": false,
+  "extensions.ignoreRecommendations": true,
+  "extensions.showRecommendationsOnlyOnDemand": true,
+  "update.channel": "none",
+  "update.showReleaseNotes": false,
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "C:\\Users\\Public\\wpilib\\2020\\jdk",
+    "PATH": "C:\\Users\\Public\\wpilib\\2020\\jdk\\bin:${env:PATH}"
+  },
+  "git.autofetch": true,
+  "java.configuration.checkProjectSettingsExclusions": false,
+  "extensions.autoUpdate": false,
+  "javascript.referencesCodeLens.enabled": true,
+  "typescript.implementationsCodeLens.enabled": true,
+  "javascript.referencesCodeLens.showOnAllFunctions": true,
+  "typescript.referencesCodeLens.showOnAllFunctions": true,
+  "typescript.referencesCodeLens.enabled": true,
+  "java.referencesCodeLens.enabled": true,
+  "java.implementationsCodeLens.enabled": true
+}
