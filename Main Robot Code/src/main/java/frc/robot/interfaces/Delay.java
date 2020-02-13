@@ -10,7 +10,7 @@ public class Delay extends Trigger {
   public boolean get() {
      return timer.get() > delay;
   }
-  public void onceElapsed(Command command) {
+  public void whenElapsed(Command command) {
     this.whenActive(command);
   }
 }
