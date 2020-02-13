@@ -14,6 +14,7 @@ import frc.lib.Looper.Loop;
 import frc.lib.Looper.Looper;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.commands.IntakeLowerCommand;
 
 //TODO: Clarify lift, lower, block, and unblock in solenoid names. Difficult to understand what does what.
 
@@ -24,8 +25,7 @@ import frc.robot.Robot;
 public class BallSubsystem extends SubsystemBase {
   private final WPI_TalonSRX intakeTalon, beltTalon;
   private final WPI_VictorSPX flickerVictor, outputVictor;
-  private final Solenoid intakeLowerSolenoid, intakeLiftSolenoid;
-  private final DoubleSolenoid lowerBlockDoubleSolenoid, upperBlockDoubleSolenoid;
+  private final DoubleSolenoid intakeDoubleSolenoid, lowerBlockDoubleSolenoid, upperBlockDoubleSolenoid;
   private final DigitalInput lowerBallSensor, upperBallSensor;
 
   private int storedBalls = 0;
@@ -54,6 +54,7 @@ public class BallSubsystem extends SubsystemBase {
 
     intakeLowerSolenoid = new Solenoid(37, Constants.lowerIntakeSolenoidPort);
     intakeLiftSolenoid = new Solenoid(37, Constants.liftIntakeSolenoidPort);
+    intakeDoubleSolenoid = new DoubleSolenoid(37, Constants.lowerIntakeSolenoidPort, reverseChannel)
     lowerBlockDoubleSolenoid = new DoubleSolenoid(37, Constants.closeLowerSolenoidPort, Constants.openLowerSolenoidPort);
     upperBlockDoubleSolenoid = new DoubleSolenoid(37, Constants.closeUpperSolenoidPort, Constants.openUpperSolenoidPort);
     intakeLowerSolenoid.set(false);
@@ -137,63 +138,7 @@ public class BallSubsystem extends SubsystemBase {
     // intakeLiftSolenoid.set(intakeDown);
     // System.out.println("BallSubsystem.setIntakeDown() intake set to ::: " + intakeDown);
     if (intakeDown) {
-      final int timeToPushForward = 1000;
-      final int timeBeforeStopping = 1000;
-      final int timeBeforeHolingIntakeDown = 1000;
-      long currentTime = System.currentTimeMillis();
-
-      //Push intake forward
-      Loop pushForward = new Loop(){
-        @Override public void onStart() {
-          intakeLowerSolenoid.set(true);
-          intakeLiftSolenoid.set(false);
-        }
-        @Override public void onLoop() {
-          if (currentTime + timeToPushForward >= System.currentTimeMillis()) {
-            pushForwardLooper.stop();
-          }
-        }
-        @Override public void onStop() {
-          intakeLowerSolenoid.set(false);
-            intakeLiftSolenoid.set(true);
-          waitToStopLooper.start();
-        }
-      };
-      pushForwardLooper = new Looper(pushForward, 50);
-      pushForwardLooper.start();
-
-      
-      Loop waitToStop = new Loop(){
-        @Override public void onStart() {
-        }
-        @Override public void onLoop() {
-          if (currentTime + timeToPushForward + timeBeforeStopping >= System.currentTimeMillis()) {
-            intakeLowerSolenoid.set(false);
-            intakeLiftSolenoid.set(true);
-            waitToStopLooper.stop();
-          }
-        }
-        @Override public void onStop() {
-          holdDownLooper.start();
-        }
-      };
-      waitToStopLooper = new Looper(waitToStop, 50);
-
-      Loop holdDown = new Loop(){
-        @Override public void onStart() {
-        }
-        @Override public void onLoop() {
-          if (currentTime + timeToPushForward + timeBeforeStopping + timeBeforeHolingIntakeDown >= System.currentTimeMillis()) {
-            intakeLowerSolenoid.set(true);
-            intakeLiftSolenoid.set(false);
-            holdDownLooper.stop();
-          }
-        }
-        @Override public void onStop() {
-        }
-      };
-      holdDownLooper = new Looper(holdDown, 50);
-
+      new IntakeLowerCommand();
     } else {
       intakeLowerSolenoid.set(false);
       intakeLiftSolenoid.set(true);
