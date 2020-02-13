@@ -30,5 +30,12 @@ public interface Controller {
      }
      
      void lights(int id, boolean state);
+     
+     default public void init() {
+          ball.whenActive(Robot.ballCommand);
+          climb.whenActive(Robot.climbCommand);
+          drive.whenActive(Robot.driveCommand);
+          wheel.whenActive(Robot.wheelCommand):
+     }
 }
 
