@@ -4,15 +4,13 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
+/*
 package frc.robot.interfaces;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-/**
- * Add your docs here.
- */
+
 public interface IController {
     public double getAnalog(Hand hand, AxisType axis);
     
@@ -43,3 +41,4 @@ public interface IController {
         wheelPosition;
     }
 }
+*/
