@@ -127,16 +127,8 @@ public class BallSubsystem extends SubsystemBase {
 
   //Set intake down and outputs to dashboard.
   private void setIntakeDown(Boolean intakeDown) {
-    SmartDashboard.putNumber("timeA", 0);
-    SmartDashboard.putNumber("timeB", 0);
-    // intakeLowerSolenoid.set(!intakeDown);
-    // intakeLiftSolenoid.set(intakeDown);
-    // System.out.println("BallSubsystem.setIntakeDown() intake set to ::: " + intakeDown);
     if (intakeDown) {
-      // new IntakeLowerCommand(this, intakeDoubleSolenoid);
       intakeDoubleSolenoid.set(Value.kForward);
-      // long timeA = (long)SmartDashboard.getNumber("timeA", 0);
-      // long timeB = (long)SmartDashboard.getNumber("timeB", 0);
       long timeA = 300;
       long timeB = 75;
 

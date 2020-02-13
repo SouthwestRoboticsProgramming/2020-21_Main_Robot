@@ -894,10 +894,7 @@ public synchronized double getRate() {
    * @return
    */
   public synchronized double getGyroInstantX() {
-    double angle = m_gyro_x - (Math.floor(m_gyro_x / 360) * 360);
-    if (angle > 180) {angle = -360 + m_gyro_x;}
-    
-    return angle;
+    return m_gyro_x;
   }
 
   /**

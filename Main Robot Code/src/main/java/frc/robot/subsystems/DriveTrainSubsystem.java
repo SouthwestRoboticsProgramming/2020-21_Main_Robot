@@ -199,7 +199,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void periodic() {
 	  differentialDriveOdometry.update(getRHeading(), ticksToMeters(getLeftDriveEncoderTicks()) , ticksToMeters(getRightDriveEncoderTicks()));
 	  Robot.shuffleBoard.drivePosition.setString(differentialDriveOdometry.getPoseMeters().toString());
-	//   System.out.print("LV = " + getLeftVelocity());
+	//   System.out.print("angle = " + gyro.getGyroAngleX());
   }
 
   public double[] getDrivePid() {
