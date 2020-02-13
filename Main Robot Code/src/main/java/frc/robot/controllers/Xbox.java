@@ -45,9 +45,9 @@ public class Xbox implements IController {
     }
     public JoystickButton getButton(Button button) {
         switch(button) {
-            case intake : return new JoystickButton(xbox, XboxMap.A.toInt());
-            case hold : return new JoystickButton(xbox, XboxMap.B.toInt());
-            case unloadIntake : return new JoystickButton(xbox, XboxMap.X.toInt());
+            case intake : return new JoystickButton(xbox, XboxMap.B.toInt());
+            case hold : return new JoystickButton(xbox, XboxMap.X.toInt());
+            case unloadIntake : return new JoystickButton(xbox, XboxMap.A.toInt());
             case unloadOutput : return new JoystickButton(xbox, XboxMap.Y.toInt());
             case wheelSpin : return new JoystickButton(xbox, XboxMap.Select.toInt());
             case wheelPosition : return new JoystickButton(xbox, XboxMap.Windows.toInt());
