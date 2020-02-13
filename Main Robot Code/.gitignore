@@ -107,7 +107,7 @@ Temporary Items
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
-!.vscode/extensions.json
+# !.vscode/extensions.json
 
 ### Windows ###
 # Windows thumbnail cache files
@@ -135,8 +135,8 @@ $RECYCLE.BIN/
 *.lnk
 
 ### Gradle ###
-# .gradle
-# /build/
+.gradle
+/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -151,9 +151,9 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 # # VS Code Specific Java Settings
-# .classpath 
+.classpath 
 .project
-# .settings/
+.settings/
 bin/
 
 
