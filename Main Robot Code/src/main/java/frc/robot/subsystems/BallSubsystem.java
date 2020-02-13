@@ -8,13 +8,11 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.Looper.Loop;
 import frc.lib.Looper.Looper;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.commands.IntakeLowerCommand;
 
 //TODO: Clarify lift, lower, block, and unblock in solenoid names. Difficult to understand what does what.
 
@@ -31,9 +29,7 @@ public class BallSubsystem extends SubsystemBase {
   private int storedBalls = 0;
   private final int maxStoredBalls = 5;
   private ballMode mode;
-  private Looper pushForwardLooper;
-  private Looper waitToStopLooper;
-  private Looper holdDownLooper;
+  private Looper ballLooper;
 
   private boolean lowerBallSensorBlocked = false,
                   upperBallSensorBlocked = false;
@@ -52,13 +48,10 @@ public class BallSubsystem extends SubsystemBase {
     beltTalon.setNeutralMode(NeutralMode.Brake);
     outputVictor.setNeutralMode(NeutralMode.Brake);
 
-    intakeLowerSolenoid = new Solenoid(37, Constants.lowerIntakeSolenoidPort);
-    intakeLiftSolenoid = new Solenoid(37, Constants.liftIntakeSolenoidPort);
-    intakeDoubleSolenoid = new DoubleSolenoid(37, Constants.lowerIntakeSolenoidPort, reverseChannel)
+    intakeDoubleSolenoid = new DoubleSolenoid(37, Constants.lowerIntakeSolenoidPort, Constants.liftIntakeSolenoidPort);
     lowerBlockDoubleSolenoid = new DoubleSolenoid(37, Constants.closeLowerSolenoidPort, Constants.openLowerSolenoidPort);
     upperBlockDoubleSolenoid = new DoubleSolenoid(37, Constants.closeUpperSolenoidPort, Constants.openUpperSolenoidPort);
-    intakeLowerSolenoid.set(false);
-    intakeLiftSolenoid.set(false);
+    intakeDoubleSolenoid.set(Value.kReverse);
     lowerBlockDoubleSolenoid.set(Value.kOff);
     upperBlockDoubleSolenoid.set(Value.kOff);
 
@@ -134,14 +127,51 @@ public class BallSubsystem extends SubsystemBase {
 
   //Set intake down and outputs to dashboard.
   private void setIntakeDown(Boolean intakeDown) {
+    SmartDashboard.putNumber("timeA", 0);
+    SmartDashboard.putNumber("timeB", 0);
     // intakeLowerSolenoid.set(!intakeDown);
     // intakeLiftSolenoid.set(intakeDown);
     // System.out.println("BallSubsystem.setIntakeDown() intake set to ::: " + intakeDown);
     if (intakeDown) {
-      new IntakeLowerCommand();
+      // new IntakeLowerCommand(this, intakeDoubleSolenoid);
+      intakeDoubleSolenoid.set(Value.kForward);
+      // long timeA = (long)SmartDashboard.getNumber("timeA", 0);
+      // long timeB = (long)SmartDashboard.getNumber("timeB", 0);
+      long timeA = 300;
+      long timeB = 75;
+
+      new Thread(new Runnable() {
+          public void run() {
+            boolean runnable = true;
+            while (runnable) {
+              try {
+                Thread.sleep(timeA);
+              } catch (Exception e) {
+                //TODO: handle exception
+              }
+              intakeDoubleSolenoid.set(Value.kReverse);
+              runnable = false;
+            }
+          }
+      }).start();
+
+      new Thread(new Runnable() {
+        public void run() {
+          boolean runnable = true;
+          while (runnable) {
+            try {
+              Thread.sleep(timeA+timeB);
+            } catch (Exception e) {
+              //TODO: handle exception
+            }
+            intakeDoubleSolenoid.set(Value.kForward);
+            runnable = false;
+            }
+        }
+      }).start();
+
     } else {
-      intakeLowerSolenoid.set(false);
-      intakeLiftSolenoid.set(true);
+      intakeDoubleSolenoid.set(Value.kReverse);
     }
 
     // Robot.shuffleBoard.ballIntakeState.setValue(intakeLiftSolenoid.get());
@@ -162,6 +192,7 @@ public class BallSubsystem extends SubsystemBase {
   //Block upper and outputs to dashboard.
   private void setUpperBlocked(Boolean blocked) {
     // upperBlockDoubleSolenoid.set(Value.kOff);
+
     if (blocked) {
       upperBlockDoubleSolenoid.set(Value.kForward);
     } else {
