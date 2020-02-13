@@ -33,23 +33,23 @@ public final class Constants {
                             elevatorTalonPort = 8,
                             wheelOfFortuneTalonPort = 9,
                             intakeTalonPort = 10,
-                            flickerVictorPort = 11,
-                            beltVictorPort = 12,
+                            beltVictorPort = 11,
+                            flickerVictorPort = 12,
                             outputVictorPort = 13;
             
   //Solenoids
-  public static final int lowerIntakeSolenoidPort = 0,
-                          liftIntakeSolenoidPort = 1,
-                          closeLowerSolenoidPort = 2,
-                          openLowerSolenoidPort = 3,
-                          closeUpperSolenoidPort = 4,
-                          openUpperSolenoidPort = 5,
-                          pushSolenoidPort = 6,
-                          retractSolenoidPort = 7;
+  public static final int lowerIntakeSolenoidPort = 2,
+                          liftIntakeSolenoidPort = 6,
+                          closeLowerSolenoidPort = 0,
+                          openLowerSolenoidPort = 7,
+                          closeUpperSolenoidPort = 3,
+                          openUpperSolenoidPort = 4,
+                          pushSolenoidPort = 1,
+                          retractSolenoidPort = 5;
 
   //Sensors
-  public static final int lowerBallSensorPort = 0,
-                          upperBallSensorPort = 1;
+  public static final int lowerBallSensorPort = 2,
+                          upperBallSensorPort = 3;
 
   public final double wheelCircumferenceMeters = 0.1524;
   public final int encoderTicksPerRotation = 4096;

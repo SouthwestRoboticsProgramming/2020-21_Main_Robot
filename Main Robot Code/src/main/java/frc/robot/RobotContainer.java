@@ -33,7 +33,7 @@ public class RobotContainer {
 
   private final BallSubsystem ballSubsystem = new BallSubsystem();
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-  public final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
+  private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
   private final WheelSubsystem wheelSubsystem = new WheelSubsystem();
   private final DriverFeedbackSubsystem driverFeedback = new DriverFeedbackSubsystem(this);
   
@@ -41,10 +41,10 @@ public class RobotContainer {
 
   private final XboxController xbox = new XboxController(0);
   private final Joystick xboxJoy = new Joystick(0);
-  private final JoystickButton intakeBalls = new JoystickButton(xboxJoy, 4);
-  private final JoystickButton holdBalls = new JoystickButton(xboxJoy, 5);
-  private final JoystickButton unloadIntakeBalls = new JoystickButton(xboxJoy, 6);
-  private final JoystickButton unloadOuttakeBalls = new JoystickButton(xboxJoy, 7);
+  private final JoystickButton intakeBalls = new JoystickButton(xboxJoy, 2);
+  private final JoystickButton holdBalls = new JoystickButton(xboxJoy, 3);
+  private final JoystickButton unloadIntakeBalls = new JoystickButton(xboxJoy, 1);
+  private final JoystickButton unloadOuttakeBalls = new JoystickButton(xboxJoy, 4);
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem);

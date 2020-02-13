@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -23,13 +22,13 @@ import frc.robot.Robot;
   Note that "lower" refers to the part of the belt system near the intake, while "upper" refers to the other end.
 */
 public class BallSubsystem extends SubsystemBase {
-  private final WPI_TalonSRX intakeTalon;
-  private final WPI_VictorSPX flickerVictor, beltVictor, outputVictor;
+  private final WPI_TalonSRX intakeTalon, beltTalon;
+  private final WPI_VictorSPX flickerVictor, outputVictor;
   private final Solenoid intakeLowerSolenoid, intakeLiftSolenoid;
   private final DoubleSolenoid lowerBlockDoubleSolenoid, upperBlockDoubleSolenoid;
   private final DigitalInput lowerBallSensor, upperBallSensor;
 
-  private int storedBalls = 3;
+  private int storedBalls = 0;
   private final int maxStoredBalls = 5;
   private ballMode mode;
   private Looper looper;
@@ -39,22 +38,30 @@ public class BallSubsystem extends SubsystemBase {
 
   public BallSubsystem() {
     intakeTalon = new WPI_TalonSRX(Constants.intakeTalonPort);
+    intakeTalon.setInverted(false);
     flickerVictor = new WPI_VictorSPX(Constants.flickerVictorPort);
-    beltVictor = new WPI_VictorSPX(Constants.beltVictorPort);
+    flickerVictor.setInverted(false);
+    beltTalon = new WPI_TalonSRX(Constants.beltVictorPort);
+    beltTalon.setInverted(true);
     outputVictor = new WPI_VictorSPX(Constants.outputVictorPort);
   
     intakeTalon.setNeutralMode(NeutralMode.Brake);
     flickerVictor.setNeutralMode(NeutralMode.Brake);
-    beltVictor.setNeutralMode(NeutralMode.Brake);
+    beltTalon.setNeutralMode(NeutralMode.Brake);
     outputVictor.setNeutralMode(NeutralMode.Brake);
 
-    intakeLowerSolenoid = new Solenoid(Constants.lowerIntakeSolenoidPort);
-    intakeLiftSolenoid = new Solenoid(Constants.liftIntakeSolenoidPort);
-    lowerBlockDoubleSolenoid = new DoubleSolenoid(Constants.closeLowerSolenoidPort, Constants.openLowerSolenoidPort);
-    upperBlockDoubleSolenoid = new DoubleSolenoid(Constants.closeUpperSolenoidPort, Constants.openUpperSolenoidPort);
+    intakeLowerSolenoid = new Solenoid(37, Constants.lowerIntakeSolenoidPort);
+    intakeLiftSolenoid = new Solenoid(37, Constants.liftIntakeSolenoidPort);
+    lowerBlockDoubleSolenoid = new DoubleSolenoid(37, Constants.closeLowerSolenoidPort, Constants.openLowerSolenoidPort);
+    upperBlockDoubleSolenoid = new DoubleSolenoid(37, Constants.closeUpperSolenoidPort, Constants.openUpperSolenoidPort);
+    intakeLowerSolenoid.set(false);
+    intakeLiftSolenoid.set(false);
+    lowerBlockDoubleSolenoid.set(Value.kOff);
+    upperBlockDoubleSolenoid.set(Value.kOff);
 
     lowerBallSensor = new DigitalInput(Constants.lowerBallSensorPort);
     upperBallSensor = new DigitalInput(Constants.upperBallSensorPort);
+    this.register();
   }
 
   public enum ballMode{
@@ -74,7 +81,7 @@ public class BallSubsystem extends SubsystemBase {
     double outputSpeed = Robot.shuffleBoard.ballOutputSpeed.getDouble(0);
 
     if (mode == ballMode.intake) {
-      setBallState(true, false, true, intakeSpeed, flickerInSpeed, beltSpeed, outputSpeed);
+      setBallState(true, false, true, intakeSpeed, flickerInSpeed, beltSpeed, 0);
     } else if (mode == ballMode.hold) {
       setBallState(false, true, true, 0, 0, 0, 0);
     } else if (mode == ballMode.unloadIntake) {
@@ -112,8 +119,8 @@ public class BallSubsystem extends SubsystemBase {
 
   // Set belt motor speed percent and outputs to dashboard.
   private void setBeltSpeed(double x) {
-    beltVictor.set(ControlMode.PercentOutput, x);
-    Robot.shuffleBoard.ballBeltsOutput.setDouble(beltVictor.getMotorOutputPercent());
+    beltTalon.set(ControlMode.PercentOutput, x);
+    Robot.shuffleBoard.ballBeltsOutput.setDouble(beltTalon.getMotorOutputPercent());
   }
 
   // Set output motor speed percent and outputs to dashboard.
@@ -124,74 +131,78 @@ public class BallSubsystem extends SubsystemBase {
 
   //Set intake down and outputs to dashboard.
   private void setIntakeDown(Boolean intakeDown) {
-    if (intakeDown) {
-      final int timeToPushForward = 10;
-      final int timeBeforeStopping = 10;
-      final int timeBeforeHolingIntakeDown = 10;
-      long currentTime = System.currentTimeMillis();
+    intakeLowerSolenoid.set(!intakeDown);
+    intakeLiftSolenoid.set(intakeDown);
+    // System.out.println("BallSubsystem.setIntakeDown() intake set to ::: " + intakeDown);
+    // if (intakeDown) {
+    //   final int timeToPushForward = 10;
+    //   final int timeBeforeStopping = 10;
+    //   final int timeBeforeHolingIntakeDown = 10;
+    //   long currentTime = System.currentTimeMillis();
 
-      //Push intake forward
-      Loop pushForward = new Loop(){
-        @Override public void onStart() {
-          intakeLowerSolenoid.set(true);
-          intakeLiftSolenoid.set(false);
-        }
-        @Override public void onLoop() {
-          if (currentTime + timeToPushForward >= System.currentTimeMillis()) {
-            looper.stop();
-          }
-        }
-        @Override public void onStop() {
-          intakeLowerSolenoid.set(false);
-            intakeLiftSolenoid.set(false);
-        }
-      };
-      looper = new Looper(pushForward, 50);
-      looper.start();
+    //   //Push intake forward
+    //   Loop pushForward = new Loop(){
+    //     @Override public void onStart() {
+    //       intakeLowerSolenoid.set(true);
+    //       intakeLiftSolenoid.set(false);
+    //     }
+    //     @Override public void onLoop() {
+    //       if (currentTime + timeToPushForward >= System.currentTimeMillis()) {
+    //         looper.stop();
+    //       }
+    //     }
+    //     @Override public void onStop() {
+    //       intakeLowerSolenoid.set(false);
+    //         intakeLiftSolenoid.set(false);
+    //     }
+    //   };
+    //   looper = new Looper(pushForward, 50);
+    //   looper.start();
 
       
-      Loop waitToStop = new Loop(){
-        @Override public void onStart() {
-        }
-        @Override public void onLoop() {
-          if (currentTime + timeToPushForward + timeBeforeStopping >= System.currentTimeMillis()) {
-            intakeLowerSolenoid.set(false);
-            intakeLiftSolenoid.set(true);
-            looper.stop();
-          }
-        }
-        @Override public void onStop() {
-        }
-      };
-      looper = new Looper(waitToStop, 50);
-      looper.start();
+    //   Loop waitToStop = new Loop(){
+    //     @Override public void onStart() {
+    //     }
+    //     @Override public void onLoop() {
+    //       if (currentTime + timeToPushForward + timeBeforeStopping >= System.currentTimeMillis()) {
+    //         intakeLowerSolenoid.set(false);
+    //         intakeLiftSolenoid.set(true);
+    //         looper.stop();
+    //       }
+    //     }
+    //     @Override public void onStop() {
+    //     }
+    //   };
+    //   looper = new Looper(waitToStop, 50);
+    //   looper.start();
 
-      Loop holdDown = new Loop(){
-        @Override public void onStart() {
-        }
-        @Override public void onLoop() {
-          if (currentTime + timeToPushForward + timeBeforeStopping + timeBeforeHolingIntakeDown >= System.currentTimeMillis()) {
-            intakeLowerSolenoid.set(true);
-            intakeLiftSolenoid.set(false);
-            looper.stop();
-          }
-        }
-        @Override public void onStop() {
-        }
-      };
-      looper = new Looper(waitToStop, 50);
-      looper.start();
+    //   Loop holdDown = new Loop(){
+    //     @Override public void onStart() {
+    //     }
+    //     @Override public void onLoop() {
+    //       if (currentTime + timeToPushForward + timeBeforeStopping + timeBeforeHolingIntakeDown >= System.currentTimeMillis()) {
+    //         intakeLowerSolenoid.set(true);
+    //         intakeLiftSolenoid.set(false);
+    //         looper.stop();
+    //       }
+    //     }
+    //     @Override public void onStop() {
+    //     }
+    //   };
+    //   looper = new Looper(waitToStop, 50);
+    //   looper.start();
 
-    } else {
-      intakeLowerSolenoid.set(false);
-      intakeLiftSolenoid.set(true);
-    }
+    // } else {
+    //   intakeLowerSolenoid.set(false);
+    //   intakeLiftSolenoid.set(true);
+    // }
 
     // Robot.shuffleBoard.ballIntakeState.setValue(intakeLiftSolenoid.get());
   }
 
   //Block lower and outputs to dashboard.
   private void setLowerBlocked(Boolean blocked) {
+    // lowerBlockDoubleSolenoid.set(Value.kOff);
     if (blocked) {
       lowerBlockDoubleSolenoid.set(Value.kForward);
     } else {
@@ -203,6 +214,7 @@ public class BallSubsystem extends SubsystemBase {
 
   //Block upper and outputs to dashboard.
   private void setUpperBlocked(Boolean blocked) {
+    // upperBlockDoubleSolenoid.set(Value.kOff);
     if (blocked) {
       upperBlockDoubleSolenoid.set(Value.kForward);
     } else {
@@ -279,5 +291,6 @@ public class BallSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     ballCounter();
+    Robot.shuffleBoard.ballSensorInDIO.setBoolean(lowerBallSensor.get());
   }
 }
