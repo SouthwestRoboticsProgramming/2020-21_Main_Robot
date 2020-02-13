@@ -8,9 +8,11 @@
 package frc.robot.interfaces;
 
 public interface Controller {
-     final Control<R<Doub>> Ball;
-     final Control<R<Doub>> Climb;
-     final Control<R<Doub>> Manual;
-     final Control<R<Doub>> Wheel;
+     final Control<R<Doub>> ball;
+     final Control<R<Doub>> climb;
+     final Control<R<Doub>> drive;
+     final Control<R<Doub>> wheel;
+     void rumble(double x);
+     void lights(int id, boolean state);
 }
 
