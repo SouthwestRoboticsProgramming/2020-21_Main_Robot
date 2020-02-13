@@ -40,11 +40,6 @@ public class RobotContainer {
   private final Xbox controller = new Xbox(Constants.controllerPort);
 
   private final XboxController xbox = new XboxController(0);
-  private final Joystick xboxJoy = new Joystick(0);
-  private final JoystickButton intakeBalls = new JoystickButton(xboxJoy, 2);
-  private final JoystickButton holdBalls = new JoystickButton(xboxJoy, 3);
-  private final JoystickButton unloadIntakeBalls = new JoystickButton(xboxJoy, 1);
-  private final JoystickButton unloadOuttakeBalls = new JoystickButton(xboxJoy, 4);
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem);
@@ -74,17 +69,13 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // // Create some buttons
-    // controller.getButton(Xbox.Button.intake).whenPressed(new BallCommand(ballSubsystem, ballMode.intake));
-    // controller.getButton(Xbox.Button.hold).whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
-    // controller.getButton(Xbox.Button.unloadIntake).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
-    // controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
+    controller.getButton(Xbox.Button.intake).whenPressed(new BallCommand(ballSubsystem, ballMode.intake));
+    controller.getButton(Xbox.Button.hold).whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
+    controller.getButton(Xbox.Button.unloadIntake).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
+    controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(positionWheel);
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(spinWheel);
 
-    intakeBalls.whenPressed(new BallCommand(ballSubsystem, ballMode.intake));
-    holdBalls.whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
-    unloadIntakeBalls.whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
-    unloadOuttakeBalls.whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
     // JoystickButton b = new JoystickButton(xbox, 2);
     // b.whenPressed(new ManualUpdateCommand(driveTrainSubsystem));
         // Connect the buttons to commands
