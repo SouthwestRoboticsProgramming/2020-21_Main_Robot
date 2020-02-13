@@ -13,7 +13,10 @@ public class AutonomonousCommand extends CommandBase {
   /**
    * Creates a new AutonomonousCommand.
    */
-  public AutonomonousCommand() {
+  public AutonomonousCommand(double x, double y) {
+    R<Doub> relPos = Robot.encoders.pos().sub(new R<Doub>(x,y));
+
+    
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -25,6 +28,7 @@ public class AutonomonousCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Robot.driveTrainSubsystem.driveAtAngle(Math.min(relPos.mag().div(5d),0.4) , Math.atan2(relPos.get(1),relPos.get(0)), DriveMode.cheezy);
   }
 
   // Called once the command ends or is interrupted.
