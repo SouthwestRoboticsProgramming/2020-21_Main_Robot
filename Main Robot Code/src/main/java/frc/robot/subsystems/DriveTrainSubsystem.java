@@ -22,7 +22,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 							  rightMaster, rightSlave1, rightSlave2;
 	private final double maxVelocity = 20000;
 	private final double maxSpeed = 1;
-	// private ADIS16448_IMU gyro = new ADIS16448_IMU();
+	private ADIS16448_IMU gyro = new ADIS16448_IMU();
 	private Constants constants = new Constants();
 	private Pose2d position;
 	private DifferentialDriveOdometry differentialDriveOdometry;
