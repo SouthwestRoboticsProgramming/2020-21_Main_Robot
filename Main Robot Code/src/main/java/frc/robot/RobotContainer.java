@@ -54,7 +54,7 @@ public class RobotContainer {
     // climbSubsystem.setDefaultCommand(climb); climb.schedule();
 
     // Configure the button bindings
-    configureButtonBindings();
+    // configureButtonBindings();
   }
 
   public void startTeleopCommands() {

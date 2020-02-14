@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.subsystems.BallSubsystem;
 
 /**
  * Add your docs here.
@@ -71,9 +72,10 @@ public class ShuffleBoard{
             public NetworkTableEntry ballLowerBlockerState = ballDebug.add("ballLowerBlockerState", 0).getEntry();
             public NetworkTableEntry ballUpperBlockerState = ballDebug.add("ballUpperBlockerState", 0).getEntry();
             //DIO
-            public NetworkTableEntry ballSensorInDIO = ballDebug.add("ballSensorInDIO", 0).getEntry();
-            public NetworkTableEntry ballSensorOutDIO = ballDebug.add("ballSensorOutDIO", 0).getEntry();
-            
+            public NetworkTableEntry ballSensorInDIO = ballDebug.add("ballSensorInDIO", false).getEntry();
+            public NetworkTableEntry ballSensorOutDIO = ballDebug.add("ballSensorOutDIO", false).getEntry();
+            public NetworkTableEntry ballCount = ballDebug.add("ballCount", 0).getEntry();
+
         private ShuffleboardLayout climbDebug = Debug.getLayout("climbDebug", BuiltInLayouts.kList);
             public NetworkTableEntry climbElevatorOutput = climbDebug.add("climbElevatorOutput", 0).getEntry();
             public NetworkTableEntry climbWinchOutput = climbDebug.add("climbWinchOutput", 0).getEntry();

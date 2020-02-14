@@ -107,8 +107,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 		return Rotation2d.fromDegrees(getHeading());
 	}
 	public double getHeading() {
-		return 0;
-		// return gyro.getGyroAngleX();
+		// return 0;
+		return gyro.getGyroAngleX();
 	}
 
 	public WPI_TalonFX getLeftMaster() {
