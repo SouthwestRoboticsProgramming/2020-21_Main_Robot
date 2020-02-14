@@ -228,9 +228,9 @@ public class BallSubsystem extends SubsystemBase {
     }
 
     if (getUpperBallSensor() && !upperBallSensorBlocked) {
-      storedBalls --;
       upperBallSensorBlocked = true;
     } else if (!getUpperBallSensor() && upperBallSensorBlocked) {
+      storedBalls --;
       upperBallSensorBlocked = false;
     }
 
@@ -270,5 +270,7 @@ public class BallSubsystem extends SubsystemBase {
   public void periodic() {
     ballCounter();
     Robot.shuffleBoard.ballSensorInDIO.setBoolean(lowerBallSensor.get());
+    Robot.shuffleBoard.ballSensorOutDIO.setBoolean(upperBallSensor.get());
+    Robot.shuffleBoard.ballCount.setNumber(storedBalls);
   }
 }
