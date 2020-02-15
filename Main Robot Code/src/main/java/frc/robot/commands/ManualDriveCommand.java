@@ -31,6 +31,7 @@ public class ManualDriveCommand extends CommandBase {
   //Maximum change in motor speed per execute
   public static final double maxSpeedDiff = 0.08;
   public static final double rotatMulti = .55;
+  public static final double joystickDeadzone = .1;
 
   public enum DriveType {
     arcade, cheezy, field, pid;
@@ -81,17 +82,14 @@ public class ManualDriveCommand extends CommandBase {
 
     // driver
     double x = -Robot.robotContainer.getLeftTurn();
-    //TODO: Why is y negative?
     double y = -Robot.robotContainer.getLeftDrive();
     double xRight = Robot.robotContainer.getRightTurn();
     double yRight = Robot.robotContainer.getRightDrive();
-    if (Math.abs(xRight) < .02) {
-      xRight = 0;
-    }
+    x = getDeadzone(x, joystickDeadzone);
+    y = getDeadzone(y, joystickDeadzone);
+    xRight = getDeadzone(xRight, joystickDeadzone);
+    yRight = getDeadzone(yRight, joystickDeadzone);
 
-    if (Math.abs(yRight) < .02) {
-      yRight = 0;
-    }
 
 
     double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0);
@@ -205,5 +203,13 @@ public class ManualDriveCommand extends CommandBase {
   private double getJoyDistance(double jX, double jY) {
     return Math.sqrt(Math.pow(jX, 2) + Math.pow(jY, 2));
   }
+
+  public static double getDeadzone(double act, double deadZone) {
+		if (act < deadZone) {
+			return 0;
+		} else {
+			return (act-deadZone) * (1/.9);
+		}
+	}
 
 }
