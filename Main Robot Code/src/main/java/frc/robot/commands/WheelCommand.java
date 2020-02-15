@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.PID;
 import frc.lib.Looper.Loop;
 import frc.lib.Looper.Looper;
+import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.DriverFeedbackSubsystem;
 import frc.robot.subsystems.DriverFeedbackSubsystem.PresetColors;
@@ -22,14 +23,16 @@ import frc.robot.subsystems.WheelSubsystem;
 public class WheelCommand extends CommandBase {
   private final WheelSubsystem m_wheelSubsystem;
   private final DriveTrainSubsystem driveTrainSubsystem;
-  private DriverFeedbackSubsystem driverFeedback;
-  private PID pid = new PID(0, 0, 0);
+  private DriverFeedbackSubsystem driverFeedback = Robot.driverFeedback;
+  private PID pid;
   private Looper powerRamper;
   private Looper positionHolder;
   private Looper spinner;
   private Spin spin;
+  private boolean pressure = false;
   private WheelSubsystem.Color color;
-  private final double spinCount = 5;
+  private long startTime;
+  private final double spinTime = 1000;
   private final long loopTime = 20;
   private boolean finished = false;
 
@@ -38,18 +41,17 @@ public class WheelCommand extends CommandBase {
     Position;
   }
 
-  public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, DriverFeedbackSubsystem driverFeedbackSubsystem, Spin spin) {
+  public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, Spin spin) {
+    System.out.println("WheelCommand.WheelCommand()");
     addRequirements(wheelSubsystem);
     this.m_wheelSubsystem = wheelSubsystem;
     this.driveTrainSubsystem = driveTrainSubsystem;
-    this.driverFeedback = driverFeedbackSubsystem;
     this.spin = spin;
   }
 
-  public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, DriverFeedbackSubsystem driverFeedbackSubsystem,  Spin spin, WheelSubsystem.Color color) {
+  public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem,  Spin spin, WheelSubsystem.Color color) {
     this.m_wheelSubsystem = wheelSubsystem;
     this.driveTrainSubsystem = driveTrainSubsystem;
-    this.driverFeedback = driverFeedbackSubsystem;
     this.spin = spin;
     this.color = color;
     addRequirements(this.m_wheelSubsystem);
@@ -58,58 +60,39 @@ public class WheelCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pid.setSetPoint(90);
-    pid.setError(100);    
-
-    while (pid.getError() > 1) {
-      driverFeedback.setColor(PresetColors.orange);
-      pid.setActual(m_wheelSubsystem.getAngle());
-      driveTrainSubsystem.driveAtAngle(driveTrainSubsystem.percentToVelocity(pid.getOutput()), 0, ControlMode.Velocity);
-    }
-    driverFeedback.setColor(PresetColors.green);
-    holdPosition();
+    m_wheelSubsystem.calibrate();
+    System.out.println("WheelCommand.initialize()");
+    startTime = System.currentTimeMillis();
     m_wheelSubsystem.setPushedState(true);
 
-    if (spin == Spin.Position) {
-      // while (getColor(m_wheelSubsystem.getColor()) != color) {
-      //   rampPower(0, .5);
-      // }
-      //   rampPower(.5, 0);
-    } else if (spin == Spin.Revolutions) {
-      Loop loop = new Loop(){
-        double setRevolution;
-        @Override public void onStart() {
-          setRevolution = m_wheelSubsystem.getEncoderRevolutions() + spinCount;
-          m_wheelSubsystem.moveSpinnerTalon(spinCount);
-        }
-        @Override public void onLoop() {
-          if (m_wheelSubsystem.getEncoderRevolutions() >= setRevolution) {spinner.stop();}
-
-        }
-        @Override public void onStop() {
-          m_wheelSubsystem.setSpinnerTalon(0);
-          m_wheelSubsystem.setPushedState(false);
-          finished = false;
-        }
-      };
-      spinner = new Looper(loop, loopTime);
-      spinner.start();
-    }
+    pid = new PID(0, 0, 0);
+    pid.setSetPoint(70);
+    pid.setError(70);    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    System.out.println("WheelCommand.execute()");
+    if (System.currentTimeMillis() - spinTime >= startTime) {finished = true;}
+
+    if (pid.getError() < 2) {
+      m_wheelSubsystem.setSpinnerTalon(50);
+    }
+
+    pid.setActual(m_wheelSubsystem.getAngle());
+    driveTrainSubsystem.driveAtAngle(pid.getOutput(), 0, ControlMode.Velocity);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("WheelCommand.end()");
     if (interrupted) {
       driverFeedback.setColor(PresetColors.red);
       // driverFeedback.errorRumble();
     }
+    m_wheelSubsystem.setSpinnerTalon(0);
     m_wheelSubsystem.setPushedState(false);
   }
 
@@ -161,8 +144,7 @@ public class WheelCommand extends CommandBase {
       }
       @Override public void onLoop() {
         if (finished) {positionHolder.stop();}
-        pid.setActual(m_wheelSubsystem.getAngle());
-        driveTrainSubsystem.driveAtAngle(driveTrainSubsystem.percentToVelocity(pid.getOutput()), 0, ControlMode.Velocity);
+        
       }
       @Override public void onStop() {
       }

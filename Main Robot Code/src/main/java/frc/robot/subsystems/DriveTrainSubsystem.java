@@ -101,6 +101,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
 		leftMaster.configAllSettings(fxConfig);
 	}
 
+	public void setFront(boolean reverse) {
+		rightMaster.setInverted(reverse);
+		rightSlave1.setInverted(reverse);
+		rightSlave2.setInverted(reverse);
+
+		leftMaster.setInverted(!reverse);
+		leftSlave1.setInverted(!reverse);
+		leftSlave2.setInverted(!reverse);
+	}
+
 	// GET INFO
 	public Rotation2d getRHeading() {
 		return Rotation2d.fromDegrees(getHeading());
@@ -225,17 +235,21 @@ public void driveMotors(double left, double right, ControlMode controlMode) {
 }
 
 public void driveAtAngle(double output, double angle, ControlMode controlMode) {
-	// System.out.println("angle = " + angle);
-	PID pid = new PID(getTurnPid()[0], getTurnPid()[1], getTurnPid()[2]);
-	pid.setSetPoint(angle);
-	pid.setActual(Robot.getAngle());
-	pid.setError(getError(Robot.getAngle(), angle));
+	double pidOutput = 0;
+	// if (angle != Double.NaN) {
+		// System.out.println("angle = " + angle);
+		PID pid = new PID(getTurnPid()[0], getTurnPid()[1], getTurnPid()[2]);
+		pid.setSetPoint(angle);
+		pid.setActual(Robot.getAngle());
+		pid.setError(getError(Robot.getAngle(), angle));
+		pidOutput = pid.getOutput();
+	// }
 	
 	// System.out.println("angleOffset = " + pid.getOutput() + " error = " + pid.getError());
 	Lib lib = new Lib();
 	output = lib.setRange(output, -maxSpeed, maxSpeed);
-	double leftOutput = -output - pid.getOutput();
-	double rightOutput = -output + pid.getOutput();
+	double leftOutput = -output - pidOutput;
+	double rightOutput = -output + pidOutput;
 	leftMaster.set(controlMode, leftOutput);
 	rightMaster.set(controlMode, rightOutput);
 			Robot.shuffleBoard.driveLeftOutput.setDouble(leftMaster.getMotorOutputPercent());

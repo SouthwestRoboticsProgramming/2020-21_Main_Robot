@@ -49,27 +49,27 @@ public class DriverFeedbackSubsystem extends SubsystemBase {
   }
 
   private void setRawColor(double output) {
-    controller.set(output);
+    // controller.set(output);
   }
 
   public void setColor(PresetColors color) {
-    setRawColor(color.get(color));
+    // setRawColor(color.get(color));
   }
 
   public void fadeRawColors(PresetColors firstColor, PresetColors secondColor, double percent) {
-    setRawColor(((firstColor.get(firstColor) - secondColor.get(secondColor))*percent) + firstColor.get(firstColor));
+    // setRawColor(((firstColor.get(firstColor) - secondColor.get(secondColor))*percent) + firstColor.get(firstColor));
   }
 
   public void fadeColors(FadedColor color, double percent) {
-    getFadedColorsValue(color, percent);
+    // getFadedColorsValue(color, percent);
   }
 
   public void errorRumble() {
-    setRumble(RumbleType.kLeftRumble, (Long)Robot.shuffleBoard.driverErrorRumbleLength.getNumber(0));
+    // setRumble(RumbleType.kLeftRumble, (Long)Robot.shuffleBoard.driverErrorRumbleLength.getNumber(0));
   }
 
   public void setRumble(RumbleType type, long ms) {
-    robotContainer.setRumble(type, ms);
+    // robotContainer.setRumble(type, ms);
   }
 
   @Override

@@ -14,6 +14,7 @@ import frc.lib.ADIS16448_IMU;
 import frc.lib.ADIS16448_IMU.IMUAxis;
 import frc.robot.sensors.Limelight;
 import frc.robot.sensors.ShuffleBoard;
+import frc.robot.subsystems.DriverFeedbackSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,6 +28,7 @@ public class Robot extends TimedRobot {
   public static ShuffleBoard shuffleBoard = new ShuffleBoard();
   public static ADIS16448_IMU gyro = new ADIS16448_IMU(IMUAxis.kX, edu.wpi.first.wpilibj.SPI.Port.kMXP, 10);
   public static Limelight limelight = new Limelight();
+  public static DriverFeedbackSubsystem driverFeedback = new DriverFeedbackSubsystem(robotContainer);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -125,14 +127,13 @@ public class Robot extends TimedRobot {
 		double multiplyer = Math.round(angle / 180);
 
 		if (angle > 180) {
-			return 180- (angle - (multiplyer * 180));
+			return -180 + (angle - (multiplyer * 180));
 		} else if (angle <= 180  && angle > -180) {
 			return angle;
 		} else if (angle < -180) {
-			return -180 - (angle - (multiplyer * 180));
+			return 180 + (angle - (multiplyer * 180));
 		} else {
 			return 0;
 		}
-		
 	}
 }

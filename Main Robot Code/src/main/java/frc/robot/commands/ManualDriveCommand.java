@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.CheesyDrive;
+import frc.lib.Lib;
 import frc.lib.PID;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -27,11 +28,13 @@ public class ManualDriveCommand extends CommandBase {
   private double prevPowLeft = 0;
   private double prevPowRight = 0;
   private double prevRotation = 0;
+  private double prevAngle = 0;
 
   //Maximum change in motor speed per execute
   public static final double maxSpeedDiff = 0.08;
   public static final double rotatMulti = .55;
   public static final double joystickDeadzone = .1;
+
 
   public enum DriveType {
     arcade, cheezy, field, pid;
@@ -69,7 +72,7 @@ public class ManualDriveCommand extends CommandBase {
     double rightAuto = 0;
 
     // wallFollow
-    double wallOffset = wallFollow.getOutput(Robot.gyro.getGyroAngleX());
+    double wallOffset = wallFollow.getOutput(Robot.gyro.getGyroAngleZ());
     double wallEffectiveness = Robot.robotContainer.getWallEffeciveness();
     leftAuto += wallOffset * wallEffectiveness;
     rightAuto -= wallOffset * wallEffectiveness;
@@ -81,25 +84,23 @@ public class ManualDriveCommand extends CommandBase {
     rightAuto -= limelightOffset * limelightEffectiveness;
 
     // driver
-    double x = -Robot.robotContainer.getLeftTurn();
-    double y = -Robot.robotContainer.getLeftDrive();
+    double xLeft = -Robot.robotContainer.getLeftTurn();
+    double yLeft = -Robot.robotContainer.getLeftDrive();
     double xRight = Robot.robotContainer.getRightTurn();
     double yRight = Robot.robotContainer.getRightDrive();
-    x = getDeadzone(x, joystickDeadzone);
-    y = getDeadzone(y, joystickDeadzone);
+    // xLeft = getDeadzone(xLeft, joystickDeadzone);
+    // yLeft = getDeadzone(yLeft, joystickDeadzone);
     xRight = getDeadzone(xRight, joystickDeadzone);
     yRight = getDeadzone(yRight, joystickDeadzone);
-
-
 
     double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0);
     boolean quickTurn = Robot.robotContainer.getOneQuickTurn();
 
     if(getDriveType() == DriveType.arcade) { // arcade drive
       Robot.shuffleBoard.driveCurrentType.setString("arcadeDrive");
-      double leftPow = limitAcceleration(y, prevPowLeft);
-      double rightPow = limitAcceleration(y, prevPowRight);
-      double rotation = limitAcceleration(x * rotatMulti, prevRotation);
+      double leftPow = limitAcceleration(yLeft, prevPowLeft);
+      double rightPow = limitAcceleration(yLeft, prevPowRight);
+      double rotation = limitAcceleration(xLeft * rotatMulti, prevRotation);
 
       prevPowLeft = leftPow;
       prevPowRight = rightPow;
@@ -107,7 +108,7 @@ public class ManualDriveCommand extends CommandBase {
       m_driveTrainSubsystem.driveMotors((leftPow + rotation + leftAuto)*driveSpeed, (rightPow - rotation + rightAuto)*driveSpeed);
     } else if (getDriveType() == DriveType.cheezy) { // Cheesy Drive
       Robot.shuffleBoard.driveCurrentType.setString("cheezyDrive");
-      var signal = cheesyDrive.cheesyDrive(y, x, quickTurn, false);
+      var signal = cheesyDrive.cheesyDrive(yLeft, xLeft, quickTurn, false);
       double leftPow = signal.getLeft();
       double rightPow = signal.getRight();
 
@@ -115,20 +116,21 @@ public class ManualDriveCommand extends CommandBase {
     } else if (getDriveType() == DriveType.field) { //Field oriented driving
       Robot.shuffleBoard.driveCurrentType.setString("fieldDrive");
       double setAngle = getJoyAngle(xRight, yRight);
-      // System.out.println("joy x = " + xRight);
-      // System.out.println("joy y = " + yRight);
+
       System.out.println("joy angle = " + setAngle);
       SmartDashboard.putNumber("setAngle", setAngle);
       // setAngle = 1-wallEffectiveness;
-      // double output = 0; 
-      double output = .25*
-      getJoyDistance(xRight, yRight);
-      // SmartDashboard.putNumber("output", output);
-      // output = limitAcceleration(output, (prevPowLeft + prevPowRight)/2);
-
+      double output = 0; 
+      // double output = driveSpeed*getJoyDistance(xRight, yRight);
+      System.out.print("joyDistence = " + output);
+      if (setAngle == 0) {
+        setAngle = prevAngle;
+      }
+      
       m_driveTrainSubsystem.driveAtAngle(output, setAngle, ControlMode.PercentOutput);
       prevPowLeft = output;
       prevPowRight = output;
+      if (setAngle != 0) {prevAngle = setAngle;}
     } else if (getDriveType() == DriveType.pid) {
       // double velocityConvert = m_driveTrainSubsystem.percentToVelocity(y);
 
@@ -201,14 +203,17 @@ public class ManualDriveCommand extends CommandBase {
   }
 
   private double getJoyDistance(double jX, double jY) {
-    return Math.sqrt(Math.pow(jX, 2) + Math.pow(jY, 2));
+    double d = Math.sqrt(Math.pow(jX, 2) + Math.pow(jY, 2));
+    Lib lib = new Lib();
+    d = lib.setRange(d, -1, 1);
+    return d;
   }
 
   public static double getDeadzone(double act, double deadZone) {
-		if (act < deadZone) {
+		if (Math.abs(act) < deadZone) {
 			return 0;
 		} else {
-			return (act-deadZone) * (1/.9);
+			return (act-deadZone) * (1/deadZone);
 		}
 	}
 

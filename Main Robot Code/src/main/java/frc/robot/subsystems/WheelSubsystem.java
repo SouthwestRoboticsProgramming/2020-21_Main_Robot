@@ -37,7 +37,8 @@ public class WheelSubsystem extends SubsystemBase {
     spinnerTalon = new WPI_TalonSRX(spinnerTalonPort);
     wheelDoubleSolenoid = new DoubleSolenoid(Constants.PCMID, Constants.pushSolenoidPort, Constants.retractSolenoidPort);
     wheelDoubleSolenoid.set(Value.kOff);
-    gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
+    gyro = new ADXRS450_Gyro();
+    gyro.calibrate();
     if (wheelDoubleSolenoid.get()==Value.kReverse) {
       gyroOffset = gyro.getAngle()-30;
     } else {
@@ -58,6 +59,10 @@ public class WheelSubsystem extends SubsystemBase {
 
   public double getAngle() {
     return gyro.getAngle()-gyroOffset;
+  }
+
+  public void calibrate(){
+    gyro.calibrate();
   }
 
   //Spinner talon SRX

@@ -44,8 +44,8 @@ public final class Constants {
                           openLowerSolenoidPort = 5,
                           closeUpperSolenoidPort = 3,
                           openUpperSolenoidPort = 4,
-                          pushSolenoidPort = 0,
-                          retractSolenoidPort = 7;
+                          pushSolenoidPort = 0,//0
+                          retractSolenoidPort = 7;//7
 
   //Sensors
   public static final int lowerBallSensorPort = 2,
