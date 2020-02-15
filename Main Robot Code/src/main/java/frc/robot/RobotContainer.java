@@ -13,6 +13,7 @@ import frc.robot.commands.BallCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.WheelCommand;
+import frc.robot.commands.turnToAngleCommand;
 // import frc.robot.commands.HopperCommands.IntakeBallsCommand;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
@@ -40,6 +41,8 @@ public class RobotContainer {
   private final Xbox controller = new Xbox(Constants.controllerPort);
 
   private final XboxController xbox = new XboxController(0);
+  private final Joystick XBOX = new Joystick(0);
+  private final JoystickButton jb = new JoystickButton(XBOX, 8);
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem);
@@ -54,7 +57,7 @@ public class RobotContainer {
     // climbSubsystem.setDefaultCommand(climb); climb.schedule();
 
     // Configure the button bindings
-    // configureButtonBindings();
+    configureButtonBindings();
   }
 
   public void startTeleopCommands() {
@@ -76,6 +79,8 @@ public class RobotContainer {
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(positionWheel);
     controller.getButton(Xbox.Button.wheelPosition).whenPressed(spinWheel);
 
+    jb.whenPressed(new turnToAngleCommand(driveTrainSubsystem));
+
     // JoystickButton b = new JoystickButton(xbox, 2);
     // b.whenPressed(new ManualUpdateCommand(driveTrainSubsystem));
         // Connect the buttons to commands
@@ -94,15 +99,17 @@ public class RobotContainer {
 
   // Single joystick drive
   public double getLeftDrive() {
-    return xbox.getY(Hand.kLeft);
+    // return xbox.getY(Hand.kLeft);
+    return -XBOX.getY(Hand.kLeft);
   }
 
   public double getLeftTurn() {
-    return xbox.getX(Hand.kLeft);
+    // return xbox.getX(Hand.kLeft);
+    return XBOX.getX(Hand.kLeft);
   }
 
   public double getRightDrive() {
-    return xbox.getY(Hand.kRight);
+    return -xbox.getY(Hand.kRight);
   }
 
   public double getRightTurn() {

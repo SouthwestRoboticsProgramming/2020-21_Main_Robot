@@ -108,7 +108,7 @@ public class WheelCommand extends CommandBase {
   public void end(boolean interrupted) {
     if (interrupted) {
       driverFeedback.setColor(PresetColors.red);
-      driverFeedback.errorRumble();
+      // driverFeedback.errorRumble();
     }
     m_wheelSubsystem.setPushedState(false);
   }

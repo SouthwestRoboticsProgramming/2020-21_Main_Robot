@@ -40,12 +40,12 @@ public final class Constants {
   //Solenoids
   public static final int lowerIntakeSolenoidPort = 6,
                           liftIntakeSolenoidPort = 2,
-                          closeLowerSolenoidPort = 0,
-                          openLowerSolenoidPort = 7,
+                          closeLowerSolenoidPort = 1,
+                          openLowerSolenoidPort = 5,
                           closeUpperSolenoidPort = 3,
                           openUpperSolenoidPort = 4,
-                          pushSolenoidPort = 1,
-                          retractSolenoidPort = 5;
+                          pushSolenoidPort = 0,
+                          retractSolenoidPort = 7;
 
   //Sensors
   public static final int lowerBallSensorPort = 2,

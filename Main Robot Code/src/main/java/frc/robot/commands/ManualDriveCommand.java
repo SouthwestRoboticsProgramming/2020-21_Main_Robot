@@ -64,7 +64,6 @@ public class ManualDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.print("ManualDriveExecute");
     double leftAuto = 0;
     double rightAuto = 0;
 
@@ -81,11 +80,20 @@ public class ManualDriveCommand extends CommandBase {
     rightAuto -= limelightOffset * limelightEffectiveness;
 
     // driver
-    double x = Robot.robotContainer.getLeftTurn();
+    double x = -Robot.robotContainer.getLeftTurn();
     //TODO: Why is y negative?
-    double y = -1 * Robot.robotContainer.getLeftDrive();
+    double y = -Robot.robotContainer.getLeftDrive();
     double xRight = Robot.robotContainer.getRightTurn();
     double yRight = Robot.robotContainer.getRightDrive();
+    if (Math.abs(xRight) < .02) {
+      xRight = 0;
+    }
+
+    if (Math.abs(yRight) < .02) {
+      yRight = 0;
+    }
+
+
     double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0);
     boolean quickTurn = Robot.robotContainer.getOneQuickTurn();
 
@@ -109,13 +117,18 @@ public class ManualDriveCommand extends CommandBase {
     } else if (getDriveType() == DriveType.field) { //Field oriented driving
       Robot.shuffleBoard.driveCurrentType.setString("fieldDrive");
       double setAngle = getJoyAngle(xRight, yRight);
+      // System.out.println("joy x = " + xRight);
+      // System.out.println("joy y = " + yRight);
+      System.out.println("joy angle = " + setAngle);
       SmartDashboard.putNumber("setAngle", setAngle);
-      setAngle = 1-wallEffectiveness;
-      double output = getJoyDistance(xRight, yRight);
-      SmartDashboard.putNumber("output", output);
-      output = limitAcceleration(output, (prevPowLeft + prevPowRight)/2);
+      // setAngle = 1-wallEffectiveness;
+      // double output = 0; 
+      double output = .25*
+      getJoyDistance(xRight, yRight);
+      // SmartDashboard.putNumber("output", output);
+      // output = limitAcceleration(output, (prevPowLeft + prevPowRight)/2);
 
-      // m_driveTrainSubsystem.driveAtAngle(output, setAngle, ControlMode.PercentOutput);
+      m_driveTrainSubsystem.driveAtAngle(output, setAngle, ControlMode.PercentOutput);
       prevPowLeft = output;
       prevPowRight = output;
     } else if (getDriveType() == DriveType.pid) {

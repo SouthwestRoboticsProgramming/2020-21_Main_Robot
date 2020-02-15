@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -36,7 +37,7 @@ public class WheelSubsystem extends SubsystemBase {
     spinnerTalon = new WPI_TalonSRX(spinnerTalonPort);
     wheelDoubleSolenoid = new DoubleSolenoid(Constants.PCMID, Constants.pushSolenoidPort, Constants.retractSolenoidPort);
     wheelDoubleSolenoid.set(Value.kOff);
-    gyro = new ADXRS450_Gyro(Port.kMXP);
+    gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
     if (wheelDoubleSolenoid.get()==Value.kReverse) {
       gyroOffset = gyro.getAngle()-30;
     } else {
@@ -125,7 +126,7 @@ public class WheelSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
+    // System.out.println("wheel angle = " + gyro.getAngle());
   }
 
 }

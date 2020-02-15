@@ -42,6 +42,8 @@ public class ShuffleBoard{
             public NetworkTableEntry ballBeltsOutIntakeSpeed = ballTune.addPersistent("ballBeltsOutIntakeSpeed", -.5).getEntry();
             public NetworkTableEntry ballBeltsOutOutputSpeed = ballTune.addPersistent("ballBeltsOutOutputSpeed", .5).getEntry();
             public NetworkTableEntry ballOutputSpeed = ballTune.addPersistent("ballOutputSpeed", .5).getEntry();
+            public NetworkTableEntry ballSpacingWait = ballTune.addPersistent("ballSpacingWait", .5).getEntry();
+            public NetworkTableEntry ballSpacingMove = ballTune.addPersistent("ballSpacingMove", .5).getEntry();
 
         private ShuffleboardLayout climbTune = Tune.getLayout("climbTune", BuiltInLayouts.kList);
             public NetworkTableEntry climbElevatorPidP = climbTune.addPersistent("climbElevatorPID-P", 0).getEntry();   

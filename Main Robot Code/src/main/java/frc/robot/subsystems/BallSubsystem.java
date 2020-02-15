@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Looper.Looper;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.sensors.ShuffleBoard;
 
 //TODO: Clarify lift, lower, block, and unblock in solenoid names. Difficult to understand what does what.
 
@@ -23,10 +24,11 @@ import frc.robot.Robot;
 public class BallSubsystem extends SubsystemBase {
   private final WPI_TalonSRX intakeTalon, beltTalon;
   private final WPI_VictorSPX flickerVictor, outputVictor;
-  private final DoubleSolenoid intakeDoubleSolenoid, lowerBlockDoubleSolenoid, upperBlockDoubleSolenoid;
+  private final DoubleSolenoid intakeDoubleSolenoid, upperBlockDoubleSolenoid;
   private final DigitalInput lowerBallSensor, upperBallSensor;
 
   private int storedBalls = 0;
+  private int ballsHeld = 0;
   private final int maxStoredBalls = 5;
   private ballMode mode;
   private Looper ballLooper;
@@ -49,10 +51,8 @@ public class BallSubsystem extends SubsystemBase {
     outputVictor.setNeutralMode(NeutralMode.Brake);
 
     intakeDoubleSolenoid = new DoubleSolenoid(37, Constants.lowerIntakeSolenoidPort, Constants.liftIntakeSolenoidPort);
-    lowerBlockDoubleSolenoid = new DoubleSolenoid(37, Constants.closeLowerSolenoidPort, Constants.openLowerSolenoidPort);
     upperBlockDoubleSolenoid = new DoubleSolenoid(37, Constants.closeUpperSolenoidPort, Constants.openUpperSolenoidPort);
     intakeDoubleSolenoid.set(Value.kReverse);
-    lowerBlockDoubleSolenoid.set(Value.kOff);
     upperBlockDoubleSolenoid.set(Value.kOff);
 
     lowerBallSensor = new DigitalInput(Constants.lowerBallSensorPort);
@@ -77,7 +77,7 @@ public class BallSubsystem extends SubsystemBase {
     double outputSpeed = Robot.shuffleBoard.ballOutputSpeed.getDouble(0);
 
     if (mode == ballMode.intake) {
-      setBallState(true, false, true, intakeSpeed, flickerInSpeed, beltSpeed, 0);
+      setBallState(true, false, true, intakeSpeed, flickerInSpeed, 0, 0);
     } else if (mode == ballMode.hold) {
       setBallState(false, true, true, 0, 0, 0, 0);
     } else if (mode == ballMode.unloadIntake) {
@@ -92,7 +92,6 @@ public class BallSubsystem extends SubsystemBase {
   public void setBallState(boolean intakeDown, boolean lowerBlocked, boolean upperBlocked, double intakeSpeed, 
                           double flickerSpeed, double beltSpeed, double outputSpeed) {
     setIntakeDown(intakeDown);
-    setLowerBlocked(lowerBlocked);
     setUpperBlocked(upperBlocked);
     setIntakeSpeed(intakeSpeed);
     // accelerateIntake(intakeTalon, intakeSpeed, .01);
@@ -129,8 +128,8 @@ public class BallSubsystem extends SubsystemBase {
   private void setIntakeDown(Boolean intakeDown) {
     if (intakeDown) {
       intakeDoubleSolenoid.set(Value.kForward);
-      long timeA = 300;
-      long timeB = 75;
+      long timeA = 100;
+      long timeB = 50;
 
       new Thread(new Runnable() {
           public void run() {
@@ -169,18 +168,6 @@ public class BallSubsystem extends SubsystemBase {
     // Robot.shuffleBoard.ballIntakeState.setValue(intakeLiftSolenoid.get());
   }
 
-  //Block lower and outputs to dashboard.
-  private void setLowerBlocked(Boolean blocked) {
-    // lowerBlockDoubleSolenoid.set(Value.kOff);
-    if (blocked) {
-      lowerBlockDoubleSolenoid.set(Value.kForward);
-    } else {
-      lowerBlockDoubleSolenoid.set(Value.kReverse);
-    }
-    
-    // Robot.shuffleBoard.ballLowerBlockerState.setBoolean(lowerBlockDoubleSolenoid.get());
-  }
-
   //Block upper and outputs to dashboard.
   private void setUpperBlocked(Boolean blocked) {
     // upperBlockDoubleSolenoid.set(Value.kOff);
@@ -211,8 +198,10 @@ public class BallSubsystem extends SubsystemBase {
     if (getLowerBallSensor() && !lowerBallSensorBlocked) {
       if (mode == ballMode.intake) {
         storedBalls ++;
+
       } else if (mode == ballMode.unloadIntake) {
         storedBalls --;
+        ballsHeld --;
       }
       lowerBallSensorBlocked = true;
     } else if (!getLowerBallSensor() && lowerBallSensorBlocked) {
@@ -223,6 +212,7 @@ public class BallSubsystem extends SubsystemBase {
       upperBallSensorBlocked = true;
     } else if (!getUpperBallSensor() && upperBallSensorBlocked) {
       storedBalls --;
+      ballsHeld --;
       upperBallSensorBlocked = false;
     }
 
@@ -264,5 +254,37 @@ public class BallSubsystem extends SubsystemBase {
     Robot.shuffleBoard.ballSensorInDIO.setBoolean(lowerBallSensor.get());
     Robot.shuffleBoard.ballSensorOutDIO.setBoolean(upperBallSensor.get());
     Robot.shuffleBoard.ballCount.setNumber(storedBalls);
+    if(ballMode.intake == mode && ballsHeld < storedBalls) {      
+      new Thread(new Runnable() {
+        public void run() {
+          boolean runnable = true;
+          while (runnable) {
+            try {
+              Thread.sleep((long)Robot.shuffleBoard.ballSpacingWait.getDouble(500));
+            } catch (Exception e) {
+              //TODO: handle exception
+            }
+            runnable = false;
+            }
+        }
+      }).start();
+      
+      beltTalon.set(ControlMode.PercentOutput, 100);
+      new Thread(new Runnable() {
+        public void run() {
+          boolean runnable = true;
+          while (runnable) {
+            try {
+              Thread.sleep((long)Robot.shuffleBoard.ballSpacingMove.getDouble(1000));
+            } catch (Exception e) {
+              //TODO: handle exception
+            }
+            beltTalon.set(ControlMode.PercentOutput, 0);
+            runnable = false;
+            }
+        }
+      }).start();
+      ballsHeld ++;
+    }
   }
 }

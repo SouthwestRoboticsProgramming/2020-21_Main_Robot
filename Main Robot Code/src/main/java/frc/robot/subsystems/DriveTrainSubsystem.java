@@ -22,7 +22,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
 							  rightMaster, rightSlave1, rightSlave2;
 	private final double maxVelocity = 20000;
 	private final double maxSpeed = 1;
-	private ADIS16448_IMU gyro = new ADIS16448_IMU();
 	private Constants constants = new Constants();
 	private Pose2d position;
 	private DifferentialDriveOdometry differentialDriveOdometry;
@@ -107,8 +106,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 		return Rotation2d.fromDegrees(getHeading());
 	}
 	public double getHeading() {
-		// return 0;
-		return gyro.getGyroAngleX();
+		return 0;
+		// return gyro.getGyroAngleX();
 	}
 
 	public WPI_TalonFX getLeftMaster() {
@@ -199,7 +198,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void periodic() {
 	  differentialDriveOdometry.update(getRHeading(), ticksToMeters(getLeftDriveEncoderTicks()) , ticksToMeters(getRightDriveEncoderTicks()));
 	  Robot.shuffleBoard.drivePosition.setString(differentialDriveOdometry.getPoseMeters().toString());
-	//   System.out.print("angle = " + gyro.getGyroAngleX());
   }
 
   public double[] getDrivePid() {
@@ -216,7 +214,7 @@ public double[] getTurnPid() {
 	return turnPID;
 }
 
-  public void driveMotors(double left, double right, ControlMode controlMode) {
+public void driveMotors(double left, double right, ControlMode controlMode) {
 	Lib lib = new Lib();
 	left = lib.setRange(left, -maxSpeed, maxSpeed);
 	right = lib.setRange(right, -maxSpeed, maxSpeed);
@@ -227,14 +225,41 @@ public double[] getTurnPid() {
 }
 
 public void driveAtAngle(double output, double angle, ControlMode controlMode) {
+	// System.out.println("angle = " + angle);
 	PID pid = new PID(getTurnPid()[0], getTurnPid()[1], getTurnPid()[2]);
 	pid.setSetPoint(angle);
-	pid.setActual(Robot.gyro.getGyroAngleX());
+	pid.setActual(Robot.getAngle());
+	pid.setError(getError(Robot.getAngle(), angle));
+	
+	// System.out.println("angleOffset = " + pid.getOutput() + " error = " + pid.getError());
 	Lib lib = new Lib();
 	output = lib.setRange(output, -maxSpeed, maxSpeed);
-	leftMaster.set(controlMode, output);
-	rightMaster.set(controlMode, output);
+	double leftOutput = -output - pid.getOutput();
+	double rightOutput = -output + pid.getOutput();
+	leftMaster.set(controlMode, leftOutput);
+	rightMaster.set(controlMode, rightOutput);
 			Robot.shuffleBoard.driveLeftOutput.setDouble(leftMaster.getMotorOutputPercent());
 			Robot.shuffleBoard.driveRightOutput.setDouble(rightMaster.getMotorOutputPercent());
 }
+
+public static double getError(double act, double set) {
+	if (act >= 0) {
+		double a = -(-set+act);
+		double b = 360-(act - set);
+		if (a <= 180 && a >= -180) {
+			return a;
+		} else {
+			return b;
+		}
+	} else {
+		double c = -(-set+act);
+		double d = -(360-(-act + set));
+		if (c <= 180 && c >= -180) {
+			return c;
+		} else {
+			return d;
+		}
+	}		
+}
+
 }
