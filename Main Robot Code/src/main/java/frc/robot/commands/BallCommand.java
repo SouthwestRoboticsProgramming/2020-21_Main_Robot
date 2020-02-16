@@ -30,6 +30,10 @@ public class BallCommand extends CommandBase {
   @Override
   public void initialize() {
     m_ballSubsystem.setBallMode(ballMode);
+    if (ballMode == ballMode.unloadIntake || ballMode == ballMode.unloadOutput) {
+      m_ballSubsystem.setBallCount(0);
+    }
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.

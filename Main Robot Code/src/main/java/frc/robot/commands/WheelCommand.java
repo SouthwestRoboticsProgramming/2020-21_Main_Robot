@@ -32,7 +32,7 @@ public class WheelCommand extends CommandBase {
   private boolean pressure = false;
   private WheelSubsystem.Color color;
   private long startTime;
-  private final double spinTime = 1000;
+  private final double spinTime = 10000;
   private final long loopTime = 20;
   private boolean finished = false;
 
@@ -64,6 +64,7 @@ public class WheelCommand extends CommandBase {
     System.out.println("WheelCommand.initialize()");
     startTime = System.currentTimeMillis();
     m_wheelSubsystem.setPushedState(true);
+    finished = false;
 
     pid = new PID(0, 0, 0);
     pid.setSetPoint(70);

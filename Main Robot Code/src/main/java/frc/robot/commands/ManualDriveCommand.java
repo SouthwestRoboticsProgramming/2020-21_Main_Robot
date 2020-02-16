@@ -23,6 +23,7 @@ public class ManualDriveCommand extends CommandBase {
   private double[] tPid;
   private PID wallFollow;
   private PID limeLight;
+  private DriveType driveType;
   
   //Previous l
   private double prevPowLeft = 0;
@@ -40,9 +41,10 @@ public class ManualDriveCommand extends CommandBase {
     arcade, cheezy, field, pid;
   }
 
-  public ManualDriveCommand(DriveTrainSubsystem driveTrainSubsystem) {
+  public ManualDriveCommand(DriveTrainSubsystem driveTrainSubsystem, DriveType driveType) {
     addRequirements(driveTrainSubsystem);
     this.m_driveTrainSubsystem = driveTrainSubsystem;
+    this.driveType = driveType;
 
     tPid = m_driveTrainSubsystem.getTurnPid();
     wallFollow = new PID(tPid[0], tPid[1], tPid[2]);
@@ -72,16 +74,16 @@ public class ManualDriveCommand extends CommandBase {
     double rightAuto = 0;
 
     // wallFollow
-    double wallOffset = wallFollow.getOutput(Robot.gyro.getGyroAngleZ());
+    double wallOffset = -wallFollow.getOutput(Robot.gyro.getGyroAngleZ());
     double wallEffectiveness = Robot.robotContainer.getWallEffeciveness();
-    leftAuto += wallOffset * wallEffectiveness;
-    rightAuto -= wallOffset * wallEffectiveness;
+    leftAuto += wallOffset * wallEffectiveness * Robot.shuffleBoard.driveStraightEffectiveness.getDouble(0);
+    rightAuto -= wallOffset * wallEffectiveness *  Robot.shuffleBoard.driveStraightEffectiveness.getDouble(0);
 
     // limelight
     double limelightOffset = limeLight.getOutput(Robot.limelight.limelightX());
     double limelightEffectiveness = Robot.robotContainer.getLimelightEffeciveness();
-    leftAuto += limelightOffset * limelightEffectiveness;
-    rightAuto -= limelightOffset * limelightEffectiveness;
+    leftAuto += limelightOffset * limelightEffectiveness *  Robot.shuffleBoard.driveLimelightEffectiveness.getDouble(0);
+    rightAuto -= limelightOffset * limelightEffectiveness *  Robot.shuffleBoard.driveLimelightEffectiveness.getDouble(0);
 
     // driver
     double xLeft = -Robot.robotContainer.getLeftTurn();
@@ -94,18 +96,24 @@ public class ManualDriveCommand extends CommandBase {
     yRight = getDeadzone(yRight, joystickDeadzone);
 
     double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0);
+    double arcadeSpeed = Robot.shuffleBoard.driveArcadeSpeed.getDouble(1);
     boolean quickTurn = Robot.robotContainer.getOneQuickTurn();
 
     if(getDriveType() == DriveType.arcade) { // arcade drive
+      System.out.println("ManualDriveCommand.execute() arcade");
       Robot.shuffleBoard.driveCurrentType.setString("arcadeDrive");
-      double leftPow = limitAcceleration(yLeft, prevPowLeft);
-      double rightPow = limitAcceleration(yLeft, prevPowRight);
-      double rotation = limitAcceleration(xLeft * rotatMulti, prevRotation);
+      // double leftPow = limitAcceleration(yLeft, prevPowLeft);
+      // double rightPow = limitAcceleration(yLeft, prevPowRight);
+      // double rotation = limitAcceleration(xLeft * rotatMulti, prevRotation);
+
+      double leftPow = yLeft;
+      double rightPow = yLeft;
+      double rotation = xLeft * Robot.shuffleBoard.driveArcadeTurn.getDouble(0);
 
       prevPowLeft = leftPow;
       prevPowRight = rightPow;
       prevRotation = rotation;
-      m_driveTrainSubsystem.driveMotors((leftPow + rotation + leftAuto)*driveSpeed, (rightPow - rotation + rightAuto)*driveSpeed);
+      m_driveTrainSubsystem.driveMotors((leftPow + rotation + leftAuto)*arcadeSpeed, (rightPow - rotation + rightAuto)*arcadeSpeed);
     } else if (getDriveType() == DriveType.cheezy) { // Cheesy Drive
       Robot.shuffleBoard.driveCurrentType.setString("cheezyDrive");
       var signal = cheesyDrive.cheesyDrive(yLeft, xLeft, quickTurn, false);
@@ -169,18 +177,19 @@ public class ManualDriveCommand extends CommandBase {
   }
 
   private DriveType getDriveType() {
-    String sbdt = Robot.shuffleBoard.driveType.getString("");
-    if (sbdt.equals("a")) {
-      return DriveType.arcade;
-    } else if (sbdt.equals("c")) {
-      return DriveType.cheezy;
-    } else if (sbdt.equals("f")) {
-      return DriveType.field;
-    } else if (sbdt.equals("p")) {
-      return DriveType.pid;
-    } else {
-      return DriveType.arcade;
-    }
+    return driveType;
+    // String sbdt = Robot.shuffleBoard.driveType.getString("");
+    // if (sbdt.equals("a")) {
+    //   return DriveType.arcade;
+    // } else if (sbdt.equals("c")) {
+    //   return DriveType.cheezy;
+    // } else if (sbdt.equals("f")) {
+    //   return DriveType.field;
+    // } else if (sbdt.equals("p")) {
+    //   return DriveType.pid;
+    // } else {
+    //   return DriveType.arcade;
+    // }
   }
 
   private double getJoyAngle(double jX, double jY) {

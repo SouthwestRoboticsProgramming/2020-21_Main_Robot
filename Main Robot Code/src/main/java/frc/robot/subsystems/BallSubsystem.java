@@ -27,7 +27,9 @@ public class BallSubsystem extends SubsystemBase {
   private final DoubleSolenoid intakeDoubleSolenoid, upperBlockDoubleSolenoid;
   private final DigitalInput lowerBallSensor, upperBallSensor;
 
-  private int storedBalls = 0;
+  //Balls currently in possesion of bot.
+  private int ballsOnRobot = 0;
+  //Balls in the upper part of belt system.
   private int ballsHeld = 0;
   private final int maxStoredBalls = 5;
   private ballMode mode;
@@ -88,7 +90,6 @@ public class BallSubsystem extends SubsystemBase {
     this.mode = mode;
   }
 
-  
   public void setBallState(boolean intakeDown, boolean lowerBlocked, boolean upperBlocked, double intakeSpeed, 
                           double flickerSpeed, double beltSpeed, double outputSpeed) {
     setIntakeDown(intakeDown);
@@ -100,9 +101,38 @@ public class BallSubsystem extends SubsystemBase {
     setOutputSpeed(outputSpeed);
   }
 
+  // Sets ballsHeld and ballsOnRobot to count
+  public void setBallCount(int count) {
+    ballsHeld = count;
+    ballsOnRobot = count;
+  }
+
   // Set intake motor speed percent and outputs to dashboard.
   private void setIntakeSpeed(double x) {
-    intakeTalon.set(ControlMode.PercentOutput, x);
+    if (x == 0) {
+      intakeTalon.set(ControlMode.PercentOutput, x);
+    } else {
+      //ms before intake changes to nonzero speed
+      long intakeSpeedDelay = 1000;
+        new Thread(new Runnable() {
+            public void run() {
+              boolean runnable = true;
+              
+              while (runnable) {
+                try {
+                  Thread.sleep(intakeSpeedDelay);
+                } catch (Exception e) {
+                  //TODO: handle exception
+                }
+              //Prevents intake from spinning when intake is up
+              if (intakeDoubleSolenoid.get() == Value.kForward) {
+                intakeTalon.set(ControlMode.PercentOutput, x);
+              }
+              runnable = false;
+              }
+            }
+        }).start();
+      }
     Robot.shuffleBoard.ballIntakeOutput.setDouble(intakeTalon.getMotorOutputPercent());
   }
 
@@ -124,43 +154,11 @@ public class BallSubsystem extends SubsystemBase {
     Robot.shuffleBoard.ballOutputOutput.setDouble(outputVictor.getMotorOutputPercent());
   }
 
+
   //Set intake down and outputs to dashboard.
   private void setIntakeDown(Boolean intakeDown) {
     if (intakeDown) {
       intakeDoubleSolenoid.set(Value.kForward);
-      long timeA = 100;
-      long timeB = 50;
-
-      new Thread(new Runnable() {
-          public void run() {
-            boolean runnable = true;
-            while (runnable) {
-              try {
-                Thread.sleep(timeA);
-              } catch (Exception e) {
-                //TODO: handle exception
-              }
-              intakeDoubleSolenoid.set(Value.kReverse);
-              runnable = false;
-            }
-          }
-      }).start();
-
-      new Thread(new Runnable() {
-        public void run() {
-          boolean runnable = true;
-          while (runnable) {
-            try {
-              Thread.sleep(timeA+timeB);
-            } catch (Exception e) {
-              //TODO: handle exception
-            }
-            intakeDoubleSolenoid.set(Value.kForward);
-            runnable = false;
-            }
-        }
-      }).start();
-
     } else {
       intakeDoubleSolenoid.set(Value.kReverse);
     }
@@ -171,7 +169,7 @@ public class BallSubsystem extends SubsystemBase {
   //Block upper and outputs to dashboard.
   private void setUpperBlocked(Boolean blocked) {
     // upperBlockDoubleSolenoid.set(Value.kOff);
-
+    blocked = false;
     if (blocked) {
       upperBlockDoubleSolenoid.set(Value.kForward);
     } else {
@@ -197,10 +195,10 @@ public class BallSubsystem extends SubsystemBase {
   private void ballCounter() {
     if (getLowerBallSensor() && !lowerBallSensorBlocked) {
       if (mode == ballMode.intake) {
-        storedBalls ++;
+        ballsOnRobot ++;
 
       } else if (mode == ballMode.unloadIntake) {
-        storedBalls --;
+        ballsOnRobot --;
         ballsHeld --;
       }
       lowerBallSensorBlocked = true;
@@ -211,15 +209,17 @@ public class BallSubsystem extends SubsystemBase {
     if (getUpperBallSensor() && !upperBallSensorBlocked) {
       upperBallSensorBlocked = true;
     } else if (!getUpperBallSensor() && upperBallSensorBlocked) {
-      storedBalls --;
+      ballsOnRobot --;
       ballsHeld --;
       upperBallSensorBlocked = false;
     }
 
-    // stop once 5 balls
-    if (storedBalls >= maxStoredBalls && mode == ballMode.intake) {
-      setBallMode(ballMode.hold);
-    }
+    
+    // if (storedBalls >= maxStoredBalls && mode == ballMode.intake) {
+    //   setBallMode(ballMode.hold);
+    // }
+
+   
   }
 
   // private void accelerateIntake(WPI_TalonSRX talonSRX, double setPercentage, double acceleration) {
@@ -253,14 +253,17 @@ public class BallSubsystem extends SubsystemBase {
     ballCounter();
     Robot.shuffleBoard.ballSensorInDIO.setBoolean(lowerBallSensor.get());
     Robot.shuffleBoard.ballSensorOutDIO.setBoolean(upperBallSensor.get());
-    Robot.shuffleBoard.ballCount.setNumber(storedBalls);
-    if(ballMode.intake == mode && ballsHeld < storedBalls) {      
+    Robot.shuffleBoard.ballCount.setNumber(ballsOnRobot);
+
+    
+    
+    if(ballMode.intake == mode && ballsHeld < ballsOnRobot) {      
       new Thread(new Runnable() {
         public void run() {
           boolean runnable = true;
           while (runnable) {
             try {
-              Thread.sleep((long)Robot.shuffleBoard.ballSpacingWait.getDouble(500));
+              Thread.sleep((long)Robot.shuffleBoard.ballSpacingWait.getDouble(300));
             } catch (Exception e) {
               //TODO: handle exception
             }
@@ -269,7 +272,7 @@ public class BallSubsystem extends SubsystemBase {
         }
       }).start();
       
-      beltTalon.set(ControlMode.PercentOutput, 100);
+      beltTalon.set(ControlMode.PercentOutput, Robot.shuffleBoard.ballBeltsSpeed.getDouble(0));
       new Thread(new Runnable() {
         public void run() {
           boolean runnable = true;
@@ -281,6 +284,11 @@ public class BallSubsystem extends SubsystemBase {
             }
             beltTalon.set(ControlMode.PercentOutput, 0);
             runnable = false;
+            //TODO: enforce max ball count
+            // stop intaking if 5 balls after belts stop moving
+            if (ballsOnRobot >= 5) {
+              setBallMode(ballMode.hold);
+            }
             }
         }
       }).start();

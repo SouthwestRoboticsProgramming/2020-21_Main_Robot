@@ -12,9 +12,9 @@ import frc.robot.commands.BallCommand;
 import frc.robot.commands.ManualDriveCommand;
 import frc.robot.commands.SetFrontOfRobotCommand;
 import frc.robot.commands.WheelCommand;
+import frc.robot.commands.ManualDriveCommand.DriveType;
 import frc.robot.commands.WheelCommand.Spin;
-import frc.robot.commands.calibrateGyroCommand;
-// import frc.robot.commands.HopperCommands.IntakeBallsCommand;
+import frc.robot.commands.CalibrateGyroCommand;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
@@ -44,11 +44,12 @@ public class RobotContainer {
   private final JoystickButton spinWheel = new JoystickButton(XBOX, 8);
   private final JoystickButton calibrateGyro = new JoystickButton(XBOX, 9);
   private final JoystickButton setFrontFront = new JoystickButton(XBOX, 5);
-  private final JoystickButton setFrontBack = new JoystickButton(XBOX, 6);
+  // private final JoystickButton setFrontBack = new JoystickButton(XBOX, 6);
+  private final JoystickButton quickTurn = new JoystickButton(XBOX, 6);
 
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
-  private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem);
+  private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem, DriveType.cheezy);
   // private final CommandBase ballSubsystemCommand = new BallCommand(ballSubsystem, ballMode.hold);
   // private final CommandBase spinWheel = new WheelCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelCommand.Spin.Revolutions);
   // private final CommandBase positionWheel = new WheelCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelCommand.Spin.Position);
@@ -82,9 +83,11 @@ public class RobotContainer {
     // controller.getButton(Xbox.Button.wheelPosition).whenPressed(positionWheel);
     // controller.getButton(Xbox.Button.wheelPosition).whenPressed(spinWheel);
     spinWheel.whenPressed(new WheelCommand(wheelSubsystem, driveTrainSubsystem, Spin.Revolutions));
-    calibrateGyro.whenPressed(new calibrateGyroCommand());
-    setFrontFront.whenPressed(new SetFrontOfRobotCommand(driveTrainSubsystem, false));
-    setFrontFront.whenPressed(new SetFrontOfRobotCommand(driveTrainSubsystem, true));
+    calibrateGyro.whenPressed(new CalibrateGyroCommand());
+    quickTurn.whenPressed(new ManualDriveCommand(driveTrainSubsystem, DriveType.arcade));
+    quickTurn.whenReleased(new ManualDriveCommand(driveTrainSubsystem, DriveType.cheezy));
+    // setFrontFront.whenPressed(new SetFrontOfRobotCommand(driveTrainSubsystem, false));
+    // setFrontFront.whenPressed(new SetFrontOfRobotCommand(driveTrainSubsystem, true));
 
     // jb.whenPressed(new turnToAngleCommand(driveTrainSubsystem));
 
@@ -125,6 +128,7 @@ public class RobotContainer {
 
   public boolean getOneQuickTurn() {
     return false;
+    // return quickTurn.get();
   }
 
   //TODO: What does effectiveness mean?
