@@ -8,25 +8,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class SetFrontOfRobotCommand extends CommandBase {
-  private DriveTrainSubsystem driveTrainSubsystem;
-  private boolean reverse;
   /**
    * Creates a new SetFrontOfRobotCommand.
    */
-  public SetFrontOfRobotCommand(DriveTrainSubsystem driveTrainSubsystem, boolean reverse) {
-    addRequirements(driveTrainSubsystem);
-    this.driveTrainSubsystem = driveTrainSubsystem;
-    this.reverse = reverse;
+  public SetFrontOfRobotCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    driveTrainSubsystem.setFront(reverse);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,6 +35,6 @@ public class SetFrontOfRobotCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }
