@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.ADIS16448_IMU;
 import frc.lib.ADIS16448_IMU.IMUAxis;
 import frc.robot.sensors.Limelight;
+import frc.robot.sensors.PDP;
 import frc.robot.sensors.ShuffleBoard;
 import frc.robot.subsystems.DriverFeedbackSubsystem;
 
@@ -28,6 +29,7 @@ public class Robot extends TimedRobot {
   public static ShuffleBoard shuffleBoard = new ShuffleBoard();
   public static ADIS16448_IMU gyro = new ADIS16448_IMU(IMUAxis.kX, edu.wpi.first.wpilibj.SPI.Port.kMXP, 10);
   public static Limelight limelight = new Limelight();
+  public static PDP pdp = new PDP();
   public static DriverFeedbackSubsystem driverFeedback = new DriverFeedbackSubsystem(robotContainer);
 
   /**

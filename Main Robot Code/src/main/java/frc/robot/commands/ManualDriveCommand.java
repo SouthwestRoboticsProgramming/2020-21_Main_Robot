@@ -57,14 +57,6 @@ public class ManualDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("setPosition", 0);
-    // TalonFXConfiguration drive = m_driveTrainSubsystem.getTFXC();
-    //     drive.slot0.kF = Robot.shuffleBoard.driveFXPidF.getDouble(0);
-    //     drive.slot0.kP = Robot.shuffleBoard.driveFXPidP.getDouble(0);
-    //     drive.slot0.kI = Robot.shuffleBoard.driveFXPidI.getDouble(0);
-    //     drive.slot0.kD = Robot.shuffleBoard.driveFXPidD.getDouble(0);
-    //     m_driveTrainSubsystem.setTFXC(drive);
-    //     System.out.print("updated control mode = " + Robot.shuffleBoard.driveType.getString(""));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -73,7 +65,7 @@ public class ManualDriveCommand extends CommandBase {
     double leftAuto = 0;
     double rightAuto = 0;
 
-    // wallFollow
+    // wallFollow -- face aliance station
     double wallOffset = -wallFollow.getOutput(Robot.gyro.getGyroAngleZ());
     double wallEffectiveness = Robot.robotContainer.getWallEffeciveness();
     leftAuto += wallOffset * wallEffectiveness * Robot.shuffleBoard.driveStraightEffectiveness.getDouble(0);
@@ -88,12 +80,10 @@ public class ManualDriveCommand extends CommandBase {
     // driver
     double xLeft = -Robot.robotContainer.getLeftTurn();
     double yLeft = -Robot.robotContainer.getLeftDrive();
-    double xRight = Robot.robotContainer.getRightTurn();
-    double yRight = Robot.robotContainer.getRightDrive();
     // xLeft = getDeadzone(xLeft, joystickDeadzone);
     // yLeft = getDeadzone(yLeft, joystickDeadzone);
-    xRight = getDeadzone(xRight, joystickDeadzone);
-    yRight = getDeadzone(yRight, joystickDeadzone);
+    // xRight = getDeadzone(xRight, joystickDeadzone);
+    // yRight = getDeadzone(yRight, joystickDeadzone);
 
     double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0);
     double arcadeSpeed = Robot.shuffleBoard.driveArcadeSpeed.getDouble(1);
@@ -123,7 +113,7 @@ public class ManualDriveCommand extends CommandBase {
       m_driveTrainSubsystem.driveMotors((leftPow + leftAuto)*driveSpeed, (rightPow + rightAuto)*driveSpeed);
     } else if (getDriveType() == DriveType.field) { //Field oriented driving
       Robot.shuffleBoard.driveCurrentType.setString("fieldDrive");
-      double setAngle = getJoyAngle(xRight, yRight);
+      double setAngle = getJoyAngle(xLeft, xLeft);
 
       System.out.println("joy angle = " + setAngle);
       SmartDashboard.putNumber("setAngle", setAngle);
@@ -222,7 +212,11 @@ public class ManualDriveCommand extends CommandBase {
 		if (Math.abs(act) < deadZone) {
 			return 0;
 		} else {
-			return (act-deadZone) * (1/deadZone);
+			if (act > 0) {
+				return (act-deadZone) * (1/(1-deadZone));
+			} else {
+				return (act+deadZone) * (1/(1-deadZone));
+			}
 		}
 	}
 

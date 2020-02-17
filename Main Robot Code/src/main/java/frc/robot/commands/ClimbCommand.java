@@ -12,9 +12,9 @@ import frc.robot.Robot;
 import frc.robot.subsystems.ClimbSubsystem;
 
 public class ClimbCommand extends CommandBase {
-  ClimbSubsystem m_climbSubsystem;
-  private boolean hookPlaced;
-  private boolean hookHightReached;
+  private ClimbSubsystem m_climbSubsystem;
+
+  
   // private 
 
   public ClimbCommand(ClimbSubsystem climbSubsystem) {
@@ -25,35 +25,28 @@ public class ClimbCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_climbSubsystem.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double climbOutput = Robot.robotContainer.getClimbOutput();
-    if (hookPlaced) {
-      m_climbSubsystem.setWinch(Math.round(climbOutput));
+    double climbOutput = getDeadzone(Robot.robotContainer.getClimbOutput(), Robot.shuffleBoard.climbDeadZone.getDouble(0));
+    climbOutput *= Robot.shuffleBoard.climbElevatorSpeed.getDouble(0);
+    m_climbSubsystem.setElevator(climbOutput);
+
+    if (Robot.robotContainer.getWinchOutput()) {
+      double winchSpeed = Robot.shuffleBoard.climbWinchOutput.getDouble(0);
+      m_climbSubsystem.setWinch(winchSpeed);
     } else {
-      m_climbSubsystem.setElevatorVelocity(m_climbSubsystem.getElevatorVelocityPercent(climbOutput));
-
-      //TODO: what does '4' signify?
-
-      if (m_climbSubsystem.getElevatorHeight() >= 4 && !hookHightReached) {
-        hookHightReached = true;
-      }
-      if (m_climbSubsystem.elevatorLowerLimit() && hookHightReached) {
-        hookPlaced = true;
-        m_climbSubsystem.stopElevator();
-      }
+      m_climbSubsystem.setWinch(0);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_climbSubsystem.stopElevator();
-    m_climbSubsystem.stopWinch();
+    m_climbSubsystem.setElevator(0);
+    m_climbSubsystem.setWinch(0);
   }
 
   // Returns true when the command should end.
@@ -61,4 +54,16 @@ public class ClimbCommand extends CommandBase {
   public boolean isFinished() {
     return false;
   }
+
+  public static double getDeadzone(double act, double deadZone) {
+		if (Math.abs(act) < deadZone) {
+			return 0;
+		} else {
+			if (act > 0) {
+				return (act-deadZone) * (1/(1-deadZone));
+			} else {
+				return (act+deadZone) * (1/(1-deadZone));
+			}
+		}
+	}
 }

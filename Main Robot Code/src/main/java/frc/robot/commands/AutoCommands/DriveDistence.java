@@ -5,36 +5,30 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.lib.CheesyDrive;
-import frc.lib.PID;
-import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class ManualUpdateCommand extends CommandBase {
-  private final DriveTrainSubsystem m_driveTrainSubsystem;
-
-  public ManualUpdateCommand(DriveTrainSubsystem driveTrainSubsystem) {
+public class DriveDistence extends CommandBase {
+  DriveTrainSubsystem driveTrainSubsystem;
+  /**
+   * Creates a new DriveDistence.
+   */
+  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem) {
+    this.driveTrainSubsystem = driveTrainSubsystem;
     addRequirements(driveTrainSubsystem);
-    this.m_driveTrainSubsystem = driveTrainSubsystem;
-
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   
   }
 
   // Called once the command ends or is interrupted.
@@ -45,6 +39,6 @@ public class ManualUpdateCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

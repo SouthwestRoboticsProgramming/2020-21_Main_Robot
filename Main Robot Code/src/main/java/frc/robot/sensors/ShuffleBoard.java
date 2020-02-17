@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.subsystems.BallSubsystem;
 
 /**
  * Add your docs here.
@@ -48,12 +47,18 @@ public class ShuffleBoard{
             public NetworkTableEntry ballOutputSpeed = ballTune.addPersistent("ballOutputSpeed", .5).getEntry();
             public NetworkTableEntry ballSpacingWait = ballTune.addPersistent("ballSpacingWait", .5).getEntry();
             public NetworkTableEntry ballSpacingMove = ballTune.addPersistent("ballSpacingMove", .5).getEntry();
+            public NetworkTableEntry ball5thSpacingWait = ballTune.addPersistent("ballSpacingWait", .5).getEntry();
+            public NetworkTableEntry ball5thSpacingMove = ballTune.addPersistent("ballSpacingMove", .5).getEntry();
+            public NetworkTableEntry ballBeltMaxAmp = ballTune.addPersistent("ballBeltMaxAmp", 0).getEntry();
 
         private ShuffleboardLayout climbTune = Tune.getLayout("climbTune", BuiltInLayouts.kList);
-            public NetworkTableEntry climbElevatorPidP = climbTune.addPersistent("climbElevatorPID-P", 0).getEntry();   
-            public NetworkTableEntry climbElevatorPidI = climbTune.addPersistent("climbElevatorPID-I", 0).getEntry();   
-            public NetworkTableEntry climbElevatorPidD = climbTune.addPersistent("climbElevatorPID-D", 0).getEntry();  
-            public NetworkTableEntry climbElevatorPidF = climbTune.addPersistent("climbElevatorPID-F", 0).getEntry();  
+            public NetworkTableEntry climbWinchSpeed = climbTune.addPersistent("climbWinchSpeed", 0).getEntry();  
+            public NetworkTableEntry climbElevatorSpeed = climbTune.addPersistent("climbElevatorSpeed", 0).getEntry();  
+            public NetworkTableEntry climbDeadZone = climbTune.addPersistent("climbDeadZone", 0).getEntry(); 
+
+        private ShuffleboardLayout wheelTune = Tune.getLayout("wheelTune", BuiltInLayouts.kList);
+            public NetworkTableEntry wheelAcceleration = wheelTune.addPersistent("wheelAcceleration", .04).getEntry();
+            public NetworkTableEntry wheelRevolutionsMS = wheelTune.addPersistent("wheelRevolutionsMS", 2000).getEntry();   
         
             private ShuffleboardLayout driverTune = Tune.getLayout("driverTune", BuiltInLayouts.kList);
                 public NetworkTableEntry driverErrorRumbleLength = driverTune.addPersistent("driverErrorRumbleLength", 0).getEntry();   

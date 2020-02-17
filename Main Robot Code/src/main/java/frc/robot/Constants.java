@@ -49,7 +49,8 @@ public final class Constants {
 
   //Sensors
   public static final int lowerBallSensorPort = 2,
-                          upperBallSensorPort = 3;
+                          upperBallSensorPort = 3,
+                          wheelOfFortuneLimitPort = 4;
 
   public final double wheelCircumferenceMeters = 0.1524;
   public final int encoderTicksPerRotation = 4096;

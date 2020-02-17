@@ -9,12 +9,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutonomonousCommand;
 import frc.robot.commands.BallCommand;
+import frc.robot.commands.CalibrateGyroCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ManualDriveCommand;
+import frc.robot.commands.ManualDriveCommand.DriveType;
 import frc.robot.commands.SetFrontOfRobotCommand;
 import frc.robot.commands.WheelCommand;
-import frc.robot.commands.ManualDriveCommand.DriveType;
 import frc.robot.commands.WheelCommand.Spin;
-import frc.robot.commands.CalibrateGyroCommand;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
@@ -30,6 +31,7 @@ import frc.robot.subsystems.WheelSubsystem;
  */
 
 public class RobotContainer {
+  private int driveReverse = 1;
 
   private final BallSubsystem ballSubsystem = new BallSubsystem();
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
@@ -38,34 +40,27 @@ public class RobotContainer {
   
   private final Xbox controller = new Xbox(Constants.controllerPort);
 
-  private final XboxController xbox = new XboxController(0);
   private final Joystick XBOX = new Joystick(0);
-  private final JoystickButton jb = new JoystickButton(XBOX, 8);
   private final JoystickButton spinWheel = new JoystickButton(XBOX, 8);
-  private final JoystickButton calibrateGyro = new JoystickButton(XBOX, 9);
-  private final JoystickButton setFrontFront = new JoystickButton(XBOX, 5);
-  // private final JoystickButton setFrontBack = new JoystickButton(XBOX, 6);
   private final JoystickButton quickTurn = new JoystickButton(XBOX, 6);
 
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
   private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem, DriveType.cheezy);
-  // private final CommandBase ballSubsystemCommand = new BallCommand(ballSubsystem, ballMode.hold);
-  // private final CommandBase spinWheel = new WheelCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelCommand.Spin.Revolutions);
-  // private final CommandBase positionWheel = new WheelCommand(wheelSubsystem, driveTrainSubsystem, driverFeedback, WheelCommand.Spin.Position);
-  // private final CommandBase climb = new ClimbCommand(climbSubsystem);
+  private final Command setFrontOfRobot = new SetFrontOfRobotCommand();
+  private final Command calibrateGyro = new CalibrateGyroCommand();
+  private final Command climb = new ClimbCommand(climbSubsystem);
 
   public RobotContainer() {
-    // driveTrainSubsystem.setDefaultCommand(manualDrive); manualDrive.schedule();
-    // ballSubsystem.setDefaultCommand(ballSubsystemCommand); ballSubsystemCommand.schedule();
-    // climbSubsystem.setDefaultCommand(climb); climb.schedule();
-
     // Configure the button bindings
     configureButtonBindings();
   }
 
   public void startTeleopCommands() {
     manualDrive.schedule();
+    setFrontOfRobot.schedule();
+    calibrateGyro.schedule();
+    climb.schedule();
   }
 
   /**
@@ -80,20 +75,10 @@ public class RobotContainer {
     controller.getButton(Xbox.Button.hold).whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
     controller.getButton(Xbox.Button.unloadIntake).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
     controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
-    // controller.getButton(Xbox.Button.wheelPosition).whenPressed(positionWheel);
-    // controller.getButton(Xbox.Button.wheelPosition).whenPressed(spinWheel);
+
     spinWheel.whenPressed(new WheelCommand(wheelSubsystem, driveTrainSubsystem, Spin.Revolutions));
-    calibrateGyro.whenPressed(new CalibrateGyroCommand());
     quickTurn.whenPressed(new ManualDriveCommand(driveTrainSubsystem, DriveType.arcade));
     quickTurn.whenReleased(new ManualDriveCommand(driveTrainSubsystem, DriveType.cheezy));
-    // setFrontFront.whenPressed(new SetFrontOfRobotCommand(driveTrainSubsystem, false));
-    // setFrontFront.whenPressed(new SetFrontOfRobotCommand(driveTrainSubsystem, true));
-
-    // jb.whenPressed(new turnToAngleCommand(driveTrainSubsystem));
-
-    // JoystickButton b = new JoystickButton(xbox, 2);
-    // b.whenPressed(new ManualUpdateCommand(driveTrainSubsystem));
-        // Connect the buttons to commands
   }
 
   /**
@@ -105,39 +90,54 @@ public class RobotContainer {
     return m_autonomousCommand;
   }
 
-  //TODO: Do these functions need to be in robotContainer? What are they for?
+  // DRIVE
+    public double getLeftDrive() {
+      // return xbox.getY(Hand.kLeft);
+      return -XBOX.getRawAxis(1) * driveReverse;
+    }
 
-  // Single joystick drive
-  public double getLeftDrive() {
-    // return xbox.getY(Hand.kLeft);
-    return -XBOX.getRawAxis(1);
-  }
+    public double getLeftTurn() {
+      // return xbox.getX(Hand.kLeft);
+      return XBOX.getRawAxis(0);
+    }
 
-  public double getLeftTurn() {
-    // return xbox.getX(Hand.kLeft);
-    return XBOX.getRawAxis(0);
-  }
+    public boolean getOneQuickTurn() {
+      return false;
+    }
 
-  public double getRightDrive() {
+    public double getWallEffeciveness() {
+      return XBOX.getRawAxis(3);
+    }
+
+    public double getLimelightEffeciveness() {
+      return XBOX.getRawAxis(2);
+    }
+
+    public void setDriveReversed(boolean reversed) {
+      if (reversed) {
+        driveReverse = -1;
+      } else {
+        driveReverse = 1;
+      }
+    }
+  
+    public int getPOV() {
+      return XBOX.getPOV();
+    }
+
+  // climb
+  public double getClimbOutput() {
     return -XBOX.getRawAxis(5);
   }
 
-  public double getRightTurn() {
-    return XBOX.getRawAxis(4);
+  public boolean getWinchOutput() {
+    return XBOX.getRawButton(10);
   }
 
-  public boolean getOneQuickTurn() {
-    return false;
-    // return quickTurn.get();
-  }
-
-  //TODO: What does effectiveness mean?
-  public double getWallEffeciveness() {
-    return XBOX.getRawAxis(3);
-  }
-
-  public double getLimelightEffeciveness() {
-    return XBOX.getRawAxis(2);
+  
+  //Other
+  public void setRumble(RumbleType type, long ms) {
+    controller.rumble(type, ms);
   }
 
   // Highly important function 
@@ -145,12 +145,6 @@ public class RobotContainer {
     return (double) x + (double) y;
   }
 
-  // climb
-  public double getClimbOutput() {
-    return 0;
-  }
 
-  public void setRumble(RumbleType type, long ms) {
-    controller.rumble(type, ms);
-  }
+
 }

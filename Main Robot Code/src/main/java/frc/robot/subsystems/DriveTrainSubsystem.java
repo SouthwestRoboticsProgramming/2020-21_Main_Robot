@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.ADIS16448_IMU;
 import frc.lib.Lib;
 import frc.lib.PID;
 import frc.robot.Robot;
@@ -116,8 +115,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 		return Rotation2d.fromDegrees(getHeading());
 	}
 	public double getHeading() {
-		return 0;
-		// return gyro.getGyroAngleX();
+		// return 0;
+		return Robot.gyro.getGyroAngleZ();
 	}
 
 	public WPI_TalonFX getLeftMaster() {

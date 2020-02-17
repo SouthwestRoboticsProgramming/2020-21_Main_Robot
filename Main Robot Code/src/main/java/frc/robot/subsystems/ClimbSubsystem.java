@@ -12,43 +12,14 @@ public class ClimbSubsystem extends SubsystemBase {
   
   private final WPI_TalonSRX winch, elevator;
 
-  private final double maxVelocity = 100;
-  private final int encoderTicks = 4096;
-
   public ClimbSubsystem() {
     winch = new WPI_TalonSRX(Constants.winchTalonPort);
     elevator = new WPI_TalonSRX(Constants.elevatorTalonPort);
 
-    elevator.setSelectedSensorPosition(0);
     elevator.configNeutralDeadband(0.001);
     elevator.setNeutralMode(NeutralMode.Brake);
-    elevator.setSensorPhase(true);
     elevator.setInverted(false);
 
-    elevator.config_kP(0, Robot.shuffleBoard.climbElevatorPidP.getDouble(0));
-    elevator.config_kI(0, Robot.shuffleBoard.climbElevatorPidI.getDouble(0));
-    elevator.config_kD(0, Robot.shuffleBoard.climbElevatorPidD.getDouble(0));
-    elevator.config_kF(0, Robot.shuffleBoard.climbElevatorPidF.getDouble(0));
-
-    elevator.configForwardSoftLimitThreshold(1300);
-		elevator.configForwardSoftLimitEnable(false);
-		elevator.configReverseSoftLimitThreshold(0);
-		elevator.configReverseSoftLimitEnable(false);
-  }
-
-  public void resetEncoder() {
-    elevator.set(ControlMode.PercentOutput, -.2);
-    while(!elevator.getSensorCollection().isRevLimitSwitchClosed()) {}
-    elevator.stopMotor();
-    elevator.setSelectedSensorPosition(0);
-  }
-
-  public double getElevatorVelocityPercent(double percent) {
-    return percent / maxVelocity;
-  }
-
-  public double getElevatorHeight() {
-    return elevator.getSelectedSensorPosition() / encoderTicks;
   }
 
   public void setWinch(double percent) {
@@ -56,30 +27,8 @@ public class ClimbSubsystem extends SubsystemBase {
     Robot.shuffleBoard.climbWinchOutput.setDouble(winch.getMotorOutputPercent());
   }
 
-  public double getWinch() {
-    return winch.get();
-  }
-
-  public void stopWinch() {
-    winch.set(ControlMode.PercentOutput, 0);
-    winch.stopMotor();
-  }
-
-  public void setElevatorVelocity(double velocity) {
-    elevator.set(ControlMode.Velocity, velocity);
+  public void setElevator(double percent) {
+    elevator.set(ControlMode.PercentOutput, percent);
     Robot.shuffleBoard.climbElevatorOutput.setDouble(elevator.getMotorOutputPercent());
-  }
-
-  public void stopElevator() {
-    elevator.set(ControlMode.PercentOutput, 0);
-    elevator.stopMotor();
-  }
-
-  public boolean elevatorLowerLimit() {
-    return false;
-  }
-
-  public boolean elevatorUpperLimit() {
-    return false;
   }
 }

@@ -15,4 +15,10 @@ public class Lib{
     public double setRange(double var, double min, double max) {
         return Math.max(Math.min(var, max), min);
     }
+
+    public void sleep(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (Exception e) {}
+    }
 }

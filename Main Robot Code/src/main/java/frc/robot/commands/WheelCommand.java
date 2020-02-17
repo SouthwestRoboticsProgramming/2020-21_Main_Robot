@@ -11,36 +11,27 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.lib.PID;
+import frc.lib.Lib;
 import frc.lib.Looper.Loop;
 import frc.lib.Looper.Looper;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriverFeedbackSubsystem;
-import frc.robot.subsystems.DriverFeedbackSubsystem.PresetColors;
 import frc.robot.subsystems.WheelSubsystem;
 
 public class WheelCommand extends CommandBase {
   private final WheelSubsystem m_wheelSubsystem;
   private final DriveTrainSubsystem driveTrainSubsystem;
-  private DriverFeedbackSubsystem driverFeedback = Robot.driverFeedback;
-  private PID pid;
   private Looper powerRamper;
-  private Looper positionHolder;
-  private Looper spinner;
   private Spin spin;
-  private boolean pressure = false;
   private WheelSubsystem.Color color;
   private long startTime;
-  private final double spinTime = 10000;
-  private final long loopTime = 20;
   private boolean finished = false;
 
   public enum Spin {
     Revolutions,
     Position;
   }
-
+  
   public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem, Spin spin) {
     System.out.println("WheelCommand.WheelCommand()");
     addRequirements(wheelSubsystem);
@@ -60,40 +51,36 @@ public class WheelCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_wheelSubsystem.calibrate();
     System.out.println("WheelCommand.initialize()");
     startTime = System.currentTimeMillis();
     m_wheelSubsystem.setPushedState(true);
-    finished = false;
+    finished = false; 
 
-    pid = new PID(0, 0, 0);
-    pid.setSetPoint(70);
-    pid.setError(70);    
+    while(m_wheelSubsystem.getLimit()) {
+      driveTrainSubsystem.driveAtAngle(.25, 0, ControlMode.PercentOutput);
+    }
+    driveTrainSubsystem.driveMotors(0, 0);
+    rampSpinnerPower(0, 100);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     System.out.println("WheelCommand.execute()");
-    if (System.currentTimeMillis() - spinTime >= startTime) {finished = true;}
-
-    if (pid.getError() < 2) {
-      m_wheelSubsystem.setSpinnerTalon(50);
+    if (spin == Spin.Revolutions) {
+      double spinTime = Robot.shuffleBoard.wheelRevolutionsMS.getDouble(0);
+      if (System.currentTimeMillis() - spinTime >= startTime) {finished = true;}
+    } else if (spin == Spin.Position) {
+      if (getColor(color) == m_wheelSubsystem.getColor()) {finished = true;}
     }
-
-    pid.setActual(m_wheelSubsystem.getAngle());
-    driveTrainSubsystem.driveAtAngle(pid.getOutput(), 0, ControlMode.Velocity);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     System.out.println("WheelCommand.end()");
-    if (interrupted) {
-      driverFeedback.setColor(PresetColors.red);
-      // driverFeedback.errorRumble();
-    }
     m_wheelSubsystem.setSpinnerTalon(0);
+    new Lib().sleep(1000);
     m_wheelSubsystem.setPushedState(false);
   }
 
@@ -118,8 +105,8 @@ public class WheelCommand extends CommandBase {
     }
   }
 
-  private void rampPower(double start, double end) {
-    double loopAdded = .04;
+  private void rampSpinnerPower(double start, double end) {
+    double loopAdded = Robot.shuffleBoard.wheelAcceleration.getDouble(0);
     Long diff = Double.doubleToLongBits((end - start) * 100 / (loopAdded * 100));
     
     Loop loop = new Loop(){
@@ -138,21 +125,7 @@ public class WheelCommand extends CommandBase {
     powerRamper.start();
   }
 
-  private void holdPosition() {
-    Loop loop = new Loop(){
-      @Override public void onStart() {
-
-      }
-      @Override public void onLoop() {
-        if (finished) {positionHolder.stop();}
-        
-      }
-      @Override public void onStop() {
-      }
-    };
-    positionHolder = new Looper(loop, loopTime);
-    positionHolder.start();
-  }
+  
 
 
 }

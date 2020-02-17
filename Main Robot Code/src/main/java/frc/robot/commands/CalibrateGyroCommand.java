@@ -21,12 +21,14 @@ public class CalibrateGyroCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.gyro.calibrate();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (Robot.robotContainer.getPOV() == 90) {
+      Robot.gyro.reset();
+    }
   }
 
   // Called once the command ends or is interrupted.

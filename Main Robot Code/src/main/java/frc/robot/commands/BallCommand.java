@@ -16,24 +16,23 @@ import frc.robot.subsystems.BallSubsystem.ballMode;
 * Output: Ball subsystem is set to th
 */
 public class BallCommand extends CommandBase {
-  private final BallSubsystem m_ballSubsystem;
-  private ballMode ballMode;
+  private BallSubsystem m_ballSubsystem;
+  private ballMode mode;
   
 
   public BallCommand(BallSubsystem ballSubsystem, ballMode ballMode) {
     addRequirements(ballSubsystem);
     this.m_ballSubsystem = ballSubsystem;
-    this.ballMode = ballMode;
+    this.mode = ballMode;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ballSubsystem.setBallMode(ballMode);
-    if (ballMode == ballMode.unloadIntake || ballMode == ballMode.unloadOutput) {
+    m_ballSubsystem.setBallMode(mode);
+    if (mode == ballMode.hold || mode == ballMode.unloadOutput) {
       m_ballSubsystem.setBallCount(0);
     }
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
