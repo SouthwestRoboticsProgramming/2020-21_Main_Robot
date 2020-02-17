@@ -13,8 +13,10 @@ public class ShuffleBoard{
 
     public boolean update = false;
     public ShuffleboardTab GamePlay = Shuffleboard.getTab("GamePlay");
-        public NetworkTableEntry outreachMode = GamePlay.add("outreachMode", false).getEntry();
-        public NetworkTableEntry noArm = GamePlay.add("noArm", false).getEntry();
+        public NetworkTableEntry path1 = GamePlay.add("path1", "").getEntry();
+        public NetworkTableEntry path2 = GamePlay.add("path2", "").getEntry();
+        public NetworkTableEntry path3 = GamePlay.add("path3", "").getEntry();
+        public NetworkTableEntry path4 = GamePlay.add("path4", "").getEntry();
         
     public ShuffleboardTab Tune = Shuffleboard.getTab("Tune");
         private ShuffleboardLayout driveTune = Tune.getLayout("driveTune", BuiltInLayouts.kList);
@@ -108,6 +110,29 @@ public class ShuffleBoard{
             public NetworkTableEntry limelightX = limeLightDebug.add("limelightX", 0).getEntry();
             public NetworkTableEntry limelightY = limeLightDebug.add("limelightY", 0).getEntry();
             public NetworkTableEntry limelightArea = limeLightDebug.add("limelightArea", 0).getEntry();
+
+    public ShuffleboardTab Auto = Shuffleboard.getTab("Auto");
+        private ShuffleboardLayout autoTune = Auto.getLayout("autoTune", BuiltInLayouts.kList);
+            public NetworkTableEntry autoTuneAccelDistence = autoTune.add("autoTuneAccelDistence", 0).getEntry();
+            public NetworkTableEntry autoTuneAcceleration = autoTune.add("autoTuneAcceleration", 0).getEntry();
+
+        private ShuffleboardLayout PathA = Auto.getLayout("PathA", BuiltInLayouts.kList);
+            public NetworkTableEntry PathAWait0 = PathA.add("PathAWait0", 0).getEntry();
+            public NetworkTableEntry PathADistence1 = PathA.add("PathADistence1", 0).getEntry();
+            public NetworkTableEntry PathASpeed1 = PathA.add("PathASpeed1", 0).getEntry();
+            public NetworkTableEntry PathATime2 = PathA.add("PathATime2", 0).getEntry();
+            public NetworkTableEntry PathASpeed2 = PathA.add("PathASpeed2", 0).getEntry();
+        
+        private ShuffleboardLayout PathB = Auto.getLayout("PathB", BuiltInLayouts.kList);
+            public NetworkTableEntry PathBWait0 = PathB.add("PathBWait0", 0).getEntry();
+            public NetworkTableEntry PathBDistence1 = PathB.add("PathBDistence1", 0).getEntry();
+            public NetworkTableEntry PathBSpeed1 = PathB.add("PathBSpeed1", 0).getEntry();
+            public NetworkTableEntry PathBAngle2 = PathB.add("PathBAngle2", 0).getEntry();
+            public NetworkTableEntry PathBDistence3 = PathB.add("PathBDistence3", 0).getEntry();
+            public NetworkTableEntry PathBSpeed3 = PathB.add("PathBSpeed3", 0).getEntry();
+            public NetworkTableEntry PathBAngle4 = PathB.add("PathBAngle4", 0).getEntry();
+            public NetworkTableEntry PathBTime5 = PathB.add("PathBTime5", 0).getEntry();
+            public NetworkTableEntry PathBSpeed5 = PathB.add("PathBSpeed5", 0).getEntry();
 
     public ShuffleBoard() {
 

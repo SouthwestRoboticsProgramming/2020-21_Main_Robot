@@ -12,42 +12,44 @@ import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
 
-public class DriveDistence extends CommandBase {
+public class AccelerateDrive extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
-  private double ft;
+  private double start;
+  private double end;
+  private double lastSpeed;
+  private double acceleration;
+  private boolean finished = false;
+  private double tolerance;
   private Wheel wheel;
-  private double speed;
-  private boolean finished;
 
-  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed, Wheel wheel) {
-    this.driveTrainSubsystem = driveTrainSubsystem;
-    this.ft = ft;
+  public AccelerateDrive(DriveTrainSubsystem driveTrainSubsystem, double start, double end, Wheel wheel) {
+    addRequirements(driveTrainSubsystem);
+    this.start = start;
+    this.end = end;
     this.wheel = wheel;
-    this.speed = speed;
-    addRequirements(driveTrainSubsystem);
-  }
-
-  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed) {
-    this.driveTrainSubsystem = driveTrainSubsystem;
-    this.ft = ft;
-    this.wheel = Wheel.both;
-    this.speed = speed;
-    addRequirements(driveTrainSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    new AccelerateDrive(driveTrainSubsystem, 0, speed, wheel);
-    finished = false;
+    driveMotors(0, 0);
+    lastSpeed = start;
+    this.acceleration = Robot.shuffleBoard.autoTuneAcceleration.getDouble(0);
+    this.tolerance = acceleration * 1.5;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double distence = (driveTrainSubsystem.getLeftDriveFeet() + driveTrainSubsystem.getRightDriveFeet())/2;
-    double decelDistence = Robot.shuffleBoard.autoTuneAccelDistence.getDouble(0) *speed;
-    if (distence + decelDistence >= ft) {
+    double newSpeed;
+    if (start < end) {
+      newSpeed = lastSpeed + acceleration;
+    } else {
+      newSpeed = lastSpeed - acceleration;
+    }
+    driveMotors(newSpeed, newSpeed);
+    lastSpeed = newSpeed;
+    if (Math.abs(end-newSpeed) < tolerance) {
       finished = true;
     }
   }
@@ -55,12 +57,24 @@ public class DriveDistence extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    new AccelerateDrive(driveTrainSubsystem, speed, 0, wheel);
+    driveMotors(end, end);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return finished;
+  }
+
+
+  private void driveMotors(double left, double right) {
+    if (wheel == Wheel.left) {
+      driveTrainSubsystem.driveMotors(left, 0);
+    } else if (wheel == Wheel.right) {
+      driveTrainSubsystem.driveMotors(0, right);
+    } else if (wheel == Wheel.both) {
+      driveTrainSubsystem.driveMotors(left, right);
+    }
+    
   }
 }

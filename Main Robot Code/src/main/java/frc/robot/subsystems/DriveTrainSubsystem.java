@@ -26,7 +26,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
 	private DifferentialDriveOdometry differentialDriveOdometry;
 	private TalonFXConfiguration fxConfig;
 
-	
+	public enum Wheel {
+		left, right, both
+	  }
 
 	public DriveTrainSubsystem() {
 	//setup motors

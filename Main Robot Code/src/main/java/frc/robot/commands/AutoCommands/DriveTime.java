@@ -8,28 +8,29 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
 
-public class DriveDistence extends CommandBase {
+public class DriveTime extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
-  private double ft;
+  private double seconds;
   private Wheel wheel;
   private double speed;
+  private long endTime;
   private boolean finished;
 
-  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed, Wheel wheel) {
+  public DriveTime(DriveTrainSubsystem driveTrainSubsystem, double seconds, double speed, Wheel wheel) {
     this.driveTrainSubsystem = driveTrainSubsystem;
-    this.ft = ft;
+    this.seconds = seconds;
     this.wheel = wheel;
     this.speed = speed;
     addRequirements(driveTrainSubsystem);
   }
 
-  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed) {
+  public DriveTime(DriveTrainSubsystem driveTrainSubsystem, double seconds, double speed) {
     this.driveTrainSubsystem = driveTrainSubsystem;
-    this.ft = ft;
+    this.seconds = seconds;
     this.wheel = Wheel.both;
     this.speed = speed;
     addRequirements(driveTrainSubsystem);
@@ -38,16 +39,15 @@ public class DriveDistence extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    endTime = System.currentTimeMillis() + (long)(seconds * 1000) - (long)(Robot.shuffleBoard.autoTuneAccelDistence.getDouble(0) * speed);
     new AccelerateDrive(driveTrainSubsystem, 0, speed, wheel);
     finished = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    double distence = (driveTrainSubsystem.getLeftDriveFeet() + driveTrainSubsystem.getRightDriveFeet())/2;
-    double decelDistence = Robot.shuffleBoard.autoTuneAccelDistence.getDouble(0) *speed;
-    if (distence + decelDistence >= ft) {
+  public void execute() { 
+    if (System.currentTimeMillis() >= endTime) {
       finished = true;
     }
   }
