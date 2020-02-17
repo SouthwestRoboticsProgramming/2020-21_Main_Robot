@@ -63,11 +63,13 @@ public class BallSubsystem extends SubsystemBase {
     intake,
     hold,
     unloadIntake,
-    unloadOutput;
+    unloadOutput,
+    pushBalls;
   }
 
   public void setBallMode(ballMode mode) {
     double intakeSpeed = Robot.shuffleBoard.ballIntakeSpeed.getDouble(0);
+    double pushSpeed = Robot.shuffleBoard.ballPushSpeed.getDouble(0);
     double flickerInSpeed = Robot.shuffleBoard.ballFlickerInSpeed.getDouble(0);
     double flickerOutIntakeSpeed = Robot.shuffleBoard.ballFluckerOutIntakeSpeed.getDouble(0);
     double beltSpeed = Robot.shuffleBoard.ballBeltsSpeed.getDouble(0);
@@ -83,6 +85,8 @@ public class BallSubsystem extends SubsystemBase {
       setBallState(false, false, true, 0, flickerOutIntakeSpeed, beltsOutIntakeSpeed, 0);
     } else if (mode == ballMode.unloadOutput) {
       setBallState(false, false, false, 0, 0, beltsOutOutputSpeed, outputSpeed);
+    } else if (mode == ballMode.unloadOutput) {
+      setBallState(true, true, true, pushSpeed, 0, 0, 0);
     }
     this.mode = mode;
   }

@@ -72,7 +72,7 @@ public class ManualDriveCommand extends CommandBase {
     rightAuto -= wallOffset * wallEffectiveness *  Robot.shuffleBoard.driveStraightEffectiveness.getDouble(0);
 
     // limelight
-    double limelightOffset = limeLight.getOutput(Robot.limelight.limelightX());
+    double limelightOffset = limeLight.getOutput(Robot.limelight.getX());
     double limelightEffectiveness = Robot.robotContainer.getLimelightEffeciveness();
     leftAuto += limelightOffset * limelightEffectiveness *  Robot.shuffleBoard.driveLimelightEffectiveness.getDouble(0);
     rightAuto -= limelightOffset * limelightEffectiveness *  Robot.shuffleBoard.driveLimelightEffectiveness.getDouble(0);

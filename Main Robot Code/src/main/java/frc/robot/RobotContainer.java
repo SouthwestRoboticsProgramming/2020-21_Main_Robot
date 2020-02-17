@@ -41,8 +41,14 @@ public class RobotContainer {
   private final Xbox controller = new Xbox(Constants.controllerPort);
 
   private final Joystick XBOX = new Joystick(0);
+  private final JoystickButton intake = new JoystickButton(XBOX, 2);
+  private final JoystickButton hold = new JoystickButton(XBOX, 3);
+  private final JoystickButton outBottom = new JoystickButton(XBOX, 1);
+  private final JoystickButton outTop = new JoystickButton(XBOX, 4);
+  private final JoystickButton pushBalls = new JoystickButton(XBOX, 6);
+
   private final JoystickButton spinWheel = new JoystickButton(XBOX, 8);
-  private final JoystickButton quickTurn = new JoystickButton(XBOX, 6);
+  private final JoystickButton slow = new JoystickButton(XBOX, 5);
 
 
   private final CommandBase m_autonomousCommand = new AutonomonousCommand();
@@ -71,14 +77,15 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // // Create some buttons
-    controller.getButton(Xbox.Button.intake).whenPressed(new BallCommand(ballSubsystem, ballMode.intake));
-    controller.getButton(Xbox.Button.hold).whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
-    controller.getButton(Xbox.Button.unloadIntake).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
-    controller.getButton(Xbox.Button.unloadOutput).whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
+    intake.whenPressed(new BallCommand(ballSubsystem, ballMode.intake));
+    hold.whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
+    outBottom.whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
+    outTop.whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
+    pushBalls.whenPressed(new BallCommand(ballSubsystem, ballMode.pushBalls));
 
     spinWheel.whenPressed(new WheelCommand(wheelSubsystem, driveTrainSubsystem, Spin.Revolutions));
-    quickTurn.whenPressed(new ManualDriveCommand(driveTrainSubsystem, DriveType.arcade));
-    quickTurn.whenReleased(new ManualDriveCommand(driveTrainSubsystem, DriveType.cheezy));
+    slow.whenPressed(new ManualDriveCommand(driveTrainSubsystem, DriveType.arcade));
+    slow.whenReleased(new ManualDriveCommand(driveTrainSubsystem, DriveType.cheezy));
   }
 
   /**
