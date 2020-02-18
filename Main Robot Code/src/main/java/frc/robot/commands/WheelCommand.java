@@ -17,13 +17,14 @@ import frc.lib.Looper.Looper;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.WheelSubsystem;
+import frc.robot.sensors.ColorSensor;
 
 public class WheelCommand extends CommandBase {
   private final WheelSubsystem m_wheelSubsystem;
   private final DriveTrainSubsystem driveTrainSubsystem;
   private Looper powerRamper;
   private Spin spin;
-  private WheelSubsystem.Color color;
+  private ColorSensor.Color color;
   private long startTime;
   private boolean finished = false;
 
@@ -40,7 +41,7 @@ public class WheelCommand extends CommandBase {
     this.spin = spin;
   }
 
-  public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem,  Spin spin, WheelSubsystem.Color color) {
+  public WheelCommand(WheelSubsystem wheelSubsystem, DriveTrainSubsystem driveTrainSubsystem,  Spin spin, ColorSensor.Color color) {
     this.m_wheelSubsystem = wheelSubsystem;
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.spin = spin;
@@ -77,12 +78,12 @@ public class WheelCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if (spin == Spin.Revolutions) {
+    if (spin == Spin.Revolutions) {
       double spinTime = Robot.shuffleBoard.wheelRevolutionsMS.getDouble(0);
       if (System.currentTimeMillis() - spinTime >= startTime) {finished = true;}
-    // } else if (spin == Spin.Position) {
-    //   if (getColor(color) == m_wheelSubsystem.getColor()) {finished = true;}
-    // }
+    } else if (spin == Spin.Position) {
+      if (getColor(color) == m_wheelSubsystem.getColor()) {finished = true;}
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -104,15 +105,15 @@ public class WheelCommand extends CommandBase {
     return finished;
   }
 
-  private WheelSubsystem.Color getColor(WheelSubsystem.Color color) {
-    if (color == WheelSubsystem.Color.blue) {
-        return WheelSubsystem.Color.red;
-    } else if (color == WheelSubsystem.Color.green) {
-      return WheelSubsystem.Color.yellow;
-    } else if (color == WheelSubsystem.Color.red) {
-      return WheelSubsystem.Color.blue;
-    } else if (color == WheelSubsystem.Color.yellow) {
-      return WheelSubsystem.Color.green;
+  private ColorSensor.Color getColor(ColorSensor.Color color) {
+    if (color == ColorSensor.Color.blue) {
+        return ColorSensor.Color.red;
+    } else if (color == ColorSensor.Color.green) {
+      return ColorSensor.Color.yellow;
+    } else if (color == ColorSensor.Color.red) {
+      return ColorSensor.Color.blue;
+    } else if (color == ColorSensor.Color.yellow) {
+      return ColorSensor.Color.green;
     } else {
       DriverStation.reportError("Color " + color + " not found!", true);
       return null;

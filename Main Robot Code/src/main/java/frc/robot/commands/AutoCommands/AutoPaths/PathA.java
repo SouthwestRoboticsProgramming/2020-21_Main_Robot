@@ -5,14 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.AutoCommands.AutoPaths;
+package frc.robot.commands.autoCommands.autoPaths;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.robot.commands.AutoCommands.DriveDistence;
-import frc.robot.commands.AutoCommands.DriveTime;
-import frc.robot.commands.AutoCommands.setBallMode;
-import frc.robot.commands.AutoCommands.Wait;
+import frc.robot.commands.autoCommands.DriveDistance;
+import frc.robot.commands.autoCommands.DriveTime;
+import frc.robot.commands.autoCommands.setBallMode;
+import frc.robot.commands.autoCommands.Wait;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -25,7 +25,7 @@ public class PathA extends SequentialCommandGroup {
     
     super(
       new Wait(Robot.shuffleBoard.PathAWait0.getDouble(0)),
-      new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathADistence1.getDouble(0), Robot.shuffleBoard.PathASpeed1.getDouble(0)),
+      new DriveDistance(driveTrainSubsystem, Robot.shuffleBoard.PathADistance1.getDouble(0), Robot.shuffleBoard.PathASpeed1.getDouble(0)),
       new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathATime2.getDouble(0), Robot.shuffleBoard.PathASpeed2.getDouble(0)),
       new setBallMode(ballSubsystem, ballMode.unloadOutput),
       new Wait(Robot.shuffleBoard.PathAWait3.getDouble(0)),

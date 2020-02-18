@@ -5,10 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.AutoCommands.AutoPaths.AutoSequence;
+import frc.robot.commands.autoCommands.autoPaths.AutoSequence;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
@@ -26,18 +26,6 @@ public class AutonomonousSelector extends CommandBase {
   public void initialize() {
     System.out.println("AutonomonousSelector.initialize()");
     new AutoSequence(driveTrainSubsystem, ballSubsystem).schedule();
-    // new DriveTime(driveTrainSubsystem, 2, .25).schedule();;
-    // new PathH(driveTrainSubsystem, ballSubsystem).schedule();
-    // new setBallMode(ballSubsystem, ballMode.intake);
-    // new AccelerateDrive(driveTrainSubsystem, 0, -.25, Wheel.both);
-    // new PathBNew(driveTrainSubsystem, ballSubsystem).schedule();
-    // runPath(Robot.shuffleBoard.path1.getString(""));
-    // runPath(Robot.shuffleBoard.path2.getString(""));
-    // runPath(Robot.shuffleBoard.path3.getString(""));
-    // runPath(Robot.shuffleBoard.path4.getString(""));
-    // new GetAcclDecelDistence(driveTrainSubsystem).schedule();
-    // new TurnToAngle(driveTrainSubsystem, 30, Wheel.both).schedule();;
-    // new DriveDistence(driveTrainSubsystem, 5, .5).schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

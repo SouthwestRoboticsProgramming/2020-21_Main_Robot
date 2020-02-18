@@ -5,25 +5,25 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class GetAcclDecelDistence extends CommandBase {
+public class GetAcclDecelDistance extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
   private double lastLeftFeet;
   private double lastRightFeet;
 
-  public GetAcclDecelDistence(DriveTrainSubsystem driveTrainSubsystem) {
+  public GetAcclDecelDistance(DriveTrainSubsystem driveTrainSubsystem) {
     this.driveTrainSubsystem = driveTrainSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("GetAcclDecelDistence.initialize()");
+    System.out.println("GetAcclDecelDistance.initialize()");
     lastLeftFeet = driveTrainSubsystem.getLeftDriveFeet();
     lastRightFeet = driveTrainSubsystem.getRightDriveFeet();
     new AccelDecelSequence(driveTrainSubsystem).schedule();
@@ -37,8 +37,8 @@ public class GetAcclDecelDistence extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    double distence = (driveTrainSubsystem.getLeftDriveFeet()-lastLeftFeet + driveTrainSubsystem.getRightDriveFeet()-lastRightFeet)/2;
-    Robot.shuffleBoard.autoTuneAccelDistence.setDouble(distence);
+    double Distance = (driveTrainSubsystem.getLeftDriveFeet()-lastLeftFeet + driveTrainSubsystem.getRightDriveFeet()-lastRightFeet)/2;
+    Robot.shuffleBoard.autoTuneAccelDistance.setDouble(Distance);
   }
 
   // Returns true when the command should end.

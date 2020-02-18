@@ -5,14 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
 
-public class DriveDistence extends CommandBase {
+public class DriveDistance extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
   private double ft;
   private Wheel wheel;
@@ -21,7 +21,7 @@ public class DriveDistence extends CommandBase {
   private double lastLeftFeet;
   private double lastRightFeet;
 
-  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed, Wheel wheel) {
+  public DriveDistance(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed, Wheel wheel) {
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.ft = ft;
     this.wheel = wheel;
@@ -29,7 +29,7 @@ public class DriveDistence extends CommandBase {
     addRequirements(driveTrainSubsystem);
   }
 
-  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed) {
+  public DriveDistance(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed) {
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.ft = ft;
     this.wheel = Wheel.both;
@@ -49,16 +49,16 @@ public class DriveDistence extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double distence = (driveTrainSubsystem.getLeftDriveFeet()-lastLeftFeet + driveTrainSubsystem.getRightDriveFeet()-lastRightFeet)/2;
-    System.out.println("distence = " + distence);
-    double decelDistence = Robot.shuffleBoard.autoTuneAccelDistence.getDouble(0) *speed*1.1;
-    System.out.println("decelDistence = " + decelDistence);
+    double Distance = (driveTrainSubsystem.getLeftDriveFeet()-lastLeftFeet + driveTrainSubsystem.getRightDriveFeet()-lastRightFeet)/2;
+    System.out.println("Distance = " + Distance);
+    double decelDistance = Robot.shuffleBoard.autoTuneAccelDistance.getDouble(0) *speed*1.1;
+    System.out.println("decelDistance = " + decelDistance);
     if (ft > 0) {
-      if (distence + decelDistence >= ft) {
+      if (Distance + decelDistance >= ft) {
         finished = true;
       }
     } else {
-      if (distence + decelDistence <= ft) {
+      if (Distance + decelDistance <= ft) {
         finished = true;
       }
     }

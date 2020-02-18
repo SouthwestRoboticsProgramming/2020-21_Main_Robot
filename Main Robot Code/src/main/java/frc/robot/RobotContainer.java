@@ -15,7 +15,7 @@ import frc.robot.commands.ManualDriveCommand.DriveType;
 import frc.robot.commands.SetFrontOfRobotCommand;
 import frc.robot.commands.WheelCommand;
 import frc.robot.commands.WheelCommand.Spin;
-import frc.robot.commands.AutoCommands.AutonomonousSelector;
+import frc.robot.commands.autoCommands.AutonomonousSelector;
 import frc.robot.commands.DriveWithLimelightToHp.WaitBeforeDrivingToHP;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
