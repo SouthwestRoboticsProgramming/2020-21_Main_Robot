@@ -21,8 +21,8 @@ public class CheesyDrive {
     private static final double kLowNegInertiaCloseScalar = 3.0;
     private static final double kLowNegInertiaFarScalar = 4.0;
 
-    private static final double kHighSensitivity = 0.6; // was .6
-    private static final double kLowSensitiity = 0.6;// was .625
+    private double kHighSensitivity = 0.5; // was .6
+    private double kLowSensitiity = 0.5;// was .625
 
     private static final double kWheelQuckTurnScalar = .65;
 
@@ -35,7 +35,9 @@ public class CheesyDrive {
     private double mNegInertiaAccumlator = 0.0;
 
     public DriveSignal cheesyDrive(double throttle, double wheel, boolean isQuickTurn,
-                                   boolean isHighGear) {
+                                   boolean isHighGear, double sensitiity) {
+                                    kHighSensitivity = sensitiity;
+                                    kLowSensitiity = sensitiity;
 
         wheel = handleDeadband(wheel, kWheelDeadband);
         throttle = handleDeadband(throttle, kThrottleDeadband);

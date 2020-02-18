@@ -7,25 +7,21 @@
 
 package frc.robot.commands.AutoCommands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 
-public class Wait extends CommandBase {
-  double time;
+public class ResetGyro extends CommandBase {
   /**
-   * Creates a new Wait.
+   * Creates a new ResetGyro.
    */
-  public Wait(double time) {
-    this.time = time;
+  public ResetGyro() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("wait start " + time);
-    Timer.delay(time);
-    System.out.println("wait end ");
+    Robot.gyro.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

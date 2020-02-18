@@ -5,27 +5,24 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.DriveWithLimelightToHp;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class Wait extends CommandBase {
-  double time;
-  /**
-   * Creates a new Wait.
-   */
-  public Wait(double time) {
-    this.time = time;
-    // Use addRequirements() here to declare subsystem dependencies.
+public class WaitBeforeDrivingToHP extends CommandBase {
+  DriveTrainSubsystem driveTrainSubsystem;
+
+  public WaitBeforeDrivingToHP(DriveTrainSubsystem driveTrainSubsystem) {
+    this.driveTrainSubsystem = driveTrainSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("wait start " + time);
-    Timer.delay(time);
-    System.out.println("wait end ");
+    System.out.println("WaitBeforeDrivingToHP.initialize()");
+    new DriveWithLimilightToHP(driveTrainSubsystem).schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

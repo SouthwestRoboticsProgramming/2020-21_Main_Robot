@@ -8,39 +8,38 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.lib.PID;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
 
-public class DriveDistence extends CommandBase {
+public class DriveAtAngle extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
   private double ft;
-  private Wheel wheel;
+  private double angle;
   private double speed;
   private boolean finished;
   private double lastLeftFeet;
   private double lastRightFeet;
 
-  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed, Wheel wheel) {
+  public DriveAtAngle(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed, double angle) {
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.ft = ft;
-    this.wheel = wheel;
+    this.angle = angle;
     this.speed = speed;
-    addRequirements(driveTrainSubsystem);
+    // addRequirements(driveTrainSubsystem);
+    double[] tPid = driveTrainSubsystem.getTurnPid();
+    if (Math.abs(Robot.gyro.getGyroAngleZ() - angle) > 70) {
+      tPid[1] = 0;
+    }
+    // pid = new PID(tPid[0], tPid[1], tPid[2]);
   }
 
-  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed) {
-    this.driveTrainSubsystem = driveTrainSubsystem;
-    this.ft = ft;
-    this.wheel = Wheel.both;
-    this.speed = speed;
-    addRequirements(driveTrainSubsystem);
-  }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    new AccelerateDrive(driveTrainSubsystem, 0, speed, wheel).schedule();
+    new AccelerateDrive(driveTrainSubsystem, 0, speed, Wheel.both).schedule();
     finished = false;
     lastLeftFeet = driveTrainSubsystem.getLeftDriveFeet();
     lastRightFeet = driveTrainSubsystem.getRightDriveFeet();
@@ -50,24 +49,16 @@ public class DriveDistence extends CommandBase {
   @Override
   public void execute() {
     double distence = (driveTrainSubsystem.getLeftDriveFeet()-lastLeftFeet + driveTrainSubsystem.getRightDriveFeet()-lastRightFeet)/2;
-    System.out.println("distence = " + distence);
     double decelDistence = Robot.shuffleBoard.autoTuneAccelDistence.getDouble(0) *speed*1.1;
-    System.out.println("decelDistence = " + decelDistence);
-    if (ft > 0) {
-      if (distence + decelDistence >= ft) {
-        finished = true;
-      }
-    } else {
-      if (distence + decelDistence <= ft) {
-        finished = true;
-      }
+    if (distence + decelDistence >= ft) {
+      finished = true;
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    new AccelerateDrive(driveTrainSubsystem, speed, 0, wheel).schedule();
+    new AccelerateDrive(driveTrainSubsystem, speed, 0, Wheel.both).schedule();
   }
 
   // Returns true when the command should end.

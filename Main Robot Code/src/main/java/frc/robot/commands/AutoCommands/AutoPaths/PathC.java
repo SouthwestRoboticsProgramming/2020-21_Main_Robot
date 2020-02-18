@@ -10,26 +10,21 @@ package frc.robot.commands.AutoCommands.AutoPaths;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.commands.AutoCommands.DriveDistence;
-import frc.robot.commands.AutoCommands.DriveTime;
-import frc.robot.commands.AutoCommands.setBallMode;
-import frc.robot.commands.AutoCommands.Wait;
+import frc.robot.commands.AutoCommands.TurnToAngle;
 import frc.robot.subsystems.BallSubsystem;
-import frc.robot.subsystems.BallSubsystem.ballMode;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class PathA extends SequentialCommandGroup {
-  public PathA(DriveTrainSubsystem driveTrainSubsystem, BallSubsystem ballSubsystem) {
+public class PathC extends SequentialCommandGroup {
+  public PathC(DriveTrainSubsystem driveTrainSubsystem, BallSubsystem ballSubsystem) {
     
     super(
-      new Wait(Robot.shuffleBoard.PathAWait0.getDouble(0)),
-      new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathADistence1.getDouble(0), Robot.shuffleBoard.PathASpeed1.getDouble(0)),
-      new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathATime2.getDouble(0), Robot.shuffleBoard.PathASpeed2.getDouble(0)),
-      new setBallMode(ballSubsystem, ballMode.unloadOutput),
-      new Wait(Robot.shuffleBoard.PathAWait3.getDouble(0)),
-      new setBallMode(ballSubsystem, ballMode.hold)
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathCAngle1.getDouble(0), Wheel.left),
+      new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathCDistence2.getDouble(0), Robot.shuffleBoard.PathCSpeed2.getDouble(0)),
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathCAngle3.getDouble(0), Wheel.left)
       );
     
   }

@@ -23,10 +23,12 @@ public class AccelerateDrive extends CommandBase {
   private Wheel wheel;
 
   public AccelerateDrive(DriveTrainSubsystem driveTrainSubsystem, double start, double end, Wheel wheel) {
-    addRequirements(driveTrainSubsystem);
+    // addRequirements(driveTrainSubsystem);
+    this.driveTrainSubsystem = driveTrainSubsystem;
     this.start = start;
     this.end = end;
     this.wheel = wheel;
+    System.out.println("AccelerateDrive.enclosing_method()");
   }
 
   // Called when the command is initially scheduled.

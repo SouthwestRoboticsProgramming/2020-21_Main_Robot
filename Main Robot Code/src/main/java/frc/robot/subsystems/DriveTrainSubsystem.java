@@ -147,11 +147,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
 	}
 
 	public double getLeftDriveFeet() {
-		return leftMaster.getSelectedSensorPosition() / 1024 * Math.PI * 6;
+		return leftMaster.getSelectedSensorPosition() / 4096 * Math.PI * 6 / 50;
 	}
 
 	public double getRightDriveFeet() {
-		return rightMaster.getSelectedSensorPosition() / 1024 * Math.PI * 6;
+		return rightMaster.getSelectedSensorPosition() / 4096 * Math.PI * 6 / 50;
 	}
 
 	// SET BRAKE MODE OF MOTORS

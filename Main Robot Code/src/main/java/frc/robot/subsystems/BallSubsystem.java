@@ -29,7 +29,7 @@ public class BallSubsystem extends SubsystemBase {
 
   //Balls in the upper part of belt system.
   private int ballsHeld = 0;
-  private final int maxStoredBalls = 5;
+  private final int maxStoredBalls = 4;
   private ballMode mode;
 
   private boolean lowerBallSensorBlocked = false,
@@ -195,7 +195,7 @@ public class BallSubsystem extends SubsystemBase {
   public void periodic() {
     ballCounter();
     ballSpacer();
-    checkForJam();
+    // checkForJam();
     Robot.shuffleBoard.ballSensorInDIO.setBoolean(lowerBallSensor.get());
     Robot.shuffleBoard.ballSensorOutDIO.setBoolean(upperBallSensor.get());
     Robot.shuffleBoard.ballCount.setNumber(ballsOnRobot);    
@@ -215,7 +215,7 @@ public class BallSubsystem extends SubsystemBase {
           boolean runnable = true;
           while (runnable) {
             try {
-              if (ballsOnRobot < 5) {
+              if (ballsOnRobot < maxStoredBalls) {
                 Thread.sleep((long)Robot.shuffleBoard.ballSpacingWait.getDouble(1000));
               } else {
                 Thread.sleep((long)Robot.shuffleBoard.ball5thSpacingWait.getDouble(1000));
@@ -229,12 +229,13 @@ public class BallSubsystem extends SubsystemBase {
       }).start();
       
       beltTalon.set(ControlMode.PercentOutput, Robot.shuffleBoard.ballBeltsSpeed.getDouble(0));
+      intakeTalon.set(ControlMode.PercentOutput, 0);
       new Thread(new Runnable() {
         public void run() {
           boolean runnable = true;
           while (runnable) {
             try {
-              if (ballsOnRobot < 5) {
+              if (ballsOnRobot < maxStoredBalls) {
                 Thread.sleep((long)Robot.shuffleBoard.ballSpacingMove.getDouble(1000));
               } else {
                 Thread.sleep((long)Robot.shuffleBoard.ball5thSpacingMove.getDouble(1000));
@@ -244,6 +245,7 @@ public class BallSubsystem extends SubsystemBase {
               //TODO: handle exception
             }
             beltTalon.set(ControlMode.PercentOutput, 0);
+            intakeTalon.set(ControlMode.PercentOutput, 100);
             runnable = false;
             //TODO: enforce max ball count
             // stop intaking if 5 balls after belts stop moving

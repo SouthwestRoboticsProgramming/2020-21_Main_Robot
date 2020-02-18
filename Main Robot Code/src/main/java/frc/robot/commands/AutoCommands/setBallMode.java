@@ -7,25 +7,27 @@
 
 package frc.robot.commands.AutoCommands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.BallSubsystem;
+import frc.robot.subsystems.BallSubsystem.ballMode;
 
-public class Wait extends CommandBase {
-  double time;
+public class setBallMode extends CommandBase {
+  private BallSubsystem ballSubsystem;
+  private ballMode ballMode;
   /**
-   * Creates a new Wait.
+   * Creates a new setBallMode.
    */
-  public Wait(double time) {
-    this.time = time;
+  public setBallMode(BallSubsystem ballSubsystem, ballMode ballMode) {
+    this.ballSubsystem = ballSubsystem;
+    this.ballMode = ballMode;
+    addRequirements(ballSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("wait start " + time);
-    Timer.delay(time);
-    System.out.println("wait end ");
+    ballSubsystem.setBallMode(ballMode);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

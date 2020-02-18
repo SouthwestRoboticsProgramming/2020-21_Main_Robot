@@ -9,25 +9,31 @@ package frc.robot.commands.AutoCommands.AutoPaths;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
 import frc.robot.commands.AutoCommands.DriveDistence;
 import frc.robot.commands.AutoCommands.DriveTime;
 import frc.robot.commands.AutoCommands.TurnToAngle;
 import frc.robot.commands.AutoCommands.Wait;
+import frc.robot.commands.AutoCommands.setBallMode;
+import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.BallSubsystem.ballMode;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class PathB extends SequentialCommandGroup {
-  public PathB(DriveTrainSubsystem driveTrainSubsystem) {
+  public PathB(DriveTrainSubsystem driveTrainSubsystem, BallSubsystem ballSubsystem) {
     super(
       new Wait(Robot.shuffleBoard.PathBWait0.getDouble(0)),
       new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathBDistence1.getDouble(0), Robot.shuffleBoard.PathBSpeed1.getDouble(0)),
-      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBAngle2.getDouble(0), Wheel.left),
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBAngle2.getDouble(0), Wheel.right),
       new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathBDistence3.getDouble(0), Robot.shuffleBoard.PathBSpeed3.getDouble(0)),
-      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBAngle4.getDouble(0), Wheel.right),
-      new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathBTime5.getDouble(0), Robot.shuffleBoard.PathBSpeed5.getDouble(0), Wheel.both)
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBAngle4.getDouble(0), Wheel.left),
+      new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathBTime5.getDouble(0), Robot.shuffleBoard.PathBSpeed5.getDouble(0), Wheel.both),
+      new setBallMode(ballSubsystem, ballMode.unloadOutput),
+      new Wait(Robot.shuffleBoard.PathBWait6.getDouble(0)),
+      new setBallMode(ballSubsystem, ballMode.hold)
     );
   }
 }

@@ -16,6 +16,7 @@ import frc.robot.commands.SetFrontOfRobotCommand;
 import frc.robot.commands.WheelCommand;
 import frc.robot.commands.WheelCommand.Spin;
 import frc.robot.commands.AutoCommands.AutonomonousSelector;
+import frc.robot.commands.DriveWithLimelightToHp.WaitBeforeDrivingToHP;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
@@ -31,11 +32,11 @@ import frc.robot.subsystems.WheelSubsystem;
  */
 
 public class RobotContainer {
-  private int driveReverse = 1;
+  private int driveReverse = -1;
 
   private final BallSubsystem ballSubsystem = new BallSubsystem();
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-  private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
+  public final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
   private final WheelSubsystem wheelSubsystem = new WheelSubsystem();
   
   private final Xbox controller = new Xbox(Constants.controllerPort);
@@ -45,13 +46,12 @@ public class RobotContainer {
   private final JoystickButton hold = new JoystickButton(XBOX, 3);
   private final JoystickButton outBottom = new JoystickButton(XBOX, 1);
   private final JoystickButton outTop = new JoystickButton(XBOX, 4);
-  private final JoystickButton pushBalls = new JoystickButton(XBOX, 6);
-
+  private final JoystickButton slowCheezy = new JoystickButton(XBOX, 5);
   private final JoystickButton spinWheel = new JoystickButton(XBOX, 8);
-  private final JoystickButton slow = new JoystickButton(XBOX, 5);
+  private final JoystickButton slow = new JoystickButton(XBOX, 6);
 
 
-  private final CommandBase m_autonomousCommand = new AutonomonousSelector(driveTrainSubsystem);
+  private final Command m_autonomousCommand = new AutonomonousSelector(driveTrainSubsystem, ballSubsystem);
   private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem, DriveType.cheezy);
   private final Command setFrontOfRobot = new SetFrontOfRobotCommand();
   private final Command calibrateGyro = new CalibrateGyroCommand();
@@ -77,11 +77,13 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // // Create some buttons
-    intake.whenPressed(new BallCommand(ballSubsystem, ballMode.intake));
-    hold.whenPressed(new BallCommand(ballSubsystem, ballMode.hold));
-    outBottom.whenPressed(new BallCommand(ballSubsystem, ballMode.unloadIntake));
-    outTop.whenPressed(new BallCommand(ballSubsystem, ballMode.unloadOutput));
-    pushBalls.whenPressed(new BallCommand(ballSubsystem, ballMode.pushBalls));
+    intake.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.intake));
+    // intake.whenPressed();
+
+    hold.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.hold));
+    outBottom.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.unloadIntake));
+    outTop.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.unloadOutput));
+    // pushBalls.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.pushBalls));
 
     spinWheel.whenPressed(new WheelCommand(wheelSubsystem, driveTrainSubsystem, Spin.Revolutions));
     slow.whenPressed(new ManualDriveCommand(driveTrainSubsystem, DriveType.arcade));
@@ -120,6 +122,10 @@ public class RobotContainer {
       return XBOX.getRawAxis(2);
     }
 
+    public boolean getSlowCheezy() {
+      return XBOX.getRawButton(5);
+    }
+
     public void setDriveReversed(boolean reversed) {
       if (reversed) {
         driveReverse = -1;
@@ -139,6 +145,11 @@ public class RobotContainer {
 
   public boolean getWinchOutput() {
     return XBOX.getRawButton(10);
+  }
+
+  // ball
+  public boolean getIntakeBotton() {
+    return intake.get();
   }
 
   

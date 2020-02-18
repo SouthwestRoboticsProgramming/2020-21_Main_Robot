@@ -54,25 +54,35 @@ public class WheelCommand extends CommandBase {
     System.out.println("WheelCommand.initialize()");
     startTime = System.currentTimeMillis();
     m_wheelSubsystem.setPushedState(true);
+    m_wheelSubsystem.setSpinnerTalon(0);
     finished = false; 
-
-    while(m_wheelSubsystem.getLimit()) {
-      driveTrainSubsystem.driveAtAngle(.25, 0, ControlMode.PercentOutput);
+    try {
+      Thread.sleep(750);
+    } catch (Exception e) {
+      //TODO: handle exception
+    }
+    while(!m_wheelSubsystem.getLimit()) {
+      driveTrainSubsystem.driveMotors(.125, .125);
+    }
+    driveTrainSubsystem.driveMotors(-.125, -.125);
+    try {
+      Thread.sleep((long)Robot.shuffleBoard.wheelBackupTimems.getDouble(0));
+    } catch (Exception e) {
+      //TODO: handle exception
     }
     driveTrainSubsystem.driveMotors(0, 0);
-    rampSpinnerPower(0, 100);
+    m_wheelSubsystem.setSpinnerTalon(100);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("WheelCommand.execute()");
-    if (spin == Spin.Revolutions) {
+    // if (spin == Spin.Revolutions) {
       double spinTime = Robot.shuffleBoard.wheelRevolutionsMS.getDouble(0);
       if (System.currentTimeMillis() - spinTime >= startTime) {finished = true;}
-    } else if (spin == Spin.Position) {
-      if (getColor(color) == m_wheelSubsystem.getColor()) {finished = true;}
-    }
+    // } else if (spin == Spin.Position) {
+    //   if (getColor(color) == m_wheelSubsystem.getColor()) {finished = true;}
+    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -80,7 +90,11 @@ public class WheelCommand extends CommandBase {
   public void end(boolean interrupted) {
     System.out.println("WheelCommand.end()");
     m_wheelSubsystem.setSpinnerTalon(0);
-    new Lib().sleep(1000);
+    try {
+     Thread.sleep(1000); 
+    } catch (Exception e) {
+      //TODO: handle exception
+    }
     m_wheelSubsystem.setPushedState(false);
   }
 
@@ -104,27 +118,6 @@ public class WheelCommand extends CommandBase {
       return null;
     }
   }
-
-  private void rampSpinnerPower(double start, double end) {
-    double loopAdded = Robot.shuffleBoard.wheelAcceleration.getDouble(0);
-    Long diff = Double.doubleToLongBits((end - start) * 100 / (loopAdded * 100));
-    
-    Loop loop = new Loop(){
-      @Override public void onStart() {
-        m_wheelSubsystem.setSpinnerTalon(start);
-      }
-      @Override public void onLoop() {
-        if (m_wheelSubsystem.getSpinnerTalon() >= end || finished) {powerRamper.stop();}
-        m_wheelSubsystem.setSpinnerTalon(m_wheelSubsystem.getSpinnerTalon() + loopAdded);
-      }
-      @Override public void onStop() {
-        m_wheelSubsystem.setSpinnerTalon(end);
-      }
-    };
-    powerRamper = new Looper(loop, diff);
-    powerRamper.start();
-  }
-
   
 
 
