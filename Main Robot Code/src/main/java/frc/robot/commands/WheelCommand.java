@@ -24,7 +24,10 @@ public class WheelCommand extends CommandBase {
   private final DriveTrainSubsystem driveTrainSubsystem;
   private Looper powerRamper;
   private Spin spin;
-  private ColorSensor.Color color;
+  private ColorSensor.Color goalColor;
+  private ColorSensor.Color initialColor;
+  private boolean onInitialColor;
+  private int rotationsCount;
   private long startTime;
   private boolean finished = false;
 
@@ -45,7 +48,7 @@ public class WheelCommand extends CommandBase {
     this.m_wheelSubsystem = wheelSubsystem;
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.spin = spin;
-    this.color = color;
+    this.goalColor = color;
     addRequirements(this.m_wheelSubsystem);
   }
 
@@ -71,18 +74,34 @@ public class WheelCommand extends CommandBase {
     } catch (Exception e) {
       //TODO: handle exception
     }
-    driveTrainSubsystem.driveMotors(0, 0);
+    driveTrainSubsystem.stop();
     m_wheelSubsystem.setSpinnerTalon(100);
+    initialColor = m_wheelSubsystem.getColor();
+    rotationsCount = 0;
+    onInitialColor = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //TODO: is time the best measure of spins completed? What if power is low? Could color tracking work?
     if (spin == Spin.Revolutions) {
-      double spinTime = Robot.shuffleBoard.wheelRevolutionsMS.getDouble(0);
-      if (System.currentTimeMillis() - spinTime >= startTime) {finished = true;}
+      // double spinTime = Robot.shuffleBoard.wheelRevolutionsMS.getDouble(0);
+      // if (System.currentTimeMillis() - spinTime >= startTime) {finished = true;}
+      if (m_wheelSubsystem.getColor() == initialColor) {
+        if (!onInitialColor) {
+          rotationsCount += 1;
+          onInitialColor = true;
+        }
+      }
+      else {
+        onInitialColor = false;
+      }
+      if (rotationsCount == 3) {
+        finished = true;
+      }
     } else if (spin == Spin.Position) {
-      if (getColor(color) == m_wheelSubsystem.getColor()) {finished = true;}
+      if (getReverseColor(goalColor) == m_wheelSubsystem.getColor()) {finished = true;}
     }
   }
 
@@ -105,7 +124,8 @@ public class WheelCommand extends CommandBase {
     return finished;
   }
 
-  private ColorSensor.Color getColor(ColorSensor.Color color) {
+  // Takes in a measured color, returns the color it corresponds to on the field sensor.
+  private ColorSensor.Color getReverseColor(ColorSensor.Color color) {
     if (color == ColorSensor.Color.blue) {
         return ColorSensor.Color.red;
     } else if (color == ColorSensor.Color.green) {
