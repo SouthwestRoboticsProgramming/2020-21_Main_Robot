@@ -15,8 +15,6 @@ public class ClimbSubsystem extends SubsystemBase {
   public ClimbSubsystem() {
     winch = new WPI_TalonSRX(Constants.winchTalonPort);
     elevator = new WPI_TalonSRX(Constants.elevatorTalonPort);
-    winch.setInverted(true);
-    winch.setNeutralMode(NeutralMode.Brake);
 
     elevator.configNeutralDeadband(0.001);
     elevator.setNeutralMode(NeutralMode.Brake);

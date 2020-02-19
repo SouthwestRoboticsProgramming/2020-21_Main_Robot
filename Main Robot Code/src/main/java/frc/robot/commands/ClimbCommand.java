@@ -31,11 +31,11 @@ public class ClimbCommand extends CommandBase {
   @Override
   public void execute() {
     double climbOutput = getDeadzone(Robot.robotContainer.getClimbOutput(), Robot.shuffleBoard.climbDeadZone.getDouble(0));
-    // System.out.println("climbOutput = " + climbOutput);
-    // climbOutput = climbOutput * Robot.shuffleBoard.climbElevatorSpeed.getDouble(0);
+    climbOutput *= Robot.shuffleBoard.climbElevatorSpeed.getDouble(0);
     m_climbSubsystem.setElevator(climbOutput);
+
     if (Robot.robotContainer.getWinchOutput()) {
-      double winchSpeed = Robot.shuffleBoard.climbWinchSpeed.getDouble(0);
+      double winchSpeed = Robot.shuffleBoard.climbWinchOutput.getDouble(0);
       m_climbSubsystem.setWinch(winchSpeed);
     } else {
       m_climbSubsystem.setWinch(0);

@@ -7,30 +7,30 @@
 
 package frc.robot.commands.autoCommands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class Wait extends CommandBase {
-  double time;
-  /**
-   * Creates a new Wait.
-   */
-  public Wait(double time) {
-    this.time = time;
-    // Use addRequirements() here to declare subsystem dependencies.
+  private double seconds;
+  private Long endTime;
+  private boolean finished;
+
+  public Wait(double seconds) {
+    this.seconds = seconds;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("wait start " + time);
-    Timer.delay(time);
-    System.out.println("wait end ");
+    endTime = System.currentTimeMillis() + (long)(seconds * 1000);
+    finished = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (System.currentTimeMillis() > endTime) {
+      finished = true;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +41,6 @@ public class Wait extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return finished;
   }
 }

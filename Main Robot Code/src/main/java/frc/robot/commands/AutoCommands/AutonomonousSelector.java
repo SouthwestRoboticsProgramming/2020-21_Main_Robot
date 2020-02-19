@@ -8,24 +8,35 @@
 package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+<<<<<<< HEAD
 import frc.robot.commands.autoCommands.autoPaths.AutoSequence;
 import frc.robot.subsystems.BallSubsystem;
+=======
+import frc.robot.Robot;
+import frc.robot.commands.AutoCommands.AutoPaths.PathA;
+import frc.robot.commands.AutoCommands.AutoPaths.PathB;
+>>>>>>> parent of b1da761... added  auto
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class AutonomonousSelector extends CommandBase {
-  private DriveTrainSubsystem driveTrainSubsystem;
-  private BallSubsystem ballSubsystem;
+  DriveTrainSubsystem driveTrainSubsystem;
 
-  public AutonomonousSelector(DriveTrainSubsystem driveTrainSubsystem, BallSubsystem ballSubsystem) {
+  public AutonomonousSelector(DriveTrainSubsystem driveTrainSubsystem) {
     this.driveTrainSubsystem = driveTrainSubsystem;
-    this.ballSubsystem = ballSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+<<<<<<< HEAD
     System.out.println("AutonomonousSelector.initialize()");
     new AutoSequence(driveTrainSubsystem, ballSubsystem).schedule();
+=======
+    runPath(Robot.shuffleBoard.path1.getString(""));
+    runPath(Robot.shuffleBoard.path2.getString(""));
+    runPath(Robot.shuffleBoard.path3.getString(""));
+    runPath(Robot.shuffleBoard.path4.getString(""));
+>>>>>>> parent of b1da761... added  auto
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,9 +57,9 @@ public class AutonomonousSelector extends CommandBase {
 
   private void runPath(String path) {
     if (path.toUpperCase() == "A") {
-      // new PathA(driveTrainSubsystem).schedule();;
+      new PathA(driveTrainSubsystem);
     } else if (path.toUpperCase() == "B") {
-      // new PathB(driveTrainSubsystem).schedule();
+      new PathB(driveTrainSubsystem);
     } else {
 
     }

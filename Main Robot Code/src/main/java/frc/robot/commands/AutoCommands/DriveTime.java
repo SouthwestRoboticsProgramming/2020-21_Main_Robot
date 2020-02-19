@@ -39,9 +39,8 @@ public class DriveTime extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("DriveTime.initialize()");
-    endTime = System.currentTimeMillis() + (long)(seconds * 1000) - (long)(Robot.shuffleBoard.autoTuneAcceleration.getDouble(0) * speed*1000);
-    new AccelerateDrive(driveTrainSubsystem, 0, speed, wheel).schedule();
+    endTime = System.currentTimeMillis() + (long)(seconds * 1000) - (long)(Robot.shuffleBoard.autoTuneAccelDistence.getDouble(0) * speed);
+    new AccelerateDrive(driveTrainSubsystem, 0, speed, wheel);
     finished = false;
   }
 
@@ -56,7 +55,7 @@ public class DriveTime extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    new AccelerateDrive(driveTrainSubsystem, speed, 0, wheel).schedule();
+    new AccelerateDrive(driveTrainSubsystem, speed, 0, wheel);
   }
 
   // Returns true when the command should end.

@@ -90,6 +90,7 @@ public class ManualDriveCommand extends CommandBase {
     boolean quickTurn = Robot.robotContainer.getOneQuickTurn();
 
     if(getDriveType() == DriveType.arcade) { // arcade drive
+      System.out.println("ManualDriveCommand.execute() arcade");
       Robot.shuffleBoard.driveCurrentType.setString("arcadeDrive");
       // double leftPow = limitAcceleration(yLeft, prevPowLeft);
       // double rightPow = limitAcceleration(yLeft, prevPowRight);
@@ -105,13 +106,7 @@ public class ManualDriveCommand extends CommandBase {
       m_driveTrainSubsystem.driveMotors((leftPow + rotation + leftAuto)*arcadeSpeed, (rightPow - rotation + rightAuto)*arcadeSpeed);
     } else if (getDriveType() == DriveType.cheezy) { // Cheesy Drive
       Robot.shuffleBoard.driveCurrentType.setString("cheezyDrive");
-      double sencitivity;
-      if (Robot.robotContainer.getSlowCheezy()) {
-        sencitivity = Robot.shuffleBoard.driveCheezyLSensitivity.getDouble(.6);
-      } else {
-        sencitivity = Robot.shuffleBoard.driveCheezyHSensitivity.getDouble(.6);
-      }
-      var signal = cheesyDrive.cheesyDrive(yLeft, xLeft, quickTurn, false, sencitivity);
+      var signal = cheesyDrive.cheesyDrive(yLeft, xLeft, quickTurn, false);
       double leftPow = signal.getLeft();
       double rightPow = signal.getRight();
 
