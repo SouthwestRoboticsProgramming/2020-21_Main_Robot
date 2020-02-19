@@ -5,28 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.autoCommands;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
-import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class GetAcclDecelDistance extends CommandBase {
-  private DriveTrainSubsystem driveTrainSubsystem;
-  private double lastLeftFeet;
-  private double lastRightFeet;
-
-  public GetAcclDecelDistance(DriveTrainSubsystem driveTrainSubsystem) {
-    this.driveTrainSubsystem = driveTrainSubsystem;
+public class RampSpinnerPower extends CommandBase {
+  /**
+   * Creates a new RampSpinnerPower.
+   */
+  public RampSpinnerPower() {
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("GetAcclDecelDistance.initialize()");
-    lastLeftFeet = driveTrainSubsystem.getLeftDriveFeet();
-    lastRightFeet = driveTrainSubsystem.getRightDriveFeet();
-    new AccelDecelSequence(driveTrainSubsystem).schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,13 +30,11 @@ public class GetAcclDecelDistance extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    double Distance = (driveTrainSubsystem.getLeftDriveFeet()-lastLeftFeet + driveTrainSubsystem.getRightDriveFeet()-lastRightFeet)/2;
-    Robot.shuffleBoard.autoTuneAccelDistance.setDouble(Distance);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

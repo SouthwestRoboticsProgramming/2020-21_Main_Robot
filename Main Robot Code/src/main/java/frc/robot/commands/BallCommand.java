@@ -8,7 +8,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.DriveWithLimelightToHp.WaitBeforeDrivingToHP;
 import frc.robot.subsystems.BallSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
 /* 
 * Controls the ball subsystem.
@@ -17,18 +19,21 @@ import frc.robot.subsystems.BallSubsystem.ballMode;
 */
 public class BallCommand extends CommandBase {
   private BallSubsystem m_ballSubsystem;
+  private DriveTrainSubsystem driveTrainSubsystem;
   private ballMode mode;
   
 
-  public BallCommand(BallSubsystem ballSubsystem, ballMode ballMode) {
+  public BallCommand(BallSubsystem ballSubsystem, DriveTrainSubsystem driveTrainSubsystem, ballMode ballMode) {
     addRequirements(ballSubsystem);
     this.m_ballSubsystem = ballSubsystem;
+    this.driveTrainSubsystem = driveTrainSubsystem;
     this.mode = ballMode;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // new WaitBeforeDrivingToHP(driveTrainSubsystem).schedule();
     m_ballSubsystem.setBallMode(mode);
     if (mode == ballMode.hold || mode == ballMode.unloadOutput) {
       m_ballSubsystem.setBallCount(0);

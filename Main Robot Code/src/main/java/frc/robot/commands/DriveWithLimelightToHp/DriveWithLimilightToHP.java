@@ -5,60 +5,42 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.DriveWithLimelightToHp;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
 import frc.lib.PID;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class TurnToAngle extends CommandBase {
+public class DriveWithLimilightToHP extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
-  private double angle;
-  private Wheel wheel;
   private PID pid;
-  private boolean finished;
 
-  public TurnToAngle(DriveTrainSubsystem driveTrainSubsystem, double angle, Wheel wheel) {
+  public DriveWithLimilightToHP(DriveTrainSubsystem driveTrainSubsystem) {
     this.driveTrainSubsystem = driveTrainSubsystem;
-    this.angle = angle;
-    this.wheel = wheel;
     // addRequirements(driveTrainSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
-    double[] tPid = driveTrainSubsystem.getTurnPid();
-    System.out.println("switch = " + Math.abs(angle - Robot.gyro.getGyroAngleZ()));
-    if (Math.abs(angle - Robot.gyro.getGyroAngleZ()) > 40) {
-      tPid[1] = 0;
-    }
+    System.out.println("DriveWithLimilightToHP.initialize()");
+    double[] tPid = new double[] {Robot.shuffleBoard.driveTurnPidP.getDouble(0),
+      Robot.shuffleBoard.driveTurnPidI.getDouble(0),
+      Robot.shuffleBoard.driveTurnPidD.getDouble(0)};
     pid = new PID(tPid[0], tPid[1], tPid[2]);
-    pid.setSetPoint(angle);
-    finished = false;
+    pid.setSetPoint(0);
   }
- 
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    double output = -pid.getOutput(Robot.gyro.getGyroAngleZ());
-    System.out.println("TurnToAngle.execute() out = " + pid.getError());
-    if (wheel == Wheel.left) {
-      driveTrainSubsystem.driveMotors(output, 0);
-    } else if (wheel == wheel.right) {
-      driveTrainSubsystem.driveMotors(0, -output);
-    } else {
-      driveTrainSubsystem.driveMotors(.5*output, -.5*output);
-    }
-
-    
-    if (Math.abs(pid.getError()) <1) {
-      finished = true;
-    }
+    double turn = pid.getOutput(-Robot.limelight.getX());
+    System.out.println("limelightX = " + Robot.limelight.getX());
+    double drive = 0;
+    // double turn = 0;
+    // double drive = Robot.limelight.getArea()/300;
+    driveTrainSubsystem.driveMotors(turn + drive, -turn + drive);
   }
 
   // Called once the command ends or is interrupted.
@@ -70,6 +52,6 @@ public class TurnToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return finished;
+    return false;
   }
 }

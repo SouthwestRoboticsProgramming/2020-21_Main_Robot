@@ -5,15 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.autoCommands.autoPaths;
+package frc.robot.commands.AutoCommands.AutoPaths;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.robot.commands.autoCommands.DriveDistance;
-import frc.robot.commands.autoCommands.DriveTime;
-import frc.robot.commands.autoCommands.setBallMode;
-import frc.robot.commands.autoCommands.TurnToAngle;
-import frc.robot.commands.autoCommands.Wait;
+import frc.robot.commands.AutoCommands.DriveDistence;
+import frc.robot.commands.AutoCommands.DriveTime;
+import frc.robot.commands.AutoCommands.setBallMode;
+import frc.robot.commands.AutoCommands.TurnToAngle;
+import frc.robot.commands.AutoCommands.Wait;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -29,13 +29,14 @@ public class PathBNew extends SequentialCommandGroup {
       new Wait(Robot.shuffleBoard.PathBnWait0.getDouble(0)),
       new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBnAngle1.getDouble(0), Wheel.left),
       new Wait(1),
-      new DriveDistance(driveTrainSubsystem, Robot.shuffleBoard.PathBnDistance2.getDouble(0), Robot.shuffleBoard.PathBnSpeed2.getDouble(0)),
+      new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathBnDistence2.getDouble(0), Robot.shuffleBoard.PathBnSpeed2.getDouble(0)),
       new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBnAngle3.getDouble(0), Wheel.left),
       new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathBnTime4.getDouble(0), Robot.shuffleBoard.PathBnSpeed4.getDouble(0)),
       new setBallMode(ballSubsystem, ballMode.unloadOutput),
       new Wait(Robot.shuffleBoard.PathBnWait5.getDouble(0)),
       new setBallMode(ballSubsystem, ballMode.hold)
       );
+    System.out.println("PathA.PathA()");
     
   }
 }

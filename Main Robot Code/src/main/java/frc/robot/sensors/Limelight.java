@@ -11,7 +11,7 @@ public class Limelight{
   }
 
   // Whether the limelight has any valid targets (0 or 1)
-  public double getValidTarget() {
+  public double getValitTarget() {
     NetworkTableEntry tv = limelightNetworkTable().getEntry("ty");
     return tv.getDouble(0.0);
   }

@@ -5,38 +5,39 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.autoCommands;
+package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-<<<<<<< HEAD
-import frc.robot.commands.autoCommands.autoPaths.AutoSequence;
+import frc.robot.commands.AutoCommands.AutoPaths.AutoSequence;
 import frc.robot.subsystems.BallSubsystem;
-=======
-import frc.robot.Robot;
-import frc.robot.commands.AutoCommands.AutoPaths.PathA;
-import frc.robot.commands.AutoCommands.AutoPaths.PathB;
->>>>>>> parent of b1da761... added  auto
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class AutonomonousSelector extends CommandBase {
-  DriveTrainSubsystem driveTrainSubsystem;
+  private DriveTrainSubsystem driveTrainSubsystem;
+  private BallSubsystem ballSubsystem;
 
-  public AutonomonousSelector(DriveTrainSubsystem driveTrainSubsystem) {
+  public AutonomonousSelector(DriveTrainSubsystem driveTrainSubsystem, BallSubsystem ballSubsystem) {
     this.driveTrainSubsystem = driveTrainSubsystem;
+    this.ballSubsystem = ballSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-<<<<<<< HEAD
     System.out.println("AutonomonousSelector.initialize()");
     new AutoSequence(driveTrainSubsystem, ballSubsystem).schedule();
-=======
-    runPath(Robot.shuffleBoard.path1.getString(""));
-    runPath(Robot.shuffleBoard.path2.getString(""));
-    runPath(Robot.shuffleBoard.path3.getString(""));
-    runPath(Robot.shuffleBoard.path4.getString(""));
->>>>>>> parent of b1da761... added  auto
+    // new DriveTime(driveTrainSubsystem, 2, .25).schedule();;
+    // new PathH(driveTrainSubsystem, ballSubsystem).schedule();
+    // new setBallMode(ballSubsystem, ballMode.intake);
+    // new AccelerateDrive(driveTrainSubsystem, 0, -.25, Wheel.both);
+    // new PathBNew(driveTrainSubsystem, ballSubsystem).schedule();
+    // runPath(Robot.shuffleBoard.path1.getString(""));
+    // runPath(Robot.shuffleBoard.path2.getString(""));
+    // runPath(Robot.shuffleBoard.path3.getString(""));
+    // runPath(Robot.shuffleBoard.path4.getString(""));
+    // new GetAcclDecelDistence(driveTrainSubsystem).schedule();
+    // new TurnToAngle(driveTrainSubsystem, 30, Wheel.both).schedule();;
+    // new DriveDistence(driveTrainSubsystem, 5, .5).schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -57,9 +58,9 @@ public class AutonomonousSelector extends CommandBase {
 
   private void runPath(String path) {
     if (path.toUpperCase() == "A") {
-      new PathA(driveTrainSubsystem);
+      // new PathA(driveTrainSubsystem).schedule();;
     } else if (path.toUpperCase() == "B") {
-      new PathB(driveTrainSubsystem);
+      // new PathB(driveTrainSubsystem).schedule();
     } else {
 
     }

@@ -5,12 +5,12 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.autoCommands.autoPaths;
+package frc.robot.commands.AutoCommands.AutoPaths;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.robot.commands.autoCommands.DriveDistance;
-import frc.robot.commands.autoCommands.TurnToAngle;
+import frc.robot.commands.AutoCommands.DriveDistence;
+import frc.robot.commands.AutoCommands.TurnToAngle;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
@@ -23,7 +23,7 @@ public class PathE extends SequentialCommandGroup {
     
     super(
       new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathEAngle1.getDouble(0), Wheel.left),
-      new DriveDistance(driveTrainSubsystem, Robot.shuffleBoard.PathEDistance2.getDouble(0), Robot.shuffleBoard.PathESpeed2.getDouble(0)),
+      new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathEDistence2.getDouble(0), Robot.shuffleBoard.PathESpeed2.getDouble(0)),
       new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathEAngle3.getDouble(0), Wheel.left)
       );
     
