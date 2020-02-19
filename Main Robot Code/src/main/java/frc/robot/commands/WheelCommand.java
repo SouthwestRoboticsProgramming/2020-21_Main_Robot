@@ -18,6 +18,7 @@ import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.WheelSubsystem;
 import frc.robot.sensors.ColorSensor;
+import frc.robot.sensors.ColorSensor.Color;
 
 public class WheelCommand extends CommandBase {
   private final WheelSubsystem m_wheelSubsystem;
@@ -26,7 +27,9 @@ public class WheelCommand extends CommandBase {
   private Spin spin;
   private ColorSensor.Color goalColor;
   private ColorSensor.Color initialColor;
+  private ColorSensor.Color adjacentColor;
   private boolean onInitialColor;
+  private boolean recentlyOnInitial;
   private int rotationsCount;
   private long startTime;
   private boolean finished = false;
@@ -79,6 +82,7 @@ public class WheelCommand extends CommandBase {
     initialColor = m_wheelSubsystem.getColor();
     rotationsCount = 0;
     onInitialColor = true;
+    recentlyOnInitial = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -90,13 +94,26 @@ public class WheelCommand extends CommandBase {
       // if (System.currentTimeMillis() - spinTime >= startTime) {finished = true;}
       if (m_wheelSubsystem.getColor() == initialColor) {
         if (!onInitialColor) {
-          rotationsCount += 1;
+          //To avoid counting rotation from being bumped back onto initialColor
+          if (!recentlyOnInitial) {
+            rotationsCount += 1;
+          }
           onInitialColor = true;
+          recentlyOnInitial = true;
         }
       }
       else {
         onInitialColor = false;
+        // Sets up adjacentColor first time
+        if (adjacentColor == null && m_wheelSubsystem.getColor() != Color.noColor) {
+          adjacentColor = m_wheelSubsystem.getColor();
+        }
+        // Sets recentlyOnInitial to false if wheel has passed adjacent color
+        if (m_wheelSubsystem.getColor() != adjacentColor && m_wheelSubsystem.getColor() != Color.noColor) {
+          recentlyOnInitial = false;
+        }
       }
+      // Finishes if has rotated three times
       if (rotationsCount == 3) {
         finished = true;
       }
