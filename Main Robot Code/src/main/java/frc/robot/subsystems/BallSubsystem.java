@@ -76,11 +76,12 @@ public class BallSubsystem extends SubsystemBase {
     double beltsOutIntakeSpeed = Robot.shuffleBoard.ballBeltsOutIntakeSpeed.getDouble(0);
     double beltsOutOutputSpeed = Robot.shuffleBoard.ballBeltsOutOutputSpeed.getDouble(0);
     double outputSpeed = Robot.shuffleBoard.ballOutputSpeed.getDouble(0);
+    double outputHoldSpeed = Robot.shuffleBoard.ballPushHoldSpeed.getDouble(0);
 
     if (mode == ballMode.intake) {
-      setBallState(true, false, true, intakeSpeed, flickerInSpeed, 0, 0);
+      setBallState(true, false, true, intakeSpeed, flickerInSpeed, 0, outputHoldSpeed);
     } else if (mode == ballMode.hold) {
-      setBallState(false, true, true, 0, 0, 0, 0);
+      setBallState(false, true, true, 0, 0, 0, outputHoldSpeed);
     } else if (mode == ballMode.unloadIntake) {
       setBallState(false, false, true, 0, flickerOutIntakeSpeed, beltsOutIntakeSpeed, 0);
     } else if (mode == ballMode.unloadOutput) {
@@ -249,9 +250,9 @@ public class BallSubsystem extends SubsystemBase {
             runnable = false;
             //TODO: enforce max ball count
             // stop intaking if 5 balls after belts stop moving
-            if (ballsOnRobot >= maxStoredBalls) {
-              setBallMode(ballMode.hold);
-            }
+            // if (ballsOnRobot >= maxStoredBalls) {
+            //   setBallMode(ballMode.hold);
+            // }
             }
         }
       }).start();

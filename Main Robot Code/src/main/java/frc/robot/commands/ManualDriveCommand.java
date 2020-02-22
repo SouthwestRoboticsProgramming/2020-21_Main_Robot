@@ -45,7 +45,7 @@ public class ManualDriveCommand extends CommandBase {
     addRequirements(driveTrainSubsystem);
     this.m_driveTrainSubsystem = driveTrainSubsystem;
     this.driveType = driveType;
-
+    
     tPid = m_driveTrainSubsystem.getTurnPid();
     wallFollow = new PID(tPid[0], tPid[1], tPid[2]);
     limeLight = new PID(tPid[0], tPid[1], tPid[2]);

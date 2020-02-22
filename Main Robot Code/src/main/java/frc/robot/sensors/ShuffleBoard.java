@@ -33,6 +33,7 @@ public class ShuffleBoard{
             public NetworkTableEntry driveTurnPidP = driveTune.addPersistent("driveTurnPID-P", 0).getEntry();
             public NetworkTableEntry driveTurnPidI = driveTune.addPersistent("driveTurnPID-I", 0).getEntry();
             public NetworkTableEntry driveTurnPidD = driveTune.addPersistent("driveTurnPID-D", 0).getEntry();
+            public NetworkTableEntry driveTurnPidF = driveTune.addPersistent("driveTurnPID-F", 0).getEntry();
             public NetworkTableEntry driveSetPosition = driveTune.addPersistent("driveSetPosition", 0).getEntry();
             public NetworkTableEntry driveStraightEffectiveness = driveTune.addPersistent("driveStraightEffectiveness", 0).getEntry();
             public NetworkTableEntry driveLimelightEffectiveness = driveTune.addPersistent("driveLimelightEffectiveness", 0).getEntry();
@@ -45,6 +46,7 @@ public class ShuffleBoard{
         private ShuffleboardLayout ballTune = Tune.getLayout("ballTune", BuiltInLayouts.kList);
             public NetworkTableEntry ballIntakeSpeed = ballTune.addPersistent("ballIntakeSpeed", .5).getEntry();
             public NetworkTableEntry ballPushSpeed = ballTune.addPersistent("ballPushSpeed", -1).getEntry();
+            public NetworkTableEntry ballPushHoldSpeed = ballTune.addPersistent("ballPushHoldSpeed", .1).getEntry();
             public NetworkTableEntry ballFlickerInSpeed = ballTune.addPersistent("ballFlickerInSpeed", .5).getEntry();
             public NetworkTableEntry ballFluckerOutIntakeSpeed = ballTune.addPersistent("ballFluckerOutIntakeSpeed", -.5).getEntry();
             public NetworkTableEntry ballBeltsSpeed = ballTune.addPersistent("ballBeltsSpeed", .5).getEntry();
@@ -119,6 +121,7 @@ public class ShuffleBoard{
         private ShuffleboardLayout autoTune = Auto.getLayout("autoTune", BuiltInLayouts.kList);
             public NetworkTableEntry autoTuneAccelDistence = autoTune.addPersistent("autoTuneAccelDistence", 0).getEntry();
             public NetworkTableEntry autoTuneAcceleration = autoTune.addPersistent("autoTuneAcceleration", 0).getEntry();
+            public NetworkTableEntry followWithLimelight = autoTune.addPersistent("followWithLimelight", 0).getEntry();
 
         private ShuffleboardLayout PathA = Auto.getLayout("PathA", BuiltInLayouts.kList);
             public NetworkTableEntry PathAWait0 = PathA.addPersistent("PathAWait0", 0).getEntry();
@@ -155,6 +158,15 @@ public class ShuffleBoard{
             public NetworkTableEntry PathCDistence2 = PathC.addPersistent("PathCDistence2", 0).getEntry();
             public NetworkTableEntry PathCSpeed2 = PathC.addPersistent("PathCSpeed2", 0).getEntry();
             public NetworkTableEntry PathCAngle3 = PathC.addPersistent("PathCAngle3", 0).getEntry();
+
+        private ShuffleboardLayout PathD = Auto.getLayout("PathD", BuiltInLayouts.kList);
+            public NetworkTableEntry PathDDistence1 = PathD.addPersistent("PathDDistence1", 0).getEntry();
+            public NetworkTableEntry PathDSpeed1 = PathD.addPersistent("PathDSpeed1", 0).getEntry();
+            public NetworkTableEntry PathDLimelightTime2 = PathD.addPersistent("PathDLimelightTime2", 0).getEntry();
+            public NetworkTableEntry PathDLimelightSpeed2 = PathD.addPersistent("PathDLimelightSpeed2", 0).getEntry();
+            public NetworkTableEntry PathDAngle3 = PathD.addPersistent("PathDAngle3", 0).getEntry();
+            public NetworkTableEntry PathDDistence4 = PathD.addPersistent("PathDDistence4", 0).getEntry();
+            public NetworkTableEntry PathDSpeed4 = PathD.addPersistent("PathDSpeed4", 0).getEntry();
 
         private ShuffleboardLayout PathE = Auto.getLayout("PathE", BuiltInLayouts.kList);
             public NetworkTableEntry PathEAngle1 = PathE.addPersistent("PathEAngle1", 0).getEntry();

@@ -28,7 +28,7 @@ public class PathBNew extends SequentialCommandGroup {
     super(
       new Wait(Robot.shuffleBoard.PathBnWait0.getDouble(0)),
       new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBnAngle1.getDouble(0), Wheel.left),
-      new Wait(1),
+      new Wait(.5),
       new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathBnDistence2.getDouble(0), Robot.shuffleBoard.PathBnSpeed2.getDouble(0)),
       new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBnAngle3.getDouble(0), Wheel.left),
       new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathBnTime4.getDouble(0), Robot.shuffleBoard.PathBnSpeed4.getDouble(0)),

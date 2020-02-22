@@ -9,6 +9,8 @@ package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.AutoCommands.AutoPaths.AutoSequence;
+import frc.robot.commands.AutoCommands.AutoPaths.PathC;
+import frc.robot.commands.AutoCommands.AutoPaths.PathD;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
@@ -26,6 +28,9 @@ public class AutonomonousSelector extends CommandBase {
   public void initialize() {
     System.out.println("AutonomonousSelector.initialize()");
     new AutoSequence(driveTrainSubsystem, ballSubsystem).schedule();
+    // new PathC(driveTrainSubsystem, ballSubsystem).schedule();
+    // new PathD(driveTrainSubsystem, ballSubsystem).schedule();
+    // new FollowWithLimelight(driveTrainSubsystem, 5, .15).schedule();
     // new DriveTime(driveTrainSubsystem, 2, .25).schedule();;
     // new PathH(driveTrainSubsystem, ballSubsystem).schedule();
     // new setBallMode(ballSubsystem, ballMode.intake);

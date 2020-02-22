@@ -7,35 +7,35 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
 import frc.lib.PID;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class TurnToAngle extends CommandBase {
+public class FollowWithLimelight extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
   private double angle;
-  private Wheel wheel;
   private PID pid;
   private boolean finished;
+  private double speed;
+  private double time;
+  private Long startTime;
 
-  public TurnToAngle(DriveTrainSubsystem driveTrainSubsystem, double angle, Wheel wheel) {
+  public FollowWithLimelight(DriveTrainSubsystem driveTrainSubsystem, double time, double speed) {
     this.driveTrainSubsystem = driveTrainSubsystem;
-    this.angle = angle;
-    this.wheel = wheel;
+    this.speed = -speed;
+    this.time = time*1000;
     // addRequirements(driveTrainSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    startTime = System.currentTimeMillis();
+    angle = Robot.limelight.getX();
     double[] tPid = driveTrainSubsystem.getTurnPid();
     System.out.println("switch = " + Math.abs(angle - Robot.gyro.getGyroAngleZ()));
-    if (Math.abs(angle - Robot.gyro.getGyroAngleZ()) > 40) {
-      tPid[1] = 0;
-    }
     pid = new PID(tPid[0], tPid[1], tPid[2]);
     pid.setSetPoint(angle);
     finished = false;
@@ -44,24 +44,19 @@ public class TurnToAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    double output = -pid.getOutput(Robot.gyro.getGyroAngleZ());
+    angle = Robot.limelight.getX();
+    pid.setSetPoint(angle);
+    double output = -pid.getOutput(Robot.gyro.getGyroAngleZ()) * Robot.shuffleBoard.followWithLimelight.getDouble(0);
     if (output > 0) {
       output += Robot.shuffleBoard.driveTurnPidF.getDouble(0);
     } else {
       output -= Robot.shuffleBoard.driveTurnPidF.getDouble(0);
     }
-    System.out.println("TurnToAngle.execute() out = " + pid.getError());
-    if (wheel == Wheel.left) {
-      driveTrainSubsystem.driveMotors(output, 0);
-    } else if (wheel == wheel.right) {
-      driveTrainSubsystem.driveMotors(0, -output);
-    } else {
-      driveTrainSubsystem.driveMotors(.5*output, -.5*output);
-    }
+    System.out.println("limelight.execute() out = " + pid.getError());
+      driveTrainSubsystem.driveMotors(.5*output + speed, -.5*output + speed);
 
     
-    if (Math.abs(pid.getError()) <1) {
+    if (System.currentTimeMillis() >= startTime + (long)time) {
       finished = true;
     }
   }
