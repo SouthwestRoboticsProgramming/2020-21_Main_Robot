@@ -61,6 +61,7 @@ public class BallSubsystem extends SubsystemBase {
 
   public enum ballMode{
     intake,
+    intakeNoDrop,
     hold,
     unloadIntake,
     unloadOutput,
@@ -80,6 +81,8 @@ public class BallSubsystem extends SubsystemBase {
 
     if (mode == ballMode.intake) {
       setBallState(true, false, true, intakeSpeed, flickerInSpeed, 0, outputHoldSpeed);
+    } else if (mode == ballMode.intakeNoDrop) {
+      setBallState(false, false, true, 0, flickerInSpeed, 0, outputHoldSpeed);
     } else if (mode == ballMode.hold) {
       setBallState(false, true, true, 0, 0, 0, outputHoldSpeed);
     } else if (mode == ballMode.unloadIntake) {
@@ -210,7 +213,8 @@ public class BallSubsystem extends SubsystemBase {
   }
 
   private void ballSpacer() {
-    if(ballMode.intake == mode && ballsHeld < ballsOnRobot) {      
+    boolean intake = ballMode.intake == mode || ballMode.intakeNoDrop == mode;
+    if(intake && ballsHeld < ballsOnRobot) {      
       new Thread(new Runnable() {
         public void run() {
           boolean runnable = true;

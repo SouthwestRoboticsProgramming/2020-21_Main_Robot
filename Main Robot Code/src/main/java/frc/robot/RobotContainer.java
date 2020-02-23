@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.BallCommand;
 import frc.robot.commands.CalibrateGyroCommand;
@@ -16,7 +15,6 @@ import frc.robot.commands.SetFrontOfRobotCommand;
 import frc.robot.commands.WheelCommand;
 import frc.robot.commands.WheelCommand.Spin;
 import frc.robot.commands.AutoCommands.AutonomonousSelector;
-import frc.robot.commands.DriveWithLimelightToHp.WaitBeforeDrivingToHP;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
@@ -36,7 +34,7 @@ public class RobotContainer {
 
   private final BallSubsystem ballSubsystem = new BallSubsystem();
   private final ClimbSubsystem climbSubsystem = new ClimbSubsystem();
-  public final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
+  private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
   private final WheelSubsystem wheelSubsystem = new WheelSubsystem();
   
   private final Xbox controller = new Xbox(Constants.controllerPort);
@@ -58,7 +56,6 @@ public class RobotContainer {
   private final Command climb = new ClimbCommand(climbSubsystem);
 
   public RobotContainer() {
-    // Configure the button bindings
     configureButtonBindings();
   }
 
@@ -77,11 +74,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // // Create some buttons
-    intake.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.intake));
-    // intake.whenPressed();
-
+    intake.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.intakeNoDrop));
     hold.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.hold));
-    outBottom.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.unloadIntake));
+    outBottom.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.intake));
     outTop.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.unloadOutput));
     // pushBalls.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.pushBalls));
 
@@ -101,12 +96,10 @@ public class RobotContainer {
 
   // DRIVE
     public double getLeftDrive() {
-      // return xbox.getY(Hand.kLeft);
       return -XBOX.getRawAxis(1) * driveReverse;
     }
 
     public double getLeftTurn() {
-      // return xbox.getX(Hand.kLeft);
       return XBOX.getRawAxis(0);
     }
 
@@ -123,14 +116,14 @@ public class RobotContainer {
     }
 
     public boolean getSlowCheezy() {
-      return XBOX.getRawButton(5);
+      return slowCheezy.get();
     }
 
     public void setDriveReversed(boolean reversed) {
       if (reversed) {
-        driveReverse = -1;
-      } else {
         driveReverse = 1;
+      } else {
+        driveReverse = -1;
       }
     }
   
@@ -152,7 +145,6 @@ public class RobotContainer {
     return intake.get();
   }
 
-  
   //Other
   public void setRumble(RumbleType type, long ms) {
     controller.rumble(type, ms);
