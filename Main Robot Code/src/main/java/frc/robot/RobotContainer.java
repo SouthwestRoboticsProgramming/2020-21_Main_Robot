@@ -111,7 +111,7 @@ public class RobotContainer {
     }
 
     public double getWallEffeciveness() {
-      return XBOX.getRawAxis(3);
+      return 0;
     }
 
     public double getLimelightEffeciveness() {
@@ -120,6 +120,10 @@ public class RobotContainer {
 
     public boolean getSlowCheezy() {
       return slowCheezy.get();
+    }
+
+    public double getSpeedMultiplyer() {
+      return Math.abs(XBOX.getRawAxis(3) - 1);
     }
 
     public void setDriveReversed(boolean reversed) {
@@ -132,6 +136,16 @@ public class RobotContainer {
   
     public int getPOV() {
       return XBOX.getPOV();
+    }
+
+    // wheel
+
+    public boolean voidTask() {
+      return getPOV() == 90;
+    }
+
+    public double getWheelManual() {
+      return XBOX.getRawAxis(4);
     }
 
   // climb
@@ -161,7 +175,4 @@ public class RobotContainer {
   public <A extends Number> double YEET(A x, A y) {
     return (double) x + (double) y;
   }
-
-
-
 }

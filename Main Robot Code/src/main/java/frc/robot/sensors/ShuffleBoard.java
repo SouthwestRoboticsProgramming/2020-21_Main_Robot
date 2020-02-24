@@ -68,6 +68,7 @@ public class ShuffleBoard{
             public NetworkTableEntry wheelAcceleration = wheelTune.addPersistent("wheelAcceleration", .04).getEntry();
             public NetworkTableEntry wheelRevolutionsMS = wheelTune.addPersistent("wheelRevolutionsMS", 2000).getEntry();  
             public NetworkTableEntry wheelBackupTimems = wheelTune.addPersistent("wheelBackupTimems", 200).getEntry(); 
+            public NetworkTableEntry wheelManualDeadZone = wheelTune.addPersistent("wheelManualDeadZone", .5).getEntry(); 
         
             private ShuffleboardLayout driverTune = Tune.getLayout("driverTune", BuiltInLayouts.kList);
                 public NetworkTableEntry driverErrorRumbleLength = driverTune.addPersistent("driverErrorRumbleLength", 0).getEntry();   

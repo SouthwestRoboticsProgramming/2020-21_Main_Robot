@@ -26,6 +26,7 @@ public class WheelCommand extends CommandBase {
   private WheelSubsystem.Color color;
   private long startTime;
   private boolean finished = false;
+  private boolean phaseA = false;
 
   public enum Spin {
     Revolutions,
@@ -56,6 +57,7 @@ public class WheelCommand extends CommandBase {
     m_wheelSubsystem.setPushedState(true);
     m_wheelSubsystem.setSpinnerTalon(0);
     finished = false; 
+    phaseA = false;
     try {
       Thread.sleep(750);
     } catch (Exception e) {
@@ -77,15 +79,27 @@ public class WheelCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (spin == Spin.Revolutions) {
-      setSpinnerSpeed(1);
-      double spinTime = Robot.shuffleBoard.wheelRevolutionsMS.getDouble(0);
-      if (System.currentTimeMillis() - spinTime >= startTime) {finished = true;}
-    } else if (spin == Spin.Position) {
-      setSpinnerSpeed(.2);
-      System.out.println("set color = " + getColor(color) + " color = " + m_wheelSubsystem.getColor());
-      if (getColor(color) == m_wheelSubsystem.getColor()) {finished = true;}
+    double manualSpeed = getDeadzone(Robot.robotContainer.getWheelManual(), Robot.shuffleBoard.wheelManualDeadZone.getDouble(.5));
+    if (Math.abs(manualSpeed) > 0) {
+      phaseA = false;
     }
+    if (!phaseA) {
+      if (spin == Spin.Revolutions) {
+        setSpinnerSpeed(1);
+        double spinTime = Robot.shuffleBoard.wheelRevolutionsMS.getDouble(0);
+        if (System.currentTimeMillis() - spinTime >= startTime || Robot.robotContainer.voidTask()) {finished = true;}
+      } else if (spin == Spin.Position) {
+        setSpinnerSpeed(.2);
+        System.out.println("set color = " + getColor(color) + " color = " + m_wheelSubsystem.getColor());
+        if (getColor(color) == m_wheelSubsystem.getColor() || Robot.robotContainer.voidTask()) {finished = true;}
+      }
+    } else {
+      setSpinnerSpeed(manualSpeed);
+      if (Robot.robotContainer.voidTask()) {
+        finished = true;
+      }
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -142,6 +156,18 @@ public class WheelCommand extends CommandBase {
     m_wheelSubsystem.setSpinnerTalon(speed);
     
   }
+
+  public static double getDeadzone(double act, double deadZone) {
+		if (Math.abs(act) < deadZone) {
+			return 0;
+		} else {
+			if (act > 0) {
+				return (act-deadZone) * (1/(1-deadZone));
+			} else {
+				return (act+deadZone) * (1/(1-deadZone));
+			}
+		}
+	}
 
 
 }

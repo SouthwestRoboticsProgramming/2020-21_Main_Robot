@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,7 +24,7 @@ public class BallSubsystem extends SubsystemBase {
   private final WPI_VictorSPX flickerVictor, outputVictor;
   private final DoubleSolenoid intakeDoubleSolenoid, upperBlockDoubleSolenoid;
   private final DigitalInput lowerBallSensor, upperBallSensor;
-  private long lastIntake;
+  private final Encoder beltEncoder;
 
   //Balls currently in possesion of bot.
   private int ballsOnRobot = 0;
@@ -37,7 +38,6 @@ public class BallSubsystem extends SubsystemBase {
                   upperBallSensorBlocked = false;
 
   public BallSubsystem() {
-    lastIntake = System.currentTimeMillis();
     intakeTalon = new WPI_TalonSRX(Constants.intakeTalonPort);
     intakeTalon.setInverted(false);
     flickerVictor = new WPI_VictorSPX(Constants.flickerVictorPort);
@@ -45,6 +45,9 @@ public class BallSubsystem extends SubsystemBase {
     beltTalon = new WPI_TalonSRX(Constants.beltVictorPort);
     beltTalon.setInverted(true);
     outputVictor = new WPI_VictorSPX(Constants.outputVictorPort);
+
+    beltEncoder = new Encoder(Constants.beltEncoderAPort, Constants.beltEncoderBPort);
+    beltEncoder.reset();
   
     intakeTalon.setNeutralMode(NeutralMode.Brake);
     flickerVictor.setNeutralMode(NeutralMode.Brake);
@@ -248,7 +251,6 @@ public class BallSubsystem extends SubsystemBase {
         public void run() {
           boolean runnable = true;
           while (runnable) {
-            
             try {
               if (ballsOnRobot < maxStoredBalls) {
                 Thread.sleep((long)Robot.shuffleBoard.ballSpacingMove.getDouble(1000));
@@ -273,6 +275,36 @@ public class BallSubsystem extends SubsystemBase {
             }
         }
       }).start();
+
+      // new Thread(new Runnable() {
+      //     public void run() {
+      //       boolean runnable = true;
+      //       while (runnable) {
+      //         int encoderSet;
+      //         if (ballsOnRobot < maxStoredBalls) {
+      //          encoderSet = beltEncoder.get() + (int)Robot.shuffleBoard.ballSpacingMove.getDouble(0);
+      //         } else {
+      //           encoderSet = beltEncoder.get() + (int)Robot.shuffleBoard.ball5thSpacingMove.getDouble(0);
+      //         }
+      //         while (beltEncoder.get() < encoderSet && !Robot.robotContainer.voidTask()) {
+      //           try {
+      //             Thread.sleep(50);
+      //           } catch (Exception e) {}
+      //         }
+      //         beltTalon.set(ControlMode.PercentOutput, 0);
+      //         if (mode == ballMode.intake) {
+      //           intakeTalon.set(ControlMode.PercentOutput, 100);
+      //         }
+      //         runnable = false;
+      //         // stop intaking if 5 balls after belts stop moving
+      //         if (ballsOnRobot >= maxStoredBalls) {
+      //           setBallMode(ballMode.hold);
+      //         }
+              
+      //         }
+      //     }
+      //   }).start();
+
       ballsHeld ++;
     }
   }
@@ -282,7 +314,6 @@ public class BallSubsystem extends SubsystemBase {
     if (getLowerBallSensor() && !lowerBallSensorBlocked) {
       if (mode == ballMode.intake || mode == ballMode.intakeNoDrop) {
         ballsOnRobot ++;
-        lastIntake = System.currentTimeMillis();
 
       } else if (mode == ballMode.unloadIntake) {
         // ballsOnRobot --;

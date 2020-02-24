@@ -85,7 +85,7 @@ public class ManualDriveCommand extends CommandBase {
     // xRight = getDeadzone(xRight, joystickDeadzone);
     // yRight = getDeadzone(yRight, joystickDeadzone);
 
-    double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0);
+    double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0) * Robot.robotContainer.getSpeedMultiplyer();
     double arcadeSpeed = Robot.shuffleBoard.driveArcadeSpeed.getDouble(1);
     boolean quickTurn = Robot.robotContainer.getOneQuickTurn();
 

@@ -39,7 +39,7 @@ public class ClimbCommand extends CommandBase {
     if (climbOutput * Robot.robotContainer.getBothClimb() < 0) {
       winchControlled = true;
       System.out.println("bothClimb = " + Robot.robotContainer.getBothClimb());
-      m_climbSubsystem.setWinch(-climbOutput * Robot.robotContainer.getBothClimb());
+      m_climbSubsystem.setWinch(-.5 * climbOutput * Robot.robotContainer.getBothClimb());
     }
     if (!winchControlled) {
       if (Robot.robotContainer.getWinchOutput()) {
