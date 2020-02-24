@@ -3,11 +3,13 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -74,35 +76,35 @@ public class WheelSubsystem extends SubsystemBase {
 
 
   //Color sensor
-  I2C.Port i2cPort = I2C.Port.kOnboard;
+  // I2C.Port i2cPort = I2C.Port.kOnboard;
   // ColorSensorV3 cs = new ColorSensorV3(i2cPort);
   // TCA9548A TCA9548A = new TCA9548A();
 
-  int adress = 0x70;
-  // I2C i2c = new I2C(Port.kOnboard, adress);
-  // I2C i2cPort = new I2C(Port.kOnboard, adress);
-  // ColorSensorV3 cs = new ColorSensorV3(kk);
-
+  // int adress = 0x70;
+  // private I2C i2c = new I2C(Port.kOnboard, adress);
+  // I2C.Port i2cPort = Port.kOnboard;
+  private ColorSensorV3 cs = new ColorSensorV3(Port.kOnboard);
 
   public Color getColor() {
-    // int r = cs.getRed();
-    // int g = cs.getGreen();
-    // int b = cs.getBlue();
-    int r = 0;
-    int g = 0;
-    int b = 0;
-
-    if (.9*g < r && r < 1.9*g && 1.9*b < r && r < 4*b) {
+    int r = cs.getRed();
+    int g = cs.getGreen();
+    int b = cs.getBlue();
+    // int r = 0;
+    // int g = 0;
+    // int b = 0;
+    System.out.println("R = " + r + " G = " + g + " B = " + b);
+    if (.7*g < r && r < 1.5*g && 1.5*b < r && r < 3*b) {
       return Color.red;
-    } else if (2*r < g && g < 5*r && 2*b < g && g < 4*b) {
+    } else if (2*r < g && g < 3*r && 1.5*b < g && g < 4*b) {
       return Color.green;
     } else if (1.5*r < b && b < 3*r && (Math.abs(b+g)/2)/b < .3 * b) {
       return Color.blue;
-    } else if (1.4*r < g && g < 2*r && 3*b < g && g < 5*b) {
+    } else if (1.4*r < g && g < 3*r && 2*b < g && g < 5*b) {
       return Color.yellow;
     } else {
       return Color.noColor;
     }
+    // System.out.println("R = " + r + " G = " + g + " B = " + b);
   }
 
   @Override

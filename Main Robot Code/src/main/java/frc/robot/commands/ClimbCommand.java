@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.ClimbSubsystem;
 
 public class ClimbCommand extends CommandBase {
@@ -31,15 +32,24 @@ public class ClimbCommand extends CommandBase {
   @Override
   public void execute() {
     double climbOutput = getDeadzone(Robot.robotContainer.getClimbOutput(), Robot.shuffleBoard.climbDeadZone.getDouble(0));
-    // System.out.println("climbOutput = " + climbOutput);
+    boolean winchControlled = false;
     // climbOutput = climbOutput * Robot.shuffleBoard.climbElevatorSpeed.getDouble(0);
     m_climbSubsystem.setElevator(climbOutput);
-    if (Robot.robotContainer.getWinchOutput()) {
-      double winchSpeed = Robot.shuffleBoard.climbWinchSpeed.getDouble(0);
-      m_climbSubsystem.setWinch(winchSpeed);
-    } else {
-      m_climbSubsystem.setWinch(0);
+    
+    if (climbOutput * Robot.robotContainer.getBothClimb() < 0) {
+      winchControlled = true;
+      System.out.println("bothClimb = " + Robot.robotContainer.getBothClimb());
+      m_climbSubsystem.setWinch(-climbOutput * Robot.robotContainer.getBothClimb());
     }
+    if (!winchControlled) {
+      if (Robot.robotContainer.getWinchOutput()) {
+        double winchSpeed = Robot.shuffleBoard.climbWinchSpeed.getDouble(0);
+        m_climbSubsystem.setWinch(winchSpeed);
+      } else {
+        m_climbSubsystem.setWinch(0);
+      }
+    }
+   
   }
 
   // Called once the command ends or is interrupted.

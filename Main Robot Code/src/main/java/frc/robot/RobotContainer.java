@@ -18,6 +18,7 @@ import frc.robot.commands.AutoCommands.AutonomonousSelector;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
+import frc.robot.subsystems.WheelSubsystem.Color;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.WheelSubsystem;
@@ -46,6 +47,7 @@ public class RobotContainer {
   private final JoystickButton outTop = new JoystickButton(XBOX, 4);
   private final JoystickButton slowCheezy = new JoystickButton(XBOX, 5);
   private final JoystickButton spinWheel = new JoystickButton(XBOX, 8);
+  private final JoystickButton alignWheel = new JoystickButton(XBOX, 7);
   private final JoystickButton slow = new JoystickButton(XBOX, 6);
 
 
@@ -81,6 +83,7 @@ public class RobotContainer {
     // pushBalls.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.pushBalls));
 
     spinWheel.whenPressed(new WheelCommand(wheelSubsystem, driveTrainSubsystem, Spin.Revolutions));
+    alignWheel.whenPressed(new WheelCommand(wheelSubsystem, driveTrainSubsystem, Spin.Position, Color.red));
     slow.whenPressed(new ManualDriveCommand(driveTrainSubsystem, DriveType.arcade));
     slow.whenReleased(new ManualDriveCommand(driveTrainSubsystem, DriveType.cheezy));
   }
@@ -112,7 +115,7 @@ public class RobotContainer {
     }
 
     public double getLimelightEffeciveness() {
-      return XBOX.getRawAxis(2);
+      return 0;
     }
 
     public boolean getSlowCheezy() {
@@ -138,6 +141,10 @@ public class RobotContainer {
 
   public boolean getWinchOutput() {
     return XBOX.getRawButton(10);
+  }
+
+  public double getBothClimb() {
+    return XBOX.getRawAxis(2);
   }
 
   // ball

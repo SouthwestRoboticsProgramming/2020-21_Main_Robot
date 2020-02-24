@@ -35,7 +35,7 @@ public class BallCommand extends CommandBase {
   public void initialize() {
     // new WaitBeforeDrivingToHP(driveTrainSubsystem).schedule();
     m_ballSubsystem.setBallMode(mode);
-    if (mode == ballMode.hold || mode == ballMode.unloadOutput) {
+    if (mode == ballMode.unloadOutput || mode == ballMode.unloadIntake) {
       m_ballSubsystem.setBallCount(0);
     }
   }

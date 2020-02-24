@@ -71,18 +71,21 @@ public class WheelCommand extends CommandBase {
       //TODO: handle exception
     }
     driveTrainSubsystem.driveMotors(0, 0);
-    m_wheelSubsystem.setSpinnerTalon(100);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if (spin == Spin.Revolutions) {
+    if (spin == Spin.Revolutions) {
+      setSpinnerSpeed(1);
       double spinTime = Robot.shuffleBoard.wheelRevolutionsMS.getDouble(0);
       if (System.currentTimeMillis() - spinTime >= startTime) {finished = true;}
-    // } else if (spin == Spin.Position) {
-    //   if (getColor(color) == m_wheelSubsystem.getColor()) {finished = true;}
-    // }
+    } else if (spin == Spin.Position) {
+      setSpinnerSpeed(.2);
+      System.out.println("set color = " + getColor(color) + " color = " + m_wheelSubsystem.getColor());
+      if (getColor(color) == m_wheelSubsystem.getColor()) {finished = true;}
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -114,11 +117,31 @@ public class WheelCommand extends CommandBase {
     } else if (color == WheelSubsystem.Color.yellow) {
       return WheelSubsystem.Color.green;
     } else {
-      DriverStation.reportError("Color " + color + " not found!", true);
+      // DriverStation.reportError("Color " + color + " not found!", true);
       return null;
+
     }
   }
   
+  private void setSpinnerSpeed(double speed) {
+    double add = Robot.shuffleBoard.wheelAcceleration.getDouble(0);
+    double start = m_wheelSubsystem.getSpinnerTalon();
+    while (Math.abs(start - speed) > add*2) {
+      System.out.println("spinner Talon = " + m_wheelSubsystem.getSpinnerTalon());
+      System.out.println("add = " + add);
+      System.out.println("start = " + start);
+      if (m_wheelSubsystem.getSpinnerTalon() < speed) {
+        m_wheelSubsystem.setSpinnerTalon(start + add);
+        start += add;
+      } else {
+        m_wheelSubsystem.setSpinnerTalon(start - add);
+        start -= add;
+      }
+    }
+
+    m_wheelSubsystem.setSpinnerTalon(speed);
+    
+  }
 
 
 }

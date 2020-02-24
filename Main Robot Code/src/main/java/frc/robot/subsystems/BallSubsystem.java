@@ -23,19 +23,21 @@ public class BallSubsystem extends SubsystemBase {
   private final WPI_VictorSPX flickerVictor, outputVictor;
   private final DoubleSolenoid intakeDoubleSolenoid, upperBlockDoubleSolenoid;
   private final DigitalInput lowerBallSensor, upperBallSensor;
+  private long lastIntake;
 
   //Balls currently in possesion of bot.
   private int ballsOnRobot = 0;
 
   //Balls in the upper part of belt system.
   private int ballsHeld = 0;
-  private final int maxStoredBalls = 4;
+  private final int maxStoredBalls = 5;
   private ballMode mode;
 
   private boolean lowerBallSensorBlocked = false,
                   upperBallSensorBlocked = false;
 
   public BallSubsystem() {
+    lastIntake = System.currentTimeMillis();
     intakeTalon = new WPI_TalonSRX(Constants.intakeTalonPort);
     intakeTalon.setInverted(false);
     flickerVictor = new WPI_VictorSPX(Constants.flickerVictorPort);
@@ -57,6 +59,7 @@ public class BallSubsystem extends SubsystemBase {
     lowerBallSensor = new DigitalInput(Constants.lowerBallSensorPort);
     upperBallSensor = new DigitalInput(Constants.upperBallSensorPort);
     this.register();
+
   }
 
   public enum ballMode{
@@ -88,7 +91,7 @@ public class BallSubsystem extends SubsystemBase {
     } else if (mode == ballMode.unloadIntake) {
       setBallState(false, false, true, 0, flickerOutIntakeSpeed, beltsOutIntakeSpeed, 0);
     } else if (mode == ballMode.unloadOutput) {
-      setBallState(false, false, false, 0, 0, beltsOutOutputSpeed, outputSpeed);
+      setBallState(false, false, false, 0, .1, beltsOutOutputSpeed, outputSpeed);
     } else if (mode == ballMode.unloadOutput) {
       setBallState(true, true, true, pushSpeed, 0, 0, 0);
     }
@@ -186,7 +189,9 @@ public class BallSubsystem extends SubsystemBase {
   //Ball sensor in
   public boolean getLowerBallSensor() {
     Robot.shuffleBoard.ballSensorInDIO.setBoolean(lowerBallSensor.get());
-    return lowerBallSensor.get();
+    boolean low = !lowerBallSensor.get();
+    boolean high = !upperBallSensor.get();
+    return  low && high;
   }
 
   //Ball sensor out
@@ -199,6 +204,9 @@ public class BallSubsystem extends SubsystemBase {
   public void periodic() {
     ballCounter();
     ballSpacer();
+    if (Robot.robotContainer.getPOV() == 270) {
+      setBallMode(ballMode.unloadIntake);
+    }
     // checkForJam();
     Robot.shuffleBoard.ballSensorInDIO.setBoolean(lowerBallSensor.get());
     Robot.shuffleBoard.ballSensorOutDIO.setBoolean(upperBallSensor.get());
@@ -232,13 +240,15 @@ public class BallSubsystem extends SubsystemBase {
             }
         }
       }).start();
-      
-      beltTalon.set(ControlMode.PercentOutput, Robot.shuffleBoard.ballBeltsSpeed.getDouble(0));
+      if (intake && ballsOnRobot < 5) {
+        beltTalon.set(ControlMode.PercentOutput, Robot.shuffleBoard.ballBeltsSpeed.getDouble(0));
+      }
       intakeTalon.set(ControlMode.PercentOutput, 0);
       new Thread(new Runnable() {
         public void run() {
           boolean runnable = true;
           while (runnable) {
+            
             try {
               if (ballsOnRobot < maxStoredBalls) {
                 Thread.sleep((long)Robot.shuffleBoard.ballSpacingMove.getDouble(1000));
@@ -250,13 +260,16 @@ public class BallSubsystem extends SubsystemBase {
               //TODO: handle exception
             }
             beltTalon.set(ControlMode.PercentOutput, 0);
-            intakeTalon.set(ControlMode.PercentOutput, 100);
+            if (mode == ballMode.intake) {
+              intakeTalon.set(ControlMode.PercentOutput, 100);
+            }
             runnable = false;
             //TODO: enforce max ball count
             // stop intaking if 5 balls after belts stop moving
-            // if (ballsOnRobot >= maxStoredBalls) {
-            //   setBallMode(ballMode.hold);
-            // }
+            if (ballsOnRobot >= maxStoredBalls) {
+              setBallMode(ballMode.hold);
+            }
+            
             }
         }
       }).start();
@@ -267,8 +280,9 @@ public class BallSubsystem extends SubsystemBase {
   // Function which handles ball counting logic.
   private void ballCounter() {
     if (getLowerBallSensor() && !lowerBallSensorBlocked) {
-      if (mode == ballMode.intake) {
+      if (mode == ballMode.intake || mode == ballMode.intakeNoDrop) {
         ballsOnRobot ++;
+        lastIntake = System.currentTimeMillis();
 
       } else if (mode == ballMode.unloadIntake) {
         // ballsOnRobot --;
