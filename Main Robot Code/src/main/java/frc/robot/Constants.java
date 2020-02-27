@@ -38,21 +38,21 @@ public final class Constants {
                             outputVictorPort = 13;
             
   //Solenoids
-  public static final int lowerIntakeSolenoidPort = 6,
-                          liftIntakeSolenoidPort = 2,
-                          closeLowerSolenoidPort = 1,
+  public static final int lowerIntakeSolenoidPort = 2,
+                          liftIntakeSolenoidPort =3,
+                          closeLowerSolenoidPort = 4,
                           openLowerSolenoidPort = 5,
-                          closeUpperSolenoidPort = 3,
-                          openUpperSolenoidPort = 4,
-                          pushSolenoidPort = 0,//0
-                          retractSolenoidPort = 7;//7
+                          closeUpperSolenoidPort = 6,
+                          openUpperSolenoidPort = 7,
+                          pushSolenoidPort = 1,//0
+                          retractSolenoidPort = 0;//7
 
   //Sensors
-  public static final int lowerBallSensorPort = 2,
-                          upperBallSensorPort = 3,
-                          wheelOfFortuneLimitPort = 4,
-                          beltEncoderAPort = 5,
-                          beltEncoderBPort = 6;
+  public static final int lowerBallSensorPort = 1,
+                          upperBallSensorPort = 2,
+                          wheelOfFortuneLimitPort = 0,
+                          beltEncoderAPort = 3,
+                          beltEncoderBPort = 4;
 
   public final double wheelCircumferenceMeters = 0.1524;
   public final int encoderTicksPerRotation = 4096;
