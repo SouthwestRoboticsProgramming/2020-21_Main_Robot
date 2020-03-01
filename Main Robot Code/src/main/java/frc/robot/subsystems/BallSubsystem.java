@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -22,7 +23,7 @@ import frc.robot.Robot;
 public class BallSubsystem extends SubsystemBase {
   private final WPI_TalonSRX intakeTalon, beltTalon;
   private final WPI_VictorSPX flickerVictor, outputVictor;
-  private final DoubleSolenoid intakeDoubleSolenoid, upperBlockDoubleSolenoid;
+  private final Solenoid intakeLowerSolenoid, intakeLiftSolenoid;
   private final DigitalInput lowerBallSensor, upperBallSensor;
   private final Encoder beltEncoder;
 
@@ -53,11 +54,8 @@ public class BallSubsystem extends SubsystemBase {
     flickerVictor.setNeutralMode(NeutralMode.Brake);
     beltTalon.setNeutralMode(NeutralMode.Brake);
     outputVictor.setNeutralMode(NeutralMode.Brake);
-
-    intakeDoubleSolenoid = new DoubleSolenoid(37, Constants.lowerIntakeSolenoidPort, Constants.liftIntakeSolenoidPort);
-    upperBlockDoubleSolenoid = new DoubleSolenoid(37, Constants.closeUpperSolenoidPort, Constants.openUpperSolenoidPort);
-    intakeDoubleSolenoid.set(Value.kReverse);
-    upperBlockDoubleSolenoid.set(Value.kOff);
+    intakeLowerSolenoid = new Solenoid(37, Constants.lowerIntakeSolenoidPort);
+    intakeLiftSolenoid = new Solenoid(37, Constants.liftIntakeSolenoidPort);
 
     lowerBallSensor = new DigitalInput(Constants.lowerBallSensorPort);
     upperBallSensor = new DigitalInput(Constants.upperBallSensorPort);
@@ -95,8 +93,8 @@ public class BallSubsystem extends SubsystemBase {
       setBallState(false, false, true, 0, flickerOutIntakeSpeed, beltsOutIntakeSpeed, 0);
     } else if (mode == ballMode.unloadOutput) {
       setBallState(false, false, false, 0, .1, beltsOutOutputSpeed, outputSpeed);
-    } else if (mode == ballMode.unloadOutput) {
-      setBallState(true, true, true, pushSpeed, 0, 0, 0);
+    } else if (mode == ballMode.pushBalls) {
+      setBallState(true, true, true, pushSpeed, 0, 0, outputHoldSpeed);
     }
     this.mode = mode;
   }
@@ -104,7 +102,6 @@ public class BallSubsystem extends SubsystemBase {
   public void setBallState(boolean intakeDown, boolean lowerBlocked, boolean upperBlocked, double intakeSpeed, 
                           double flickerSpeed, double beltSpeed, double outputSpeed) {
     setIntakeDown(intakeDown);
-    setUpperBlocked(upperBlocked);
     setIntakeSpeed(intakeSpeed);
     setFlickerSpeed(flickerSpeed);
     setBeltSpeed(beltSpeed);
@@ -135,7 +132,7 @@ public class BallSubsystem extends SubsystemBase {
                   //TODO: handle exception
                 }
                 //Prevents intake from spinning when intake is up
-                if (intakeDoubleSolenoid.get() == Value.kForward) {
+                if (intakeLowerSolenoid.get() == true) {
                   intakeTalon.set(ControlMode.PercentOutput, x);
                 }
                 runnable = false;
@@ -168,26 +165,16 @@ public class BallSubsystem extends SubsystemBase {
   //Set intake down and outputs to dashboard.
   private void setIntakeDown(Boolean intakeDown) {
     if (intakeDown) {
-      intakeDoubleSolenoid.set(Value.kForward);
+      intakeLowerSolenoid.set(true);
+      intakeLiftSolenoid.set(true);
     } else {
-      intakeDoubleSolenoid.set(Value.kReverse);
+      intakeLowerSolenoid.set(false);
+      intakeLiftSolenoid.set(false);
     }
 
     // Robot.shuffleBoard.ballIntakeState.setValue(intakeLiftSolenoid.get());
   }
 
-  //Block upper and outputs to dashboard.
-  private void setUpperBlocked(Boolean blocked) {
-    // upperBlockDoubleSolenoid.set(Value.kOff);
-    blocked = false;
-    if (blocked) {
-      upperBlockDoubleSolenoid.set(Value.kForward);
-    } else {
-      upperBlockDoubleSolenoid.set(Value.kReverse);
-    }
-
-    // Robot.shuffleBoard.ballUpperBlockerState.setValue(upperBlockDoubleSolenoid.get());
-  }
 
   //Ball sensor in
   public boolean getLowerBallSensor() {

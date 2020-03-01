@@ -24,12 +24,12 @@ public class PathA extends SequentialCommandGroup {
   public PathA(DriveTrainSubsystem driveTrainSubsystem, BallSubsystem ballSubsystem) {
     
     super(
-      new Wait(Robot.shuffleBoard.PathAWait0.getDouble(0)),
-      new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathADistence1.getDouble(0), Robot.shuffleBoard.PathASpeed1.getDouble(0)),
-      new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathATime2.getDouble(0), Robot.shuffleBoard.PathASpeed2.getDouble(0)),
-      new setBallMode(ballSubsystem, ballMode.unloadOutput),
-      new Wait(Robot.shuffleBoard.PathAWait3.getDouble(0)),
-      new setBallMode(ballSubsystem, ballMode.hold)
+      // new Wait(Robot.shuffleBoard.PathAWait0.getDouble(0)),
+      new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathADistence1.getDouble(0), Robot.shuffleBoard.PathASpeed1.getDouble(0))
+      // new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathATime2.getDouble(0), Robot.shuffleBoard.PathASpeed2.getDouble(0)),
+      // new setBallMode(ballSubsystem, ballMode.unloadOutput),
+      // new Wait(Robot.shuffleBoard.PathAWait3.getDouble(0)),
+      // new setBallMode(ballSubsystem, ballMode.hold)
       );
     
   }

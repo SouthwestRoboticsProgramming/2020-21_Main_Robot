@@ -41,15 +41,18 @@ public class RobotContainer {
   private final Xbox controller = new Xbox(Constants.controllerPort);
 
   private final Joystick XBOX = new Joystick(0);
-  private final JoystickButton intake = new JoystickButton(XBOX, 2);
-  private final JoystickButton hold = new JoystickButton(XBOX, 3);
-  private final JoystickButton outBottom = new JoystickButton(XBOX, 1);
-  private final JoystickButton outTop = new JoystickButton(XBOX, 4);
+  private final Joystick XBOX2 = new Joystick(1);
+  private final JoystickButton intakeNoDrop = new JoystickButton(XBOX2, 2);
+  private final JoystickButton hold = new JoystickButton(XBOX2, 3);
+  private final JoystickButton intake = new JoystickButton(XBOX2, 1);
+  private final JoystickButton unloadOutput = new JoystickButton(XBOX2, 4);
+  private final JoystickButton unloadIntake = new JoystickButton(XBOX2, 6);
+  private final JoystickButton pushBalls = new JoystickButton(XBOX2, 5);
+
   private final JoystickButton slowCheezy = new JoystickButton(XBOX, 5);
   private final JoystickButton spinWheel = new JoystickButton(XBOX, 8);
   private final JoystickButton alignWheel = new JoystickButton(XBOX, 7);
   private final JoystickButton slow = new JoystickButton(XBOX, 6);
-
 
   private final Command m_autonomousCommand = new AutonomonousSelector(driveTrainSubsystem, ballSubsystem);
   private final Command manualDrive = new ManualDriveCommand(driveTrainSubsystem, DriveType.cheezy);
@@ -76,11 +79,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // // Create some buttons
-    intake.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.intakeNoDrop));
+    intakeNoDrop.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.intakeNoDrop));
     hold.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.hold));
-    outBottom.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.intake));
-    outTop.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.unloadOutput));
-    // pushBalls.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.pushBalls));
+    intake.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.intake));
+    unloadOutput.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.unloadOutput));
+    pushBalls.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.pushBalls));
+    unloadIntake.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.unloadIntake));
 
     spinWheel.whenPressed(new WheelCommand(wheelSubsystem, driveTrainSubsystem, Spin.Revolutions));
     alignWheel.whenPressed(new WheelCommand(wheelSubsystem, driveTrainSubsystem, Spin.Position, Color.red));
@@ -123,7 +127,12 @@ public class RobotContainer {
     }
 
     public double getSpeedMultiplyer() {
-      return Math.abs(XBOX.getRawAxis(3) - 1);
+      double slowestSpeed = .1;
+      double output = Math.abs(XBOX.getRawAxis(3) - 1);
+      if (output < slowestSpeed) {
+        output = slowestSpeed;
+      }
+      return output;
     }
 
     public void setDriveReversed(boolean reversed) {
@@ -150,15 +159,15 @@ public class RobotContainer {
 
   // climb
   public double getClimbOutput() {
-    return -XBOX.getRawAxis(5);
+    return -XBOX2.getRawAxis(5);
   }
 
   public boolean getWinchOutput() {
-    return XBOX.getRawButton(10);
+    return XBOX2.getRawButton(10);
   }
 
   public double getBothClimb() {
-    return XBOX.getRawAxis(2);
+    return XBOX2.getRawAxis(2);
   }
 
   // ball

@@ -6,6 +6,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight{
 
+  public Limelight() {
+    limelightNetworkTable().getEntry("stream").setDouble(0);
+  }
+
   public NetworkTable limelightNetworkTable() {
     return NetworkTableInstance.getDefault().getTable("limelight");
   }

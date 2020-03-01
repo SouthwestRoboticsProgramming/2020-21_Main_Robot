@@ -81,20 +81,21 @@ public class WheelCommand extends CommandBase {
   public void execute() {
     double manualSpeed = getDeadzone(Robot.robotContainer.getWheelManual(), Robot.shuffleBoard.wheelManualDeadZone.getDouble(.5));
     if (Math.abs(manualSpeed) > 0) {
-      phaseA = false;
+      phaseA = true;
     }
     if (!phaseA) {
       if (spin == Spin.Revolutions) {
-        setSpinnerSpeed(1);
+        m_wheelSubsystem.setSpinnerTalon(.9);
         double spinTime = Robot.shuffleBoard.wheelRevolutionsMS.getDouble(0);
-        if (System.currentTimeMillis() - spinTime >= startTime || Robot.robotContainer.voidTask()) {finished = true;}
+        if (System.currentTimeMillis() - spinTime >= startTime || Robot.robotContainer.voidTask()) {phaseA = true;}
       } else if (spin == Spin.Position) {
-        setSpinnerSpeed(.2);
+        m_wheelSubsystem.setSpinnerTalon(.2);
         System.out.println("set color = " + getColor(color) + " color = " + m_wheelSubsystem.getColor());
-        if (getColor(color) == m_wheelSubsystem.getColor() || Robot.robotContainer.voidTask()) {finished = true;}
+        if (getColor(color) == m_wheelSubsystem.getColor() || Robot.robotContainer.voidTask()) {phaseA = true;}
       }
+
     } else {
-      setSpinnerSpeed(manualSpeed);
+      m_wheelSubsystem.setSpinnerTalon(.5*manualSpeed);
       if (Robot.robotContainer.voidTask()) {
         finished = true;
       }

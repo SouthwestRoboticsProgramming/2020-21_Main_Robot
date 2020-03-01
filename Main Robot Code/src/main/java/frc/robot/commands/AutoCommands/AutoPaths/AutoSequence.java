@@ -22,6 +22,7 @@ public class AutoSequence extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(
+      // new PathA(driveTrainSubsystem, ballSubsystem)
       new PathBNew(driveTrainSubsystem, ballSubsystem),
       new PathC(driveTrainSubsystem, ballSubsystem)
       // new PathD(driveTrainSubsystem, ballSubsystem)

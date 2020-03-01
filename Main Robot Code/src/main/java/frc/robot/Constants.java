@@ -23,12 +23,12 @@ public final class Constants {
     public static final int controllerPort = 0;
 
     //Motor controllers
-    public static final int leftPort1 = 1,
-                            leftPort2 = 2,
-                            leftPort3 = 3,
-                            rightPort1 = 4,
-                            rightPort2 = 5,
-                            rightPort3 = 6,
+    public static final int leftPort1 = 4,
+                            leftPort2 = 5,
+                            leftPort3 = 6,
+                            rightPort1 = 1,
+                            rightPort2 = 2,
+                            rightPort3 = 3,
                             winchTalonPort = 7, 
                             elevatorTalonPort = 8,
                             wheelOfFortuneTalonPort = 9,
