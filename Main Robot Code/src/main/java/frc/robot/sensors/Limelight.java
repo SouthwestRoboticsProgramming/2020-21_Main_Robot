@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class Limelight{
 
   public Limelight() {
-    limelightNetworkTable().getEntry("stream").setDouble(0);
+    limelightNetworkTable().getEntry("stream").setDouble(2);
   }
 
   public NetworkTable limelightNetworkTable() {

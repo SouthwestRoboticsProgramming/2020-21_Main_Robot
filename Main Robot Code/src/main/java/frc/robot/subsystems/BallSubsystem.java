@@ -48,6 +48,7 @@ public class BallSubsystem extends SubsystemBase {
     outputVictor = new WPI_VictorSPX(Constants.outputVictorPort);
 
     beltEncoder = new Encoder(Constants.beltEncoderAPort, Constants.beltEncoderBPort);
+    beltEncoder.setReverseDirection(true);
     beltEncoder.reset();
   
     intakeTalon.setNeutralMode(NeutralMode.Brake);
@@ -192,10 +193,12 @@ public class BallSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println("beltEncoder=" + beltEncoder.get());
     ballCounter();
-    ballSpacer();
+    // ballSpacer();
     if (Robot.robotContainer.getPOV() == 270) {
       setBallMode(ballMode.unloadIntake);
+      ballsOnRobot = 0;
     }
     // checkForJam();
     Robot.shuffleBoard.ballSensorInDIO.setBoolean(lowerBallSensor.get());
@@ -298,9 +301,16 @@ public class BallSubsystem extends SubsystemBase {
 
   // Function which handles ball counting logic.
   private void ballCounter() {
+    boolean intake = ballMode.intake == mode || ballMode.intakeNoDrop == mode;
     if (getLowerBallSensor() && !lowerBallSensorBlocked) {
       if (mode == ballMode.intake || mode == ballMode.intakeNoDrop) {
         ballsOnRobot ++;
+       
+        if (intake && ballsOnRobot < 5) {
+          beltTalon.set(ControlMode.PercentOutput, Robot.shuffleBoard.ballBeltsSpeed.getDouble(0));
+        } else {
+          flickerVictor.set(ControlMode.PercentOutput, 0);
+        }
 
       } else if (mode == ballMode.unloadIntake) {
         // ballsOnRobot --;
@@ -308,6 +318,10 @@ public class BallSubsystem extends SubsystemBase {
       }
       lowerBallSensorBlocked = true;
     } else if (!getLowerBallSensor() && lowerBallSensorBlocked) {
+      if (intake && ballsOnRobot < 5) {
+        stopBeltsAfter((int)Robot.shuffleBoard.ballSpacingMove.getDouble(0));
+      }
+      
       lowerBallSensorBlocked = false;
     }
 
@@ -318,5 +332,24 @@ public class BallSubsystem extends SubsystemBase {
       // ballsHeld --;
       upperBallSensorBlocked = false;
     }   
+  }
+  private void stopBeltsAfter(int distence) {
+    new Thread(new Runnable() {
+      public void run() {
+        boolean runnable = true;
+        int start = beltEncoder.get();
+        while (runnable) {
+          try {
+              Thread.sleep(50);
+          } catch (Exception e) {
+            //TODO: handle exception
+          }
+          if (beltEncoder.get() > start + distence) {
+            beltTalon.set(ControlMode.PercentOutput, 0);
+            runnable = false;
+          }
+        }
+      }
+    }).start();
   }
 }
