@@ -10,7 +10,7 @@ package frc.robot.commands.AutoCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.DriveTrainSubsystem.WheelSide;
 
 public class AccelerateDrive extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
@@ -20,9 +20,9 @@ public class AccelerateDrive extends CommandBase {
   private double acceleration;
   private boolean finished = false;
   private double tolerance;
-  private Wheel wheel;
+  private WheelSide wheel;
 
-  public AccelerateDrive(DriveTrainSubsystem driveTrainSubsystem, double start, double end, Wheel wheel) {
+  public AccelerateDrive(DriveTrainSubsystem driveTrainSubsystem, double start, double end, WheelSide wheel) {
     // addRequirements(driveTrainSubsystem);
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.start = start;
@@ -70,11 +70,11 @@ public class AccelerateDrive extends CommandBase {
 
 
   private void driveMotors(double left, double right) {
-    if (wheel == Wheel.left) {
+    if (wheel == WheelSide.left) {
       driveTrainSubsystem.driveMotors(left, 0);
-    } else if (wheel == Wheel.right) {
+    } else if (wheel == WheelSide.right) {
       driveTrainSubsystem.driveMotors(0, right);
-    } else if (wheel == Wheel.both) {
+    } else if (wheel == WheelSide.both) {
       driveTrainSubsystem.driveMotors(left, right);
     }
     

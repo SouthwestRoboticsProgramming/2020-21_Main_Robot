@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.PID;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.DriveTrainSubsystem.WheelSide;
 
 public class DriveAtAngle extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
@@ -39,7 +39,7 @@ public class DriveAtAngle extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    new AccelerateDrive(driveTrainSubsystem, 0, speed, Wheel.both).schedule();
+    new AccelerateDrive(driveTrainSubsystem, 0, speed, WheelSide.both).schedule();
     finished = false;
     lastLeftFeet = driveTrainSubsystem.getLeftDriveFeet();
     lastRightFeet = driveTrainSubsystem.getRightDriveFeet();
@@ -58,7 +58,7 @@ public class DriveAtAngle extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    new AccelerateDrive(driveTrainSubsystem, speed, 0, Wheel.both).schedule();
+    new AccelerateDrive(driveTrainSubsystem, speed, 0, WheelSide.both).schedule();
   }
 
   // Returns true when the command should end.

@@ -19,7 +19,7 @@ import frc.robot.commands.AutoCommands.Wait;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.DriveTrainSubsystem.WheelSide;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -31,9 +31,9 @@ public class PathH extends SequentialCommandGroup {
       new Wait(.5),
       new ResetGyro(),
       new Wait(.5),
-      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathHAngle1.getDouble(0), Wheel.left),
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathHAngle1.getDouble(0), WheelSide.left),
       new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathHTime2.getDouble(0), Robot.shuffleBoard.PathHSpeed2.getDouble(0)),
-      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathHAngle3.getDouble(0), Wheel.left)
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathHAngle3.getDouble(0), WheelSide.left)
       );
     
   }

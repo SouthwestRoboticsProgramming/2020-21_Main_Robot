@@ -13,7 +13,7 @@ import frc.robot.commands.AutoCommands.DriveDistence;
 import frc.robot.commands.AutoCommands.TurnToAngle;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.DriveTrainSubsystem.WheelSide;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -22,7 +22,7 @@ public class PathF extends SequentialCommandGroup {
   public PathF(DriveTrainSubsystem driveTrainSubsystem, BallSubsystem ballSubsystem) {
     
     super(
-      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathFAngle1.getDouble(0), Wheel.right),
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathFAngle1.getDouble(0), WheelSide.right),
       new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathFDistence2.getDouble(0), Robot.shuffleBoard.PathFSpeed2.getDouble(0))
       );
     

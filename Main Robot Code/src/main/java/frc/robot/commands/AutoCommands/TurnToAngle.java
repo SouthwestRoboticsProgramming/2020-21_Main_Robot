@@ -8,7 +8,7 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.DriveTrainSubsystem.WheelSide;
 import frc.lib.PID;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -16,11 +16,11 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 public class TurnToAngle extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
   private double angle;
-  private Wheel wheel;
+  private WheelSide wheel;
   private PID pid;
   private boolean finished;
 
-  public TurnToAngle(DriveTrainSubsystem driveTrainSubsystem, double angle, Wheel wheel) {
+  public TurnToAngle(DriveTrainSubsystem driveTrainSubsystem, double angle, WheelSide wheel) {
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.angle = angle;
     this.wheel = wheel;
@@ -52,9 +52,9 @@ public class TurnToAngle extends CommandBase {
       output -= Robot.shuffleBoard.driveTurnPidF.getDouble(0);
     }
     System.out.println("TurnToAngle.execute() out = " + pid.getError());
-    if (wheel == Wheel.left) {
+    if (wheel == WheelSide.left) {
       driveTrainSubsystem.driveMotors(output, 0);
-    } else if (wheel == wheel.right) {
+    } else if (wheel == WheelSide.right) {
       driveTrainSubsystem.driveMotors(0, -output);
     } else {
       driveTrainSubsystem.driveMotors(.5*output, -.5*output);

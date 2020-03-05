@@ -8,19 +8,19 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.DriveTrainSubsystem.WheelSide;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class DriveTime extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
   private double seconds;
-  private Wheel wheel;
+  private WheelSide wheel;
   private double speed;
   private long endTime;
   private boolean finished;
 
-  public DriveTime(DriveTrainSubsystem driveTrainSubsystem, double seconds, double speed, Wheel wheel) {
+  public DriveTime(DriveTrainSubsystem driveTrainSubsystem, double seconds, double speed, WheelSide wheel) {
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.seconds = seconds;
     this.wheel = wheel;
@@ -31,7 +31,7 @@ public class DriveTime extends CommandBase {
   public DriveTime(DriveTrainSubsystem driveTrainSubsystem, double seconds, double speed) {
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.seconds = seconds;
-    this.wheel = Wheel.both;
+    this.wheel = WheelSide.both;
     this.speed = speed;
     addRequirements(driveTrainSubsystem);
   }

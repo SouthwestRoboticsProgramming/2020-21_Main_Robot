@@ -10,18 +10,18 @@ package frc.robot.commands.AutoCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.DriveTrainSubsystem.WheelSide;
 
 public class DriveDistence extends CommandBase {
   private DriveTrainSubsystem driveTrainSubsystem;
   private double ft;
-  private Wheel wheel;
+  private WheelSide wheel;
   private double speed;
   private boolean finished;
   private double lastLeftFeet;
   private double lastRightFeet;
 
-  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed, Wheel wheel) {
+  public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed, WheelSide wheel) {
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.ft = ft;
     this.wheel = wheel;
@@ -32,7 +32,7 @@ public class DriveDistence extends CommandBase {
   public DriveDistence(DriveTrainSubsystem driveTrainSubsystem, double ft, double speed) {
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.ft = ft;
-    this.wheel = Wheel.both;
+    this.wheel = WheelSide.both;
     this.speed = speed;
     addRequirements(driveTrainSubsystem);
   }

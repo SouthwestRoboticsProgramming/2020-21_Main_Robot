@@ -9,7 +9,7 @@ package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.DriveTrainSubsystem.WheelSide;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -21,7 +21,7 @@ public class AccelDecelSequence extends SequentialCommandGroup {
   public AccelDecelSequence(DriveTrainSubsystem driveTrainSubsystem) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new AccelerateDrive(driveTrainSubsystem, 0, 1, Wheel.both),
-    new AccelerateDrive(driveTrainSubsystem, 1, 0, Wheel.both));
+    super(new AccelerateDrive(driveTrainSubsystem, 0, 1, WheelSide.both),
+    new AccelerateDrive(driveTrainSubsystem, 1, 0, WheelSide.both));
   }
 }

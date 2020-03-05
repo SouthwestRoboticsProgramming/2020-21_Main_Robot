@@ -5,7 +5,9 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.util;
+package frc.lib;
+import java.util.function.Function;
+import java.util.Vector;
 
 /**
  * Add your docs here.
@@ -19,6 +21,7 @@ public class Waypoint {
         this.x = x;
         this.y = y;
         this.m = Math.atan(theta);
+
     }
     public Waypoint join(Waypoint end) {
         distance = Math.hypot(this.x - end.x, this.y-end.y);
@@ -28,25 +31,26 @@ public class Waypoint {
         d = 0;
         e = m;
         f = 0;
+
     }
-    public path(double x) {
-        return quintic(a,b,c,d,e,f).apply(x);
+    public Vector<Double> path(double x) {
+        quintic(a,b,c,d,e,f).apply(x);
     }
-    public Function<Double,Double> quintic(double a_, double b_, double c_, double e_, double f_) {
+    public Function<Double,Double> quintic(double a_, double b_, double c_, double d_, double e_, double f_) {
         return x -> a_ * Math.pow(x,5) + b_ * Math.pow(x,4) + c_ * Math.pow(x,3) + d_ * Math.pow(x,2) + e_ * x + f_;
     }
     public Function<Double,Double> derivate(Function<Double,Double> fn) {
         return x -> (fn.apply(Math.nextUp(x)) - fn.apply(Math.nextDown(x))) / (Math.nextUp(x) - Math.nextDown(x))
     }
-    public double slope() {
-        double disX = Robot.in.encoders.x() / Math.cos(theta);
-        double disY = Robot.in.encoders.y() / Math.sin(theta);
-        double dis  = (disX + disY) / 2
-        return 5 * a * Math.pow(dis,4) + 4 * b * Math.pow(dis,3) + 3 * c * Math.pow(dis,2) + 2 * d * dis + m;
-    }
     public Function<Double,Double> omega() {
         return x -> Math.atan(derivate(quintic(a,b,c,d,e,f)).apply(x)); // maybe have to add another term;
     }
 
-    Waypoint(90,0,0).join(new Waypoint(180,12,3)).join(2rjopijoiassdnf).
+    // public double slope() {
+    //     double disX = Position.getX() / Math.cos(theta);
+    //     double disY = Position.getY() / Math.sin(theta);
+    //     double dis  = (disX + disY) / 2;
+    //     return 5 * a * Math.pow(dis,4) + 4 * b * Math.pow(dis,3) + 3 * c * Math.pow(dis,2) + 2 * d * dis + m;
+    // }
+
 }

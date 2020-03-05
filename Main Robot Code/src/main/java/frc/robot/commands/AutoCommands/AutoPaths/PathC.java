@@ -14,7 +14,7 @@ import frc.robot.commands.AutoCommands.ResetGyro;
 import frc.robot.commands.AutoCommands.TurnToAngle;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.DriveTrainSubsystem.WheelSide;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -24,9 +24,9 @@ public class PathC extends SequentialCommandGroup {
     
     super(
       new ResetGyro(),
-      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathCAngle1.getDouble(0), Wheel.right),
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathCAngle1.getDouble(0), WheelSide.right),
       new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathCDistence2.getDouble(0), Robot.shuffleBoard.PathCSpeed2.getDouble(0)),
-      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathCAngle3.getDouble(0), Wheel.left)
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathCAngle3.getDouble(0), WheelSide.left)
       );
     
   }

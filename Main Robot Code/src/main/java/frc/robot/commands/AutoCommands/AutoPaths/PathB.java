@@ -16,7 +16,7 @@ import frc.robot.commands.AutoCommands.Wait;
 import frc.robot.commands.AutoCommands.setBallMode;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem.Wheel;
+import frc.robot.subsystems.DriveTrainSubsystem.WheelSide;
 import frc.robot.subsystems.BallSubsystem.ballMode;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -27,10 +27,10 @@ public class PathB extends SequentialCommandGroup {
     super(
       new Wait(Robot.shuffleBoard.PathBWait0.getDouble(0)),
       new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathBDistence1.getDouble(0), Robot.shuffleBoard.PathBSpeed1.getDouble(0)),
-      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBAngle2.getDouble(0), Wheel.right),
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBAngle2.getDouble(0), WheelSide.right),
       new DriveDistence(driveTrainSubsystem, Robot.shuffleBoard.PathBDistence3.getDouble(0), Robot.shuffleBoard.PathBSpeed3.getDouble(0)),
-      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBAngle4.getDouble(0), Wheel.left),
-      new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathBTime5.getDouble(0), Robot.shuffleBoard.PathBSpeed5.getDouble(0), Wheel.both),
+      new TurnToAngle(driveTrainSubsystem, Robot.shuffleBoard.PathBAngle4.getDouble(0), WheelSide.left),
+      new DriveTime(driveTrainSubsystem, Robot.shuffleBoard.PathBTime5.getDouble(0), Robot.shuffleBoard.PathBSpeed5.getDouble(0), WheelSide.both),
       new setBallMode(ballSubsystem, ballMode.unloadOutput),
       new Wait(Robot.shuffleBoard.PathBWait6.getDouble(0)),
       new setBallMode(ballSubsystem, ballMode.hold)

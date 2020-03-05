@@ -26,7 +26,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 	private DifferentialDriveOdometry differentialDriveOdometry;
 	private TalonFXConfiguration fxConfig;
 
-	public enum Wheel {
+	
+	public enum WheelSide {
 		left, right, both
 	  }
 
