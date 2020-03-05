@@ -1,4 +1,4 @@
-package frc.lib.Controller;
+package frc.lib.controller;
 
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 

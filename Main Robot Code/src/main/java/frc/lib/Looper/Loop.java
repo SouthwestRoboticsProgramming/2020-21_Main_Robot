@@ -1,4 +1,4 @@
-package frc.lib.Looper;
+package frc.lib.looper;
 
 public interface Loop {
     void onStart();

@@ -1,11 +1,11 @@
-package frc.lib.Grid;
+package frc.lib.grid;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.lib.PID;
 import frc.lib.TimeOutTimer;
 import frc.lib.Looper.Loop;
 import frc.lib.Looper.Looper;
-import frc.robot.subsystems.DriveTrainSubsystem;;
+import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.lib.ADIS16448_IMU;
 
 public class Grid {

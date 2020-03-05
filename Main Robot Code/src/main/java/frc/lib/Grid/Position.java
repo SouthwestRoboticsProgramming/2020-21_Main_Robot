@@ -1,4 +1,4 @@
-package frc.lib.Grid;
+package frc.lib.grid;
 
 public class Position {
     double x;

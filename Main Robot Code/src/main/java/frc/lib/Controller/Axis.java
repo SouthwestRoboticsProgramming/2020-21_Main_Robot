@@ -1,4 +1,4 @@
-package frc.lib.Controller;
+package frc.lib.controller;
 
 public enum Axis {
     centerDrive,

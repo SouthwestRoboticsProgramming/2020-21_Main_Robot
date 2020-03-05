@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.TimeOutTimer;
-import frc.lib.Looper.Loop;
-import frc.lib.Looper.Looper;
+import frc.lib.looper.Loop;
+import frc.lib.looper.Looper;
 import frc.robot.interfaces.IController;
 import frc.robot.subsystems.DriveTrainSubsystem;;
 public class Xbox implements IController {
