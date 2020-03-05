@@ -5,15 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.AutoCommands.AutoPaths;
+package frc.robot.commands.autoCommands.autoPaths;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.robot.commands.AutoCommands.DriveDistence;
-import frc.robot.commands.AutoCommands.DriveTime;
-import frc.robot.commands.AutoCommands.setBallMode;
-import frc.robot.commands.AutoCommands.TurnToAngle;
-import frc.robot.commands.AutoCommands.Wait;
+import frc.robot.commands.autoCommands.DriveDistence;
+import frc.robot.commands.autoCommands.DriveTime;
+import frc.robot.commands.autoCommands.setBallMode;
+import frc.robot.commands.autoCommands.TurnToAngle;
+import frc.robot.commands.autoCommands.Wait;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.BallSubsystem.ballMode;
 import frc.robot.subsystems.DriveTrainSubsystem;

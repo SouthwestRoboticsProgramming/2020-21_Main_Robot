@@ -5,12 +5,12 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.AutoCommands.AutoPaths.AutoSequence;
-import frc.robot.commands.AutoCommands.AutoPaths.PathC;
-import frc.robot.commands.AutoCommands.AutoPaths.PathD;
+import frc.robot.commands.autoCommands.autoPaths.AutoSequence;
+import frc.robot.commands.autoCommands.autoPaths.PathC;
+import frc.robot.commands.autoCommands.autoPaths.PathD;
 import frc.robot.subsystems.BallSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
