@@ -114,11 +114,11 @@ public class RobotContainer {
       return false;
     }
 
-    public double getWallEffeciveness() {
+    public double getWallEffectiveness() {
       return 0;
     }
 
-    public double getLimelightEffeciveness() {
+    public double getLimelightEffectiveness() {
       return 0;
     }
 
@@ -126,7 +126,7 @@ public class RobotContainer {
       return slowCheezy.get();
     }
 
-    public double getSpeedMultiplyer() {
+    public double getSpeedMultiplier() {
       double slowestSpeed = .1;
       double output = Math.abs(XBOX.getRawAxis(3) - 1);
       if (output < slowestSpeed) {

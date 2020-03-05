@@ -136,14 +136,14 @@ public class Robot extends TimedRobot {
 
   public static double getAngle() {
     double angle = gyro.getGyroAngleZ();
-		double multiplyer = Math.round(angle / 180);
+		double multiplier = Math.round(angle / 180);
 
 		if (angle > 180) {
-			return -180 + (angle - (multiplyer * 180));
+			return -180 + (angle - (multiplier * 180));
 		} else if (angle <= 180  && angle > -180) {
 			return angle;
 		} else if (angle < -180) {
-			return 180 + (angle - (multiplyer * 180));
+			return 180 + (angle - (multiplier * 180));
 		} else {
 			return 0;
 		}

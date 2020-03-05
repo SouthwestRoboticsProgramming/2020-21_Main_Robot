@@ -67,13 +67,13 @@ public class ManualDriveCommand extends CommandBase {
 
     // wallFollow -- face aliance station
     double wallOffset = -wallFollow.getOutput(Robot.gyro.getGyroAngleZ());
-    double wallEffectiveness = Robot.robotContainer.getWallEffeciveness();
+    double wallEffectiveness = Robot.robotContainer.getWallEffectiveness();
     leftAuto += wallOffset * wallEffectiveness * Robot.shuffleBoard.driveStraightEffectiveness.getDouble(0);
     rightAuto -= wallOffset * wallEffectiveness *  Robot.shuffleBoard.driveStraightEffectiveness.getDouble(0);
 
     // limelight
     double limelightOffset = limeLight.getOutput(Robot.limelight.getX());
-    double limelightEffectiveness = Robot.robotContainer.getLimelightEffeciveness();
+    double limelightEffectiveness = Robot.robotContainer.getLimelightEffectiveness();
     leftAuto += limelightOffset * limelightEffectiveness *  Robot.shuffleBoard.driveLimelightEffectiveness.getDouble(0);
     rightAuto -= limelightOffset * limelightEffectiveness *  Robot.shuffleBoard.driveLimelightEffectiveness.getDouble(0);
 
@@ -85,7 +85,7 @@ public class ManualDriveCommand extends CommandBase {
     // xRight = getDeadzone(xRight, joystickDeadzone);
     // yRight = getDeadzone(yRight, joystickDeadzone);
 
-    double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0) * Robot.robotContainer.getSpeedMultiplyer();
+    double driveSpeed = Robot.shuffleBoard.driveSpeed.getDouble(0) * Robot.robotContainer.getSpeedMultiplier();
     double arcadeSpeed = Robot.shuffleBoard.driveArcadeSpeed.getDouble(1);
     boolean quickTurn = Robot.robotContainer.getOneQuickTurn();
 
