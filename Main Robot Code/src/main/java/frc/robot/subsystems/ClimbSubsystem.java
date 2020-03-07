@@ -33,7 +33,7 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void setElevator(double percent) {
-    System.out.println("climbOutput = " + percent);
+    // System.out.println("climbOutput = " + percent);
     elevator.set(ControlMode.PercentOutput, percent);
     Robot.shuffleBoard.climbElevatorOutput.setDouble(elevator.getMotorOutputPercent());
   }

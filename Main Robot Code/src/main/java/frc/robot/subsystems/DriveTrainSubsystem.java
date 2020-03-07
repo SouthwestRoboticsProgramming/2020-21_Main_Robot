@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Lib;
 import frc.lib.PID;
 import frc.robot.Robot;
+import frc.robot.commands.autoCommands.ShiftyCommand;
 import frc.robot.Constants;
 
 public class DriveTrainSubsystem extends SubsystemBase {
@@ -25,7 +26,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 	private Pose2d position;
 	private DifferentialDriveOdometry differentialDriveOdometry;
 	private TalonFXConfiguration fxConfig;
-
+	private boolean shiftyStarted = false;
 	
 	public enum WheelSide {
 		left, right, both
@@ -210,6 +211,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
   public void periodic() {
 	  differentialDriveOdometry.update(getRHeading(), ticksToMeters(getLeftDriveEncoderTicks()) , ticksToMeters(getRightDriveEncoderTicks()));
 	  Robot.shuffleBoard.drivePosition.setString(differentialDriveOdometry.getPoseMeters().toString());
+	  if (Robot.robotContainer.getPOV() == 0 && !shiftyStarted) {
+		new ShiftyCommand(this).schedule();
+		shiftyStarted = true;
+	  } else if (Robot.robotContainer.getPOV() == -1 && shiftyStarted) {
+		shiftyStarted = false;
+	  }
   }
 
   public double[] getDrivePid() {

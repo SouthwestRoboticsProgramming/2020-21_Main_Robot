@@ -16,15 +16,15 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.TimeOutTimer;
-import frc.lib.looper.Loop;
-import frc.lib.looper.Looper;
+// import frc.lib.looper.Loop;
+// import frc.lib.looper.Looper;
 import frc.robot.interfaces.IController;
 import frc.robot.subsystems.DriveTrainSubsystem;;
 public class Xbox implements IController {
     final int PORT;
     private XboxController xbox;
     private double reverseVal = 1;
-    private Looper rumbleLooper;
+    // private Looper rumbleLooper;
 
     public Xbox(int port) {
         PORT = port;
@@ -56,21 +56,21 @@ public class Xbox implements IController {
     }
     
     public void rumble(RumbleType type, long ms) {
-        TimeOutTimer timer = new TimeOutTimer(ms);
-        Loop loop = new Loop(){
-            @Override public void onStart() {
-                xbox.setRumble(type, 1);
-                timer.start();
-            }
-            @Override public void onLoop() {
-              if (timer.getTimedOut()) {rumbleLooper.stop();}
-            }
-            @Override public void onStop() {
-                timer.stop();
-            }
-          };
-          rumbleLooper = new Looper(loop, 100);
-          rumbleLooper.start();
+        // TimeOutTimer timer = new TimeOutTimer(ms);
+        // Loop loop = new Loop(){
+        //     @Override public void onStart() {
+        //         xbox.setRumble(type, 1);
+        //         timer.start();
+        //     }
+        //     @Override public void onLoop() {
+        //       if (timer.getTimedOut()) {rumbleLooper.stop();}
+        //     }
+        //     @Override public void onStop() {
+        //         timer.stop();
+        //     }
+        //   };
+        //   rumbleLooper = new Looper(loop, 100);
+        //   rumbleLooper.start();
         
     }
     public double getTrigger(Hand hand) {

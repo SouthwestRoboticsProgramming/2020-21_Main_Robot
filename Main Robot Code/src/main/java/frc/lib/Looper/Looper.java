@@ -1,7 +1,7 @@
-package frc.lib.looper;
+package frc.lib.Looper;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.lib.looper.Loop;
+import frc.lib.Looper.Loop;
 
 public class Looper {
 

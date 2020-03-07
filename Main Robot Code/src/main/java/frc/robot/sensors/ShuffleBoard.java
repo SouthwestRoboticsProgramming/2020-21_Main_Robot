@@ -41,6 +41,9 @@ public class ShuffleBoard{
             public NetworkTableEntry driveArcadeTurn = driveTune.addPersistent("driveArcadeTurn", 0).getEntry();
             public NetworkTableEntry driveCheezyHSensitivity = driveTune.addPersistent("driveCheezyHSensitivity", 0).getEntry();
             public NetworkTableEntry driveCheezyLSensitivity = driveTune.addPersistent("driveCheezyLSensitivity", 0).getEntry();
+            public NetworkTableEntry driveShiftyFrictionForce = driveTune.addPersistent("driveShiftyFrictionForce", 0).getEntry();
+            public NetworkTableEntry driveShiftyMaxSpeed = driveTune.addPersistent("driveShiftyMaxSpeed", 0).getEntry();
+            public NetworkTableEntry driveShiftySpeed = driveTune.addPersistent("driveShiftySpeed", 0).getEntry();
 
 
         private ShuffleboardLayout ballTune = Tune.getLayout("ballTune", BuiltInLayouts.kList);

@@ -7,13 +7,7 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.lib.Lib;
-import frc.lib.looper.Loop;
-import frc.lib.looper.Looper;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.WheelSubsystem;
@@ -21,7 +15,6 @@ import frc.robot.subsystems.WheelSubsystem;
 public class WheelCommand extends CommandBase {
   private final WheelSubsystem m_wheelSubsystem;
   private final DriveTrainSubsystem driveTrainSubsystem;
-  private Looper powerRamper;
   private Spin spin;
   private WheelSubsystem.Color color;
   private long startTime;
