@@ -41,7 +41,7 @@ public class RobotContainer {
   private final Xbox controller = new Xbox(Constants.controllerPort);
 
   private final Joystick XBOX = new Joystick(0);
-  private final Joystick XBOX2 = new Joystick(0);
+  private final Joystick XBOX2 = new Joystick(1);
   private final JoystickButton intakeNoDrop = new JoystickButton(XBOX2, 2);
   private final JoystickButton hold = new JoystickButton(XBOX2, 3);
   private final JoystickButton intake = new JoystickButton(XBOX2, 1);
