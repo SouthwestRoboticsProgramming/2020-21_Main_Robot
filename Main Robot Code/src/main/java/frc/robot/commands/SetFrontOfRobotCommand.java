@@ -26,11 +26,11 @@ public class SetFrontOfRobotCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if (Robot.robotContainer.getPOV() == 0) {
-    //   Robot.robotContainer.setDriveReversed(false);
-    // } else if (Robot.robotContainer.getPOV() == 180) {
-    //   Robot.robotContainer.setDriveReversed(true);
-    // }
+    if (Robot.robotContainer.getPOV() == 0) {
+      Robot.robotContainer.setDriveReversed(false);
+    } else if (Robot.robotContainer.getPOV() == 180) {
+      Robot.robotContainer.setDriveReversed(true);
+    }
   }
 
   // Called once the command ends or is interrupted.

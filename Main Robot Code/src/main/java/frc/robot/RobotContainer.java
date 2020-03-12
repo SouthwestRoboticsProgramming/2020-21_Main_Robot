@@ -84,7 +84,7 @@ public class RobotContainer {
     intake.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.intake));
     unloadOutput.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem,ballMode.unloadOutput));
     pushBalls.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.pushBalls));
-    unloadIntake.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.unloadIntake));
+    // unloadIntake.whenPressed(new BallCommand(ballSubsystem, driveTrainSubsystem, ballMode.unloadIntake));
 
     spinWheel.whenPressed(new WheelCommand(wheelSubsystem, driveTrainSubsystem, Spin.Revolutions));
     alignWheel.whenPressed(new WheelCommand(wheelSubsystem, driveTrainSubsystem, Spin.Position, Color.red));
