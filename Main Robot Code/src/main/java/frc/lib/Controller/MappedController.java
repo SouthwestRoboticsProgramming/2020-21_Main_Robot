@@ -1,10 +1,10 @@
-package frc.lib.controller;
+package frc.lib.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.lib.controller.Buttons;
+import frc.lib.Controller.Buttons;
 
 public class MappedController {
     

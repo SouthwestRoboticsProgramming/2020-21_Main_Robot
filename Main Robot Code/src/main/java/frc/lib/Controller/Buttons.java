@@ -1,4 +1,4 @@
-package frc.lib.controller;
+package frc.lib.Controller;
 
 public enum Buttons {
     quickTurn
