@@ -171,6 +171,10 @@ public class RobotContainer {
     return XBOX2.getRawAxis(2);
   }
 
+  public boolean getLockButton() {
+    return XBOX2.getRawButton(7);
+  }
+
   // ball
   public boolean getIntakeBotton() {
     return intake.get();

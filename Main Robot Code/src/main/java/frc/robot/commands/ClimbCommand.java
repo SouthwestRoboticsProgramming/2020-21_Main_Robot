@@ -41,6 +41,7 @@ public class ClimbCommand extends CommandBase {
       System.out.println("bothClimb = " + Robot.robotContainer.getBothClimb());
       m_climbSubsystem.setWinch(-.5 * climbOutput * Robot.robotContainer.getBothClimb());
     }
+
     if (!winchControlled) {
       if (Robot.robotContainer.getWinchOutput()) {
         double winchSpeed = Robot.shuffleBoard.climbWinchSpeed.getDouble(0);
@@ -49,6 +50,8 @@ public class ClimbCommand extends CommandBase {
         m_climbSubsystem.setWinch(0);
       }
     }
+
+    m_climbSubsystem.setLock(Robot.robotContainer.getLockButton());
    
   }
 
